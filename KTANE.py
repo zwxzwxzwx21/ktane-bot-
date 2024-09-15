@@ -3,6 +3,11 @@ from vosk import Model, KaldiRecognizer
 import pyaudio
 import pyttsx3
 import json
+# LIST OF WORDS THAT SHOULD BE PUT INTO LUT BECAUSE BOT STUPID DD
+# #desolate = detonate
+
+#potential bugs:
+#uhh i think when serial is not long enough it kinda fucks it over unsure tho
 #code below changes the voice from polish to english
 #region
 engine = pyttsx3.init()
@@ -19,7 +24,10 @@ recognizer = KaldiRecognizer(model, 16000)
 p = pyaudio.PyAudio()
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True,frames_per_buffer=8192)
 stream.start_stream()
-mode = 'go'
+mode = 'test'
+numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
+           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1}
+
 
 def convert_json(json_text):
     text = json.loads(json_text)
@@ -50,8 +58,11 @@ def ask_for(key):
     while True:
         if conf == False:
             say_(f'{key} waiting')
-            response = listening()
-
+            res = listening()
+            resp = res.replace('the','')
+            response = resp.replace(' ','')
+            if response in numbers:
+                response = numbers[response]
             say_(f"{key}, {response}, correct?")
             print(f"{key}, {response}, correct?")
 
@@ -60,6 +71,8 @@ def ask_for(key):
             return response
         elif confirm == key:
             say_(f'lets try again')
+        elif confirm == 'wrong':
+            ask_for(key)
         else:
             say_(f'unknown')
             conf = True #makes the bot remember the batteries if it wont understand 'yes' as an answer, you dont have to say it again
@@ -168,7 +181,6 @@ def ask_for_advanced(key):
 
     elif key == 'serial':
         list = []
-        numbers = {'zero':0,'one':1, 'two':2, 'three':3, 'four':4, 'five':5, 'six':6, 'seven':7, 'eight':8, 'nine':9,'for':4,'aids':8,'aid':8,'tree':3,'free':3}
         while True:
 
             say_(f'{key} waiting')
@@ -212,8 +224,9 @@ def ask_for_advanced(key):
 
 while True:
     print("waiting")
-    recognized_text = listening()
+
     if mode == 'wait':
+        recognized_text = listening()
         if recognized_text == 'go':
             say_('start')
             mode = 'go'
@@ -235,10 +248,61 @@ while True:
         batteries = ask_for("batteries")
         info_dict["batteries"] = batteries
         say_(f'batteries: {batteries}')
+        mode = 'play'
+    elif mode == 'test':
+        port = 'parallel'
+        serial = 'abcdef'
+        lights = ('asd','yes')
+        batteries = ask_for("batteries")
+        info_dict["batteries"] = batteries
+        say_(f'batteries: {batteries}')
+        mode = 'play'
+    elif mode == 'play':
+        print('entered play mode')
+        say_('game')
+        rec_text = listening()
+        recognized_text = rec_text.replace('the', '')
 
-
-
-
-
-
-        mode = 'wait'
+        print(recognized_text)
+        if recognized_text == 'button' or recognized_text == 'bottom':
+            say_('button')
+            button_held = False
+            say_('label')
+            state_on_button = listening()
+            say_('color')
+            color_of_button = listening()
+            if color_of_button == 'read':
+                color_of_button = 'red'
+            say_(f'button: {state_on_button}, color: {color_of_button}, correct?')
+            answer = wait_()
+            if answer == 'yes':
+                if color_of_button == 'blue' and state_on_button == 'abort':
+                    button_held = True
+                    say_('hold')
+                elif int(batteries) > 1 and state_on_button == 'detonate':
+                    say_('press and release')
+                elif color_of_button == 'white' and ('car','yes') in lights:
+                    say_('hold')
+                    button_held = True
+                elif int(batteries) > 2 and ('frk','yes') in lights:
+                    say_('press and release')
+                elif color_of_button == 'yellow':
+                    say_('hold')
+                    button_held = True
+                elif color_of_button == 'red' and state_on_button == 'hold':
+                    say_('press and release')
+                else:
+                    say_('hold')
+                    button_held = True
+                if button_held:
+                    say_('stripe color')
+                    stripe_color = wait_()
+                    if stripe_color == 'blue':
+                        say_('4 at any position')
+                    elif stripe_color == 'white':
+                        say_('1 at any position')
+                    elif stripe_color == 'yellow':
+                        say_('5 at any position')
+                    else:
+                        say_('1 at any position')
+            else: continue
