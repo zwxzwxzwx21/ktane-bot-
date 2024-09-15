@@ -8,6 +8,9 @@ import json
 
 #potential bugs:
 #uhh i think when serial is not long enough it kinda fucks it over unsure tho
+#not really a bug but sth that can be changed, on password gamemode i use double brackets because i tought there was a bug, you can remove one of the brackets but you would need to
+#remove the [0] part  from rowX[0][_] and it should make stuff slightly cleaner, and also you wont really have to work on arrays inside of arrays, wont really mean that uch
+# but to be fair could be changed later to make the code cleaner or so
 #code below changes the voice from polish to english
 #region
 engine = pyttsx3.init()
@@ -222,6 +225,146 @@ def ask_for_advanced(key):
 
         return serial
 
+def password(rows_done,r1,r2,r3,r4,r5):
+    row1 = r1
+    row2 = r2
+    row3 = r3
+    row4 = r4
+    row5 = r5
+    password_LUT = ['about','after','again','below','could','every', 'first', 'found', 'great', 'house',
+'large', 'learn', 'never', 'other', 'place',
+'plant', 'point', 'right', 'small', 'sound',
+'spell', 'still', 'study', 'their', 'there',
+'these', 'thing', 'think', 'three', 'water',
+'where', 'which', 'world', 'would', 'write']
+
+    if rows_done == 'one':
+        say_('password')
+        letters = wait_()
+        letters_replaced = letters.replace('the ', '')
+        letters_group = letters_replaced.split(' ')
+        try:
+            row_one = [letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
+        except IndexError:
+            print(rows_done, 'wrong')
+            password('one',r1,r2,r3,r4,r5)
+        row1.append(row_one)
+        say_(f'{row_one}, correct?')
+        answer = wait_()
+        print(answer)
+        if answer == 'yes':
+            print(row1)
+            rows_done = 'two'
+
+        elif answer == 'wrong':
+            r1 = []
+            password('one',r1,r2,r3,r4,r5)
+        else: r1 = [];password('one',r1,r2,r3,r4,r5)
+    if rows_done == 'two':
+        say_('row two')
+        letters = wait_()
+        letters_replaced = letters.replace('the ', '')
+        letters_group = letters_replaced.split(' ')
+        try:
+            row_two = [letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
+        except IndexError:
+            print(rows_done, 'wrong')
+            password('two',r1,r2,r3,r4,r5)
+        row2.append(row_two)
+        say_(f'{row_two}, correct?')
+        answer = wait_()
+        print(answer)
+        if answer == 'yes':
+            print(row2)
+            rows_done = 'three'
+
+        elif answer == 'wrong':
+            r2 = []
+            password('two',r1,r2,r3,r4,r5)
+        else: r2 = [];password('two',r1,r2,r3,r4,r5)
+    if rows_done == 'three':
+        say_('row three')
+        letters = wait_()
+        letters_replaced = letters.replace('the ', '')
+        letters_group = letters_replaced.split(' ')
+        try:
+            row_three =[letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
+        except IndexError:
+            print(rows_done, 'wrong')
+            password('three',r1,r2,r3,r4,r5)
+        row3.append(row_three)
+        say_(f'{row_three}, correct?')
+        answer = wait_()
+        print(answer)
+        if answer == 'yes':
+            print(row3)
+            rows_done = 'four'
+
+        elif answer == 'wrong':
+            r3 = [];password('three',r1,r2,r3,r4,r5)
+        else: r3 = [];password('three',r1,r2,r3,r4,r5)
+    if rows_done == 'four':
+        say_('row four')
+        letters = wait_()
+        letters_replaced = letters.replace('the ', '')
+        letters_group = letters_replaced.split(' ')
+        try:
+            row_four = [letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
+        except IndexError:
+            print(rows_done, 'wrong')
+            password('four',r1,r2,r3,r4,r5)
+        row4.append(row_four)
+        say_(f'{row_four}, correct?')
+        answer = wait_()
+        print(answer)
+        if answer == 'yes':
+            print(row4)
+            rows_done = 'five'
+
+        elif answer == 'wrong':
+            r4 = [];password('four',r1,r2,r3,r4,r5)
+        else: r4= [];password('four',r1,r2,r3,r4,r5)
+    if rows_done == 'five':
+        say_('row five')
+        letters = wait_()
+        letters_replaced = letters.replace('the ', '')
+        letters_group = letters_replaced.split(' ')
+        try:
+            row_five = [letters_group[0][0], letters_group[1][0], letters_group[2][0],letters_group[3][0], letters_group[4][0], letters_group[5][0]]
+        except IndexError:
+            print(rows_done,'wrong')
+            password('five',r1,r2,r3,r4,r5)
+        row5.append(row_five)
+        say_(f'{row_five}, correct?')
+        answer = wait_()
+        print(answer)
+        if answer == 'yes':
+            print(r1,r2,r3,r4,r5)
+            for i in range(6):
+                for j in range(6):
+                    for k in range(6):
+                        for l in range(6):
+                            for m in range(6):
+                                if debug:
+                                    print(i,j,k,l,m)
+                                    if len(row5[0]) < 6: say_('error')
+                                    print(row1[0][i] , row2[0][j] , row3[0][k] , row4[0][l] , row5[0][m])
+                                    print(row5)
+                                    print(row4)
+                                word = row1[0][i] + row2[0][j] + row3[0][k] + row4[0][l] + row5[0][m]
+                                if word in password_LUT:
+                                    say_(word)
+                                    return
+        elif answer == 'wrong':
+            r5 = []
+            password('five',r1,r2,r3,r4,r5)
+        else:
+            r5 = []
+            password('five', r1, r2, r3, r4, r5)
+
+
+password('five',[["a", "o", "p", "y", "t", "u"]],[["z", "l", "u" ,"o", "a", "h"]],[["z" ,"g" ,"f" ,"k" ,"l", "a"]],[["h" ,"v" ,"z" ,"c" ,"g","t"]],[])
+#["h" ,"v" ,"z" ,"c" ,"g","t"]
 while True:
     print("waiting")
 
@@ -253,17 +396,16 @@ while True:
         port = 'parallel'
         serial = 'abcdef'
         lights = ('asd','yes')
-        batteries = ask_for("batteries")
-        info_dict["batteries"] = batteries
-        say_(f'batteries: {batteries}')
+        batteries = 2
         mode = 'play'
     elif mode == 'play':
         print('entered play mode')
-        say_('game')
+        say_('module')
         rec_text = listening()
-        recognized_text = rec_text.replace('the', '')
+        recognized_text = rec_text.replace('the ', '')
 
         print(recognized_text)
+        #DONE
         if recognized_text == 'button' or recognized_text == 'bottom':
             say_('button')
             button_held = False
@@ -306,3 +448,6 @@ while True:
                     else:
                         say_('1 at any position')
             else: continue
+        elif recognized_text == 'password':
+            word = password('one',[],[],[],[],[])
+
