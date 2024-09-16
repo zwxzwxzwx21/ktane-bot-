@@ -16,7 +16,26 @@ positive_answers = ['yes','s','this','us','ps','as']
 # but to be fair could be changed later to make the code cleaner or so
 #another thing, could be fixed already but idk, when bot wont understand 'yes' or 'wrong' it could go to say_('module') line which is really bad because it loses all progress
 # if the error is still there FUCKING FIX IT
-# make the bot read passwords faster
+# make the bot read passwords faster - DONE
+
+# GAMES TO REPLICATE
+#region
+###IMPLEMENTED
+#BUTTON - WORKS 100% NO ERRORS FOUND
+#PASSWORD - WORKS 100% NO ERRORS FOUND
+#WIRES - HAVENT HAD AN ERROR RELATED TO SERIAL NUMBER, NEED TO TESTCASE THAT!!!
+###UNIMPLEMENTED
+#COMPLICATED (COMPLICATED WIRES) - PROB NEXT ONE, REALLY EASY
+#SEQUENCE (WIRE SEQUENCE) - SEEMS EASY TBH, JUST MAKE IT SO SEA,SEE,C = C
+#SIMON SAYS - PISS EASY JUST ASK FOR COLORS STRIKES N SHIT, AND CHECK FOR VOWELS
+#MEMORY - JUST SAY 2 THINGS, MAIN NUMBER AND WHAT YOURE PRESSING LIKE 'PRESSING 2' AND YOU SHOULD BE DONE, GL WITH THE BOT RECOGNIZING IT EVERY TIME CORRECTLY THO XD
+#MORSE - IDEK, DO BEFORE MAZE BUT STILL KINDA HARD SEEMS, PROB DO THE SAME AS PASSWORD
+#KEYPADS - WELL TOU GONNA DO STH LIKE A SIGN THAT LOOKS LIKE A  C JUST IS A C AND BOT WILL GET IT YE???
+#MAZE - FUCKING HELL NAH
+#KNOBS - SEEMS HARD
+#FIRST - FOR EMPTY SAY EMPTY, I THINK THE BEST THING IS TO USE SOME FUCKED UP PRONOUNCE TO WORK THIS OUT (THEIR , THERE = THERE, DEER = THEIR XD, TRY USING NUMBERS TOO, HONESLT YIT SEEMS THE WORST!!!!!!!!!!)
+
+#endregion
 #code below changes the voice from polish to english
 #region
 engine = pyttsx3.init()
@@ -440,23 +459,26 @@ def password(rows_done,r1,r2,r3,r4,r5):
             r5 = []
             password('five', r1, r2, r3, r4, r5)
 
-def wires(wires_done,wire_numb): # funciton takes argument to skip past first part if you fuck up colors
+def wires(wires_done,wire_numb):
+    # funciton takes argument to skip past first part if you fuck up colors
     wire_number = wire_numb
+    engine.setProperty('rate', 235)
     if wires_done == False:
-        say_('wires')
+        say_('wires numbers')
+
         wire_number_pre = wait_()
         if wire_number_pre in numbers:
             wire_number = numbers[wire_number_pre]
     say_('colors')
     colors = wait_()
-    colors_replaced = letters.replace('the ', '')
-    colors_replaced = letters.replace('read', 'red')
-    colors_group = letters_replaced.split(' ')
+    colors_replaced2 = colors.replace('the ', '')
+    colors_replaced = colors_replaced2.replace('read', 'red')
+    colors_group = colors_replaced.split(' ')
     if len(colors_group) != wire_number:
         say_('wrong colors')
         wires(True,wire_number)
-    engine.setProperty('rate', speed_up)
-    say_(f'{colors_group}, correc?')
+
+    say_(f'{colors_group}')
     answer_ = wait_()
     answer = remove_the(answer_)
     if answer in positive_answers:
@@ -478,7 +500,7 @@ def wires(wires_done,wire_numb): # funciton takes argument to skip past first pa
                     continue
             if last_int % 2 == 1 and colors_group.count('red')>1: say_('cut last red')
             elif colors_group.count('red') == 0 and colors_group[-1] == 'yellow': say_('cut first')
-            elif colors_groun.count('blue') == 1: say_('cut first')
+            elif colors_group.count('blue') == 1: say_('cut first')
             elif colors_group.count('yellow') > 1: say_('cut last')
             else: say_('cut second')
         elif wire_number == 5:
@@ -489,7 +511,7 @@ def wires(wires_done,wire_numb): # funciton takes argument to skip past first pa
                 except ValueError:
                     continue
             if last_int % 2 == 1 and colors_group[-1] =='black': say_('cut fourth')
-            elif colors_group.count('red') == 1 and colors_group.count('yellow') > 1: say_('cut first'):
+            elif colors_group.count('red') == 1 and colors_group.count('yellow') > 1: say_('cut first')
             elif colors_group.count('black') == 0: say_('cut second')
             else: say_('cut first')
         elif wire_number == 6:
@@ -507,9 +529,76 @@ def wires(wires_done,wire_numb): # funciton takes argument to skip past first pa
         wires(True,wire_number)
     else:
         wires(True,wire_number)
-
+    engine.setProperty('read',200)
+    return
 #password('one',[],[],[],[],[])
 #5:["h" ,"v" ,"z" ,"c" ,"g","t"] 3:["z" ,"g" ,"f" ,"k" ,"l", "a"],4:["h" ,"v" ,"z" ,"c" ,"g","t"] 1: ["a", "o", "p", "y", "t", "u"],2:["z", "l", "u" ,"o", "a", "h"]
+def complicated():
+    say_('complicated')
+    # idea basically separete wired by next and make bot just say, cut,skip...
+    wires = wait_()
+    wires_replaced2 = wires.replace('the ', '')
+    wires_replaced3 = wires_replaced2.replace('read', 'red')
+    wires_replaced = wires_replaced3.replace('start', 'star')
+    wires_group = wires_replaced.split(' ')
+    wire_desc = []
+    things_to_do = [] # this one is read at the end quikly to save time
+    is_even = False
+    for signs in serial:
+        try:
+            # int(signs)
+            last_int = int(signs)
+        except ValueError:
+            continue
+    if last_int % 2 == 0:
+        is_even = True
+    for words in wires_group:
+        if words == 'next':
+            if 'lit' in wire_desc:
+                if 'red' not in wire_desc and 'blue' not in wire_desc and 'star' not in wire_desc:
+                    things_to_do.append('skip') # right D
+                elif 'blue' in wire_desc and 'parallel' in port and 'red' not in wire_desc and 'star' not in wire_desc:
+                    things_to_do.append('cut')# right P
+                elif 'red' not in wire_desc and 'blue' not in wire_desc and 'star' in wire_desc and batteries > 1:
+                    things_to_do.append('cut')# bottom B
+                elif 'red' in wire_desc and 'blue' not in wire_desc  and batteries > 1:
+                    things_to_do.append('cut') # star does not matter here, making it 2 | right down B
+                elif 'blue' in wire_desc and 'parallel' in port and 'red' not in wire_desc and 'star' in wire_desc:
+                    things_to_do.append('cut') # left down P
+                elif 'red' in wire_desc and 'blue' in wire_desc and is_even == True and 'star' not in wire_desc:
+                    things_to_do.append('cut') # middle right S
+                elif 'star' in wire_desc and 'red' in wire_desc and 'blue' in wire_desc:
+                    things_to_do.append('dont') # middle D
+            else:
+                if 'blue' not in wire_desc and 'red' not in wire_desc and 'star' not in wire_desc:
+                    things_to_do.append('cut') # upper C
+                elif 'blue' in wire_desc and 'star' not in wire_desc and 'red' not in wire_desc and is_even == True:
+                    things_to_do.append('cut') # upper right S
+                elif 'blue' in wire_desc and 'star' not in wire_desc and 'red' in wire_desc and is_even == True:
+                    things_to_do.append('cut') # middle S
+                elif 'blue' not in wire_desc and 'star' not in wire_desc and 'red' in wire_desc and is_even == True:
+                    things_to_do.append('cut') # upper left S
+                elif 'blue' in wire_desc and 'star' in wire_desc and 'red' in wire_desc and 'parallel' in port:
+                    things_to_do.append('cut') # middle left P
+                elif 'red' not in wire_desc and 'blue' in wire_desc and 'star' in wire_desc:
+                    things_to_do.append('skip') # bottom left D
+                elif 'red' not in wire_desc and 'blue' not in wire_desc and 'star' in wire_desc:
+                    things_to_do.append('cut') # middle left C
+                elif 'red' in wire_desc and 'blue' in wire_desc and 'star' in wire_desc:
+                    things_to_do.append('cut') # upper left C
+    for instruction in things_to_do:
+        engine.setProperty('read',240)
+        say_(instruction)
+        engine.setProperty('read',200)
+
+
+
+
+            wire_desc = []
+        else:
+            wire_desc.append(words)
+
+
 while True:
     print("waiting")
 
@@ -539,11 +628,18 @@ while True:
         mode = 'play'
     elif mode == 'test':
         port = 'parallel'
-        serial = 'abcdef'
+        serial = 'ee5ek5'
         lights = ('asd','yes')
         batteries = 2
         mode = 'play'
     elif mode == 'play':
+        #region
+        '''port = 'parallel'
+        serial = 'ee5ek5'
+        lights = ('asd', 'yes')
+        batteries = 2'''
+        #endregion
+        #^^^ REMOVE THAT WHEN NOT TESTING OR COMMENT THAT OUR BECAUSE IT WILL OVERWRITE THINGS!!!!!!!!!!!!!!!!!!!!!!!!!!!
         print('entered play mode')
         say_('module')
         rec_text = listening()
@@ -597,5 +693,7 @@ while True:
         elif recognized_text == 'password':
             word = password('one',[],[],[],[],[])
         elif recognized_text == 'wires':
-            wires(False)
+            wires(False,0)
+        elif recognized_text == 'complicated':
+            complicated = complicated()
 
