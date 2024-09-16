@@ -3,17 +3,24 @@ from vosk import Model, KaldiRecognizer
 import pyaudio
 import pyttsx3
 import json
+
+speed_up = 225 # speed and slowed down voice for bot to read faster or slower if needed
+slow_down = 175
 # LIST OF WORDS THAT SHOULD BE PUT INTO LUT BECAUSE BOT STUPID DD
 # #desolate = detonate
-
-#potential bugs:
+positive_answers = ['yes','s','this','us','ps','as']
+#potential bugs n todo:
 #uhh i think when serial is not long enough it kinda fucks it over unsure tho
 #not really a bug but sth that can be changed, on password gamemode i use double brackets because i tought there was a bug, you can remove one of the brackets but you would need to
 #remove the [0] part  from rowX[0][_] and it should make stuff slightly cleaner, and also you wont really have to work on arrays inside of arrays, wont really mean that uch
 # but to be fair could be changed later to make the code cleaner or so
+#another thing, could be fixed already but idk, when bot wont understand 'yes' or 'wrong' it could go to say_('module') line which is really bad because it loses all progress
+# if the error is still there FUCKING FIX IT
+# make the bot read passwords faster
 #code below changes the voice from polish to english
 #region
 engine = pyttsx3.init()
+engine.setProperty('read',210)
 voices = engine.getProperty('voices')
 for voice in voices:
     if "zira" in voice.id.lower():  # Use the ID for Microsoft Zira (English)
@@ -31,6 +38,9 @@ mode = 'test'
 numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
            'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1}
 
+def remove_the(text):
+    a = text.replace('the ','')
+    return a
 
 def convert_json(json_text):
     text = json.loads(json_text)
@@ -70,7 +80,7 @@ def ask_for(key):
             print(f"{key}, {response}, correct?")
 
         confirm = listening()
-        if confirm == 'yes':
+        if confirm in positive_answers:
             return response
         elif confirm == key:
             say_(f'lets try again')
@@ -108,7 +118,8 @@ def ask_for_advanced(key):
         while True:
 
             say_(f'{key} waiting')
-            answer  = listening()
+            answer_  = listening()
+            answer = remove_the(answer_)
             if answer in port_LUT:
                 list.append(port_LUT[answer])
                 say_(f"{key}, {port_LUT[answer]}, done?")
@@ -143,9 +154,10 @@ def ask_for_advanced(key):
         while True:
 
             say_(f'{key} waiting')
-            answer = listening()
+            answer_ = listening()
+            answer = remove_the(answer_)
             if answer:
-                answer_corrected = answer.replace('the','')
+                answer_corrected = answer.replace('the ','')
                 print(answer_corrected)
                 indicator = ''
                 group = answer_corrected.split() #group ofwords from answer
@@ -188,6 +200,7 @@ def ask_for_advanced(key):
 
             say_(f'{key} waiting')
             answer = listening()
+
             if answer:
                 clean_answer = answer.replace('the', '')
                 print(clean_answer,'answer')
@@ -248,11 +261,15 @@ def password(rows_done,r1,r2,r3,r4,r5):
         except IndexError:
             print(rows_done, 'wrong')
             password('one',r1,r2,r3,r4,r5)
-        row1.append(row_one)
-        say_(f'{row_one}, correct?')
-        answer = wait_()
+        row1 = row_one
+        engine.setProperty('rate', speed_up)
+        say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        engine.setProperty('rate', 200)
+        answer_ = wait_()
+        answer = remove_the(answer_)
         print(answer)
-        if answer == 'yes':
+        if answer in positive_answers:
+
             print(row1)
             rows_done = 'two'
 
@@ -269,18 +286,35 @@ def password(rows_done,r1,r2,r3,r4,r5):
             row_two = [letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
         except IndexError:
             print(rows_done, 'wrong')
+            print('function : two',r1,r2,r3,r4,r5)
             password('two',r1,r2,r3,r4,r5)
-        row2.append(row_two)
-        say_(f'{row_two}, correct?')
-        answer = wait_()
+        row2 = row_two
+        say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        answer_ = wait_()
+        answer = remove_the(answer_)
         print(answer)
-        if answer == 'yes':
+        if answer in positive_answers:
+            solutions = 0
+            solution_array = []
+            for i in range(6):
+                for j in range(6):
+                    #print(row1, row2)
+                    word = row1[i] + row2[j]
+                    for table in password_LUT:
+                        if word == table[:2]:
+                            solutions += 1
+                            solution_array.append(table)
+            if solutions == 1:
+                say_(f'{solution_array}')
+                print(solution_array)
+                return
+            else: print(solution_array)
             print(row2)
             rows_done = 'three'
 
         elif answer == 'wrong':
             r2 = []
-            password('two',r1,r2,r3,r4,r5)
+            password('two',row1,row2,row3,row4,row5) # apparently used to be wrong but i dont give a fuck, prob still wrong xd, applies to others
         else: r2 = [];password('two',r1,r2,r3,r4,r5)
     if rows_done == 'three':
         say_('row three')
@@ -292,17 +326,37 @@ def password(rows_done,r1,r2,r3,r4,r5):
         except IndexError:
             print(rows_done, 'wrong')
             password('three',r1,r2,r3,r4,r5)
-        row3.append(row_three)
-        say_(f'{row_three}, correct?')
-        answer = wait_()
+        row3 = row_three
+        engine.setProperty('rate',speed_up)
+        say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        engine.setProperty('rate', 200)
+        answer_ = wait_()
+        answer = remove_the(answer_)
         print(answer)
-        if answer == 'yes':
+        if answer in positive_answers:
+            solutions = 0
+            solution_array = []
+            for i in range(6):
+                for j in range(6):
+                    for k in range(6):
+                        #print(row1,row2,row3)
+                        word = row1[i] + row2[j] + row3[k]
+                        for table in password_LUT:
+                            if word == table[:3]:
+                                solutions += 1
+                                solution_array.append(table)
+            if solutions == 1:
+                say_(f'{solution_array}')
+                print(solution_array)
+                return
+            else:
+                print(solution_array)
             print(row3)
             rows_done = 'four'
 
         elif answer == 'wrong':
-            r3 = [];password('three',r1,r2,r3,r4,r5)
-        else: r3 = [];password('three',r1,r2,r3,r4,r5)
+            r3 = [];password('three',row1,row2,row3,row4,row5)
+        else: r3 = [];password('three',row1,row2,row3,row4,row5)
     if rows_done == 'four':
         say_('row four')
         letters = wait_()
@@ -313,11 +367,32 @@ def password(rows_done,r1,r2,r3,r4,r5):
         except IndexError:
             print(rows_done, 'wrong')
             password('four',r1,r2,r3,r4,r5)
-        row4.append(row_four)
-        say_(f'{row_four}, correct?')
-        answer = wait_()
+        row4 = row_four
+        engine.setProperty('rate', speed_up)
+        say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        engine.setProperty('rate', 200)
+        answer_ = wait_()
+        answer = remove_the(answer_)
         print(answer)
-        if answer == 'yes':
+        if answer in positive_answers:
+            solutions = 0
+            solution_array = []
+            for i in range(6):
+                for j in range(6):
+                    for k in range(6):
+                        for l in range(6):
+                            #print(row1, row2, row3,row4)
+                            word = row1[i] + row2[j] + row3[k] + row4[l]
+                            for table in password_LUT:
+                                if word == table[:4]:
+                                    solutions += 1
+                                    solution_array.append(table)
+            if solutions == 1:
+                say_(f'{solution_array}')
+                print(solution_array)
+                return
+            else:
+                print(solution_array)
             print(row4)
             rows_done = 'five'
 
@@ -334,11 +409,14 @@ def password(rows_done,r1,r2,r3,r4,r5):
         except IndexError:
             print(rows_done,'wrong')
             password('five',r1,r2,r3,r4,r5)
-        row5.append(row_five)
-        say_(f'{row_five}, correct?')
-        answer = wait_()
+        row5 = row_five
+        engine.setProperty('rate', speed_up)
+        say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        engine.setProperty('rate', 200)
+        answer_ = wait_()
+        answer = remove_the(answer_)
         print(answer)
-        if answer == 'yes':
+        if answer in positive_answers:
             print(r1,r2,r3,r4,r5)
             for i in range(6):
                 for j in range(6):
@@ -347,11 +425,11 @@ def password(rows_done,r1,r2,r3,r4,r5):
                             for m in range(6):
                                 if debug:
                                     print(i,j,k,l,m)
-                                    if len(row5[0]) < 6: say_('error')
-                                    print(row1[0][i] , row2[0][j] , row3[0][k] , row4[0][l] , row5[0][m])
+                                    if len(row5) < 6: say_('error')
+                                    print(row1[i] , row2[j] , row3[k] , row4[l] , row5[m])
                                     print(row5)
                                     print(row4)
-                                word = row1[0][i] + row2[0][j] + row3[0][k] + row4[0][l] + row5[0][m]
+                                word = row1[i] + row2[j] + row3[k] + row4[l] + row5[m]
                                 if word in password_LUT:
                                     say_(word)
                                     return
@@ -362,9 +440,76 @@ def password(rows_done,r1,r2,r3,r4,r5):
             r5 = []
             password('five', r1, r2, r3, r4, r5)
 
+def wires(wires_done,wire_numb): # funciton takes argument to skip past first part if you fuck up colors
+    wire_number = wire_numb
+    if wires_done == False:
+        say_('wires')
+        wire_number_pre = wait_()
+        if wire_number_pre in numbers:
+            wire_number = numbers[wire_number_pre]
+    say_('colors')
+    colors = wait_()
+    colors_replaced = letters.replace('the ', '')
+    colors_replaced = letters.replace('read', 'red')
+    colors_group = letters_replaced.split(' ')
+    if len(colors_group) != wire_number:
+        say_('wrong colors')
+        wires(True,wire_number)
+    engine.setProperty('rate', speed_up)
+    say_(f'{colors_group}, correc?')
+    answer_ = wait_()
+    answer = remove_the(answer_)
+    if answer in positive_answers:
+        if wire_number == 3:
+            if 'red' not in colors_group:
+                say_('cut second')
+                return
+            elif colors_group[-1] == 'white':
+                say_('cut last')
+            elif colors_group.count('blue') > 1:
+                say_('cut last blue')
+            else: say_('cut last')
+        elif wire_number == 4:
+            for signs in serial:
+                try:
+                    #int(signs)
+                    last_int = int(signs)
+                except ValueError:
+                    continue
+            if last_int % 2 == 1 and colors_group.count('red')>1: say_('cut last red')
+            elif colors_group.count('red') == 0 and colors_group[-1] == 'yellow': say_('cut first')
+            elif colors_groun.count('blue') == 1: say_('cut first')
+            elif colors_group.count('yellow') > 1: say_('cut last')
+            else: say_('cut second')
+        elif wire_number == 5:
+            for signs in serial:
+                try:
+                    #int(signs)
+                    last_int = int(signs)
+                except ValueError:
+                    continue
+            if last_int % 2 == 1 and colors_group[-1] =='black': say_('cut fourth')
+            elif colors_group.count('red') == 1 and colors_group.count('yellow') > 1: say_('cut first'):
+            elif colors_group.count('black') == 0: say_('cut second')
+            else: say_('cut first')
+        elif wire_number == 6:
+            for signs in serial:
+                try:
+                    #int(signs)
+                    last_int = int(signs)
+                except ValueError:
+                    continue
+            if last_int % 2 == 1 and colors_group.count('yellow') == 0: say_('cut third')
+            elif colors_group.count('yellow') == 1 and colors_group.count('white') > 1: say_('cut fourth')
+            elif colors_group.count('red') == 0: say_('cut last')
+            else: say_('cut fourth')
+    elif answer == 'wrong':
+        wires(True,wire_number)
+    else:
+        wires(True,wire_number)
 
-password('five',[["a", "o", "p", "y", "t", "u"]],[["z", "l", "u" ,"o", "a", "h"]],[["z" ,"g" ,"f" ,"k" ,"l", "a"]],[["h" ,"v" ,"z" ,"c" ,"g","t"]],[])
-#["h" ,"v" ,"z" ,"c" ,"g","t"]
+#password('one',[],[],[],[],[])
+#5:["h" ,"v" ,"z" ,"c" ,"g","t"] 3:["z" ,"g" ,"f" ,"k" ,"l", "a"],4:["h" ,"v" ,"z" ,"c" ,"g","t"] 1: ["a", "o", "p", "y", "t", "u"],2:["z", "l", "u" ,"o", "a", "h"]
 while True:
     print("waiting")
 
@@ -416,8 +561,9 @@ while True:
             if color_of_button == 'read':
                 color_of_button = 'red'
             say_(f'button: {state_on_button}, color: {color_of_button}, correct?')
-            answer = wait_()
-            if answer == 'yes':
+            answer_ = wait_()
+            answer = remove_the(answer_)
+            if answer in positive_answers:
                 if color_of_button == 'blue' and state_on_button == 'abort':
                     button_held = True
                     say_('hold')
@@ -450,4 +596,6 @@ while True:
             else: continue
         elif recognized_text == 'password':
             word = password('one',[],[],[],[],[])
+        elif recognized_text == 'wires':
+            wires(False)
 
