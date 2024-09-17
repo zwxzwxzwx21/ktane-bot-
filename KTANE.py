@@ -922,16 +922,15 @@ def memory():
     stage5 = ''
     number5 = ''
     position5 = ''
-    correct = wait_()
-    correct = remove_the(correct)
-    if correct == 'module':
-        return
     say_('step 1')
     level1 = wait_()
     level1 = remove_the(level1)
+    print(level1)
+    if level1 == 'module':
+        return
     if level1 in numbers:
         level1 = numbers[level1]
-        if level1 == '1':
+        if level1 == 1:
             say_('second position')
             number1 = wait_()
             number1 = remove_the(number1)
@@ -939,7 +938,7 @@ def memory():
                 number1 = numbers[number1]
             position1 = '2'
 
-        elif level1 == '2':
+        elif level1 == 2:
             say_('second position')
             number1 = wait_()
             number1 = remove_the(number1)
@@ -947,7 +946,7 @@ def memory():
                 number1 = numbers[number1]
             position1 = '2'
 
-        elif level1 == '3':
+        elif level1 == 3:
             say_('third position')
             number1 = wait_()
             number1 = remove_the(number1)
@@ -955,7 +954,7 @@ def memory():
                 number1 = numbers[number1]
             position1 = '3'
 
-        elif level1 == '4':
+        elif level1 == 4:
             say_('fourth position')
             number1 = wait_()
             number1 = remove_the(number1)
@@ -969,7 +968,7 @@ def memory():
     if level2 in numbers:
         level2 = numbers[level2]
 
-        if level2 == '1':
+        if level2 == 1:
             say_('press 4')
             number2 = '4'
             position = wait_()
@@ -977,7 +976,7 @@ def memory():
             if position in numbers:
                 position2 = numbers[position]
 
-        elif level2 == '2':
+        elif level2 == 2:
             say_(f' press {position1} position')
             number2 = wait_()
             number2 = remove_the(number2)
@@ -985,7 +984,7 @@ def memory():
                 number2 = numbers[number2]
             position2 = position1
 
-        elif level2 == '3':
+        elif level2 == 3:
             say_('first position')
             number2 = wait_()
             number2 = remove_the(number2)
@@ -993,7 +992,7 @@ def memory():
                 number2 = numbers[number2]
             position2 = '1'
 
-        elif level2 == '4':
+        elif level2 == 4:
             say_(f' press {position1} position')
             number2 = wait_()
             number2 = remove_the(number2)
@@ -1007,7 +1006,7 @@ def memory():
     if level3 in numbers:
         level3 = numbers[level3]
 
-        if level3 == '1':
+        if level3 == 1:
             say_(f'press {number2}')
             number3 = number2
             position = wait_()
@@ -1015,7 +1014,7 @@ def memory():
             if position in numbers:
                 position3 = numbers[position]
 
-        elif level3 == '2':
+        elif level3 == 2:
             say_(f'press {number1}')
             number3 = number1
             position = wait_()
@@ -1023,7 +1022,7 @@ def memory():
             if position in numbers:
                 position3 = numbers[position]
 
-        elif level3 == '3':
+        elif level3 == 3:
             say_('third position')
             number3 = wait_()
             number3 = remove_the(number3)
@@ -1031,7 +1030,7 @@ def memory():
                 number3 = numbers[number3]
             position3 = '3'
 
-        elif level3 == '4':
+        elif level3 == 4:
             say_(f' press 4')
             number3 = '4'
             position = wait_()
@@ -1045,7 +1044,7 @@ def memory():
     if level4 in numbers:
         level4 = numbers[level4]
 
-        if level4 == '1':
+        if level4 == 1:
             say_(f'press {position1} position')
             number4 = wait_()
             number4 = remove_the(number4)
@@ -1053,7 +1052,7 @@ def memory():
                 number4 = numbers[number4]
             position4 = position1
 
-        elif level4 == '2':
+        elif level4 == 2:
             say_(f'first position')
             number4 = wait_()
             number4 = remove_the(number4)
@@ -1061,7 +1060,7 @@ def memory():
                 number4 = numbers[number4]
             position4 = '1'
 
-        elif level4 == '3':
+        elif level4 == 3:
             say_(f'press {position2} position')
             number4 = wait_()
             number4 = remove_the(number4)
@@ -1069,7 +1068,7 @@ def memory():
                 number4 = numbers[number4]
             position4 = position2
 
-        elif level4 == '4':
+        elif level4 == 4:
             say_(f'press {position2} position')
             number4 = wait_()
             number4 = remove_the(number4)
@@ -1082,16 +1081,16 @@ def memory():
     level5 = remove_the(level5)
     if level5 in numbers:
         level5 = numbers[level5]
-        if level5 == '1':
+        if level5 == 1:
 
             say_(f'press {number1}')
-        elif level5 == '2':
+        elif level5 == 2:
 
             say_(f'press {number2}')
-        elif level5 == '3':
+        elif level5 == 3:
 
             say_(f'press {number3}')
-        elif level5 == '4':
+        elif level5 == 4:
 
             say_(f'press {number4}')
 
