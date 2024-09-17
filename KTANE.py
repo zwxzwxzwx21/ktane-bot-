@@ -17,17 +17,18 @@ positive_answers = ['yes','s','this','us','ps','as']
 #another thing, could be fixed already but idk, when bot wont understand 'yes' or 'wrong' it could go to say_('module') line which is really bad because it loses all progress
 # if the error is still there FUCKING FIX IT
 # make the bot read passwords faster - DONE
-
+# connect numbers and colors in wires so you say number+  colors, should save several seconds of time cuz bot thinks a lot
+#
 # GAMES TO REPLICATE
 #region
 ###IMPLEMENTED
 #BUTTON - WORKS 100% NO ERRORS FOUND
 #PASSWORD - WORKS 100% NO ERRORS FOUND
 #WIRES - HAVENT HAD AN ERROR RELATED TO SERIAL NUMBER, NEED TO TESTCASE THAT!!!
-###UNIMPLEMENTED
-#COMPLICATED (COMPLICATED WIRES) - PROB NEXT ONE, REALLY EASY
-#SEQUENCE (WIRE SEQUENCE) - SEEMS EASY TBH, JUST MAKE IT SO SEA,SEE,C = C
+#COMPLICATED (COMPLICATED WIRES) - PROB NEXT ONE, REALLY EASY ^^^
+#SEQUENCE (WIRE SEQUENCE) - NEED TO TALK SLOWLY, LAST PUZZLE NOT REALLY DOABLE WHEN BOT TAKES OVER 30 SECONDS TO THINK XD
 #SIMON SAYS - PISS EASY JUST ASK FOR COLORS STRIKES N SHIT, AND CHECK FOR VOWELS
+###UNIMPLEMENTED
 #MEMORY - JUST SAY 2 THINGS, MAIN NUMBER AND WHAT YOURE PRESSING LIKE 'PRESSING 2' AND YOU SHOULD BE DONE, GL WITH THE BOT RECOGNIZING IT EVERY TIME CORRECTLY THO XD
 #MORSE - IDEK, DO BEFORE MAZE BUT STILL KINDA HARD SEEMS, PROB DO THE SAME AS PASSWORD
 #KEYPADS - WELL TOU GONNA DO STH LIKE A SIGN THAT LOOKS LIKE A  C JUST IS A C AND BOT WILL GET IT YE???
@@ -55,7 +56,7 @@ stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True,frame
 stream.start_stream()
 mode = 'test'
 numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
-           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1}
+           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2}
 
 def remove_the(text):
     a = text.replace('the ','')
@@ -70,8 +71,6 @@ def say_(text):
     engine.say(text)
     engine.runAndWait()
 
-def button_(batteries,port,lights,serial):
-    pass
 
 def listening():
 
@@ -529,7 +528,7 @@ def wires(wires_done,wire_numb):
         wires(True,wire_number)
     else:
         wires(True,wire_number)
-    engine.setProperty('read',200)
+    engine.setProperty('rate',200)
     return
 #password('one',[],[],[],[],[])
 #5:["h" ,"v" ,"z" ,"c" ,"g","t"] 3:["z" ,"g" ,"f" ,"k" ,"l", "a"],4:["h" ,"v" ,"z" ,"c" ,"g","t"] 1: ["a", "o", "p", "y", "t", "u"],2:["z", "l", "u" ,"o", "a", "h"]
@@ -539,7 +538,8 @@ def complicated():
     wires = wait_()
     wires_replaced2 = wires.replace('the ', '')
     wires_replaced3 = wires_replaced2.replace('read', 'red')
-    wires_replaced = wires_replaced3.replace('start', 'star')
+    wires_replaced4 = wires_replaced2.replace('lead', 'lit')
+    wires_replaced = wires_replaced4.replace('start', 'star')
     wires_group = wires_replaced.split(' ')
     wire_desc = []
     things_to_do = [] # this one is read at the end quikly to save time
@@ -553,51 +553,547 @@ def complicated():
     if last_int % 2 == 0:
         is_even = True
     for words in wires_group:
+        print(wires_group)
         if words == 'next':
+            print(wire_desc)
             if 'lit' in wire_desc:
                 if 'red' not in wire_desc and 'blue' not in wire_desc and 'star' not in wire_desc:
+                    print('LIT | NOT red | NOT blue | NOT star')
                     things_to_do.append('skip') # right D
                 elif 'blue' in wire_desc and 'parallel' in port and 'red' not in wire_desc and 'star' not in wire_desc:
+                    print('LIT | NOT red | blue | NOT star',f' ports: {port}','cut')
                     things_to_do.append('cut')# right P
                 elif 'red' not in wire_desc and 'blue' not in wire_desc and 'star' in wire_desc and batteries > 1:
+                    print('LIT | NOT red | NOT  blue | star', f' batteries: {batteries}','cut')
                     things_to_do.append('cut')# bottom B
                 elif 'red' in wire_desc and 'blue' not in wire_desc  and batteries > 1:
+                    print('LIT | red | NOT  blue ', f' batteries: {batteries}','cut')
                     things_to_do.append('cut') # star does not matter here, making it 2 | right down B
                 elif 'blue' in wire_desc and 'parallel' in port and 'red' not in wire_desc and 'star' in wire_desc:
+                    print('LIT | NOT red | blue | star', f' ports: {port}','cut')
                     things_to_do.append('cut') # left down P
                 elif 'red' in wire_desc and 'blue' in wire_desc and is_even == True and 'star' not in wire_desc:
+                    print('LIT | red | blue | NOT star', f' is even?: {is_even}','cut')
                     things_to_do.append('cut') # middle right S
                 elif 'star' in wire_desc and 'red' in wire_desc and 'blue' in wire_desc:
-                    things_to_do.append('dont') # middle D
+                    print('LIT | red | blue | star')
+                    things_to_do.append('skip') # middle D
+                else:
+                    things_to_do.append('skip')
             else:
                 if 'blue' not in wire_desc and 'red' not in wire_desc and 'star' not in wire_desc:
+                    print('NOT LIT | NOT red | NOT blue | NOT star','cut')
                     things_to_do.append('cut') # upper C
                 elif 'blue' in wire_desc and 'star' not in wire_desc and 'red' not in wire_desc and is_even == True:
+                    print('NOT LIT | NOT red | blue | NOT star', f'is even?: {is_even}'),'cut'
                     things_to_do.append('cut') # upper right S
                 elif 'blue' in wire_desc and 'star' not in wire_desc and 'red' in wire_desc and is_even == True:
+                    print('NOT LIT | red | blue | NOT star', f'is even?: {is_even}','cut')
                     things_to_do.append('cut') # middle S
                 elif 'blue' not in wire_desc and 'star' not in wire_desc and 'red' in wire_desc and is_even == True:
+                    print('NOT LIT | red | NOT blue | star', f'is even?: {is_even}','cut')
                     things_to_do.append('cut') # upper left S
                 elif 'blue' in wire_desc and 'star' in wire_desc and 'red' in wire_desc and 'parallel' in port:
+                    print('NOT LIT | red | blue | star', f'port: {port}','cut')
                     things_to_do.append('cut') # middle left P
                 elif 'red' not in wire_desc and 'blue' in wire_desc and 'star' in wire_desc:
+                    print('NOT LIT | NOT red | blue | star')
                     things_to_do.append('skip') # bottom left D
                 elif 'red' not in wire_desc and 'blue' not in wire_desc and 'star' in wire_desc:
+                    print('NOT LIT | NOT red | NOT blue | star','cut')
                     things_to_do.append('cut') # middle left C
-                elif 'red' in wire_desc and 'blue' in wire_desc and 'star' in wire_desc:
+                elif 'red' in wire_desc and 'blue' not in wire_desc and 'star' in wire_desc:
+                    print('NOT LIT | red | NOT blue | star','cut')
                     things_to_do.append('cut') # upper left C
-    for instruction in things_to_do:
-        engine.setProperty('read',240)
-        say_(instruction)
-        engine.setProperty('read',200)
-
-
-
-
+                else:
+                    things_to_do.append('skip')
             wire_desc = []
         else:
             wire_desc.append(words)
+    for instruction in things_to_do:
+        engine.setProperty('rate',240)
+        say_(instruction)
+        engine.setProperty('rate',200)
 
+def sequence(str,red_count,blue_count,black_count):
+    engine.setProperty('rate',220)
+    say_('sequence')
+
+    black = black_count
+    red = red_count
+    blue = blue_count
+    first_level = wait_()
+    first_level = remove_the(first_level)
+    first_level = first_level.replace('see','c')
+    first_level = first_level.replace('sea','c')
+    first_level = first_level.replace('ct','c')
+    first_level = first_level.replace('eight','c')
+    first_level = first_level.replace('bee','b')
+    first_level = first_level.replace('blow','blue')
+    first_level = first_level.replace('baten','b')
+    first_level = first_level.replace('rather','red')
+    first_level = first_level.replace('be','b')
+    first_level = first_level.replace('read','red')
+    first_level = first_level.replace('block','black')
+    if first_level == 'module':
+        return
+    level1 = first_level.split(' ')
+    wire = []
+    what_to_do = []
+    print(level1 , f' red {red}, blue {blue}, black {black}')
+    for word in level1:
+        word = word.replace('see', 'c')
+        word = word.replace('sea', 'c')
+        word = word.replace('ct', 'c')
+        word = word.replace('eight', 'c')
+        word = word.replace('bee', 'b')
+        word = word.replace('bat', 'b')
+        word = word.replace('blow', 'blue')
+        word = word.replace('baten', 'b')
+        word = word.replace('rather', 'red')
+        word = word.replace('be', 'b')
+        word = word.replace('read', 'red')
+        word = word.replace('block', 'black')
+        if word == 'next':
+            print('wire',wire)
+            if 'red' in wire:
+                red += 1
+                print('red',red,f'wire: {wire}')
+                if red == 1:
+                    if 'c' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif red == 2:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif red == 3:
+                    if 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif red == 4:
+                    if 'c' in wire or 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif red == 5:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif red == 6:
+                    if 'c' in wire or 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif red == 7:
+                    what_to_do.append('cut')
+                elif red == 8:
+                    if 'b' in wire or 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif red == 9:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+            elif 'blue' in wire:
+                blue += 1
+                print('blue',blue,f'wire: {wire}')
+                if blue == 1:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 2:
+                    if 'a' in wire or 'c' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 3:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 4:
+                    if 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 5:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 6:
+                    if 'c' in wire or 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 7:
+                    if 'c' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 8:
+                    if 'c' in wire or 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif blue == 9:
+                    if 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+            elif 'black' in wire:
+
+                black += 1
+                print('adding black',black,f'wire: {wire}')
+                if black == 1:
+                    what_to_do.append('cut')
+                elif black == 2:
+                    if 'a' in wire or 'c' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif black == 3:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif black == 4:
+                    if 'a' in wire or 'c' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif black == 5:
+                    if 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif black == 6:
+                    if 'c' in wire or 'b' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif black == 7:
+                    if 'b' in wire or 'a' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif black == 8:
+                    if 'c' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+                elif black == 9:
+                    if 'c' in wire:
+                        what_to_do.append('cut')
+                    else:
+                        what_to_do.append('skip')
+            wire = []
+        elif word == 'done':
+
+            return
+        else:
+            wire.append(word)
+    huj = ''
+    for words in what_to_do:
+        huj += words + ' '
+    print('huj test', huj)
+    engine.setProperty('rate', 240)
+    say_(huj)
+
+    engine.setProperty('rate', 200)
+
+def simon_says(color_array,loop,strike):
+    colors = color_array
+    engine.setProperty('rate', speed_up)
+    has_vowel = False
+    vowels = ['a', 'e', 'i', 'o', 'u']
+    for sign in serial:
+        if sign in vowels:
+            has_vowel = True
+            break
+    strikes = strike
+    if loop == 0:
+        say_('colors, strikes')
+        strikes = 0
+        answ = wait_()
+        answe = remove_the(answ)
+        if answe in numbers:
+            answer = numbers[answe]
+        if answe == 'module':
+            return
+        try:
+            strikes = int(answer)
+        except ValueError:
+            simon_says(colors,0)
+    say_('color')
+    flashing = wait_()
+    flashing = remove_the(flashing)
+    print(flashing)
+    if has_vowel:
+        if strikes == 0:
+            if flashing == 'red':
+                colors.append('blue')
+            elif flashing == 'blue':
+                colors.append('red')
+            elif flashing == 'green':
+                colors.append('yellow')
+            elif flashing == 'yellow':
+                colors.append('green')
+        elif strikes == 1:
+            if flashing == 'red':
+                colors.append('yellow')
+            elif flashing == 'blue':
+                colors.append('green')
+            elif flashing == 'green':
+                colors.append('blue')
+            elif flashing == 'yellow':
+                colors.append('red')
+        elif strikes == 2:
+            if flashing == 'red':
+                colors.append('green')
+            elif flashing == 'blue':
+                colors.append('red')
+            elif flashing == 'green':
+                colors.append('yellow')
+            elif flashing == 'yellow':
+                colors.append('blue')
+    else:
+        if strikes == 0:
+            if flashing == 'red':
+                colors.append('blue')
+            elif flashing == 'blue':
+                colors.append('yellow')
+            elif flashing == 'green':
+                colors.append('green')
+            elif flashing == 'yellow':
+                colors.append('red')
+        elif strikes == 1:
+            if flashing == 'red':
+                colors.append('yellow')
+            elif flashing == 'blue':
+                colors.append('blue')
+            elif flashing == 'green':
+                colors.append('yellow')
+            elif flashing == 'yellow':
+                colors.append('green')
+        elif strikes == 2:
+            if flashing == 'red':
+                colors.append('yellow')
+            elif flashing == 'blue':
+                colors.append('green')
+            elif flashing == 'green':
+                colors.append('blue')
+            elif flashing == 'yellow':
+                colors.append('red')
+    huj = ''
+    for words in colors:
+        huj += words + ' '
+    print('huj test', huj)
+    engine.setProperty('rate', 240)
+    say_(huj)
+
+    engine.setProperty('rate', 200)
+
+    simon_says(colors,1,strikes)
+
+def memory():
+    engine.setProperty('rate', speed_up)
+    say_('memory')
+    stage1 = '' # main number | seems to be useless xd
+    number1 = '' #number on button
+    position1 = '' #position of button (first second third fourth)
+    stage2 = ''
+    number2 = ''
+    position2 = ''
+    stage3 = ''
+    number3 = ''
+    position3 = ''
+    stage4 = ''
+    number4 = ''
+    position4 = ''
+    stage5 = ''
+    number5 = ''
+    position5 = ''
+    correct = wait_()
+    correct = remove_the(correct)
+    if correct == 'module':
+        return
+    say_('step 1')
+    level1 = wait_()
+    level1 = remove_the(level1)
+    if level1 in numbers:
+        level1 = numbers[level1]
+        if level1 == '1':
+            say_('second position')
+            number1 = wait_()
+            number1 = remove_the(number1)
+            if number1 in numbers:
+                number1 = numbers[number1]
+            position1 = '2'
+
+        elif level1 == '2':
+            say_('second position')
+            number1 = wait_()
+            number1 = remove_the(number1)
+            if number1 in numbers:
+                number1 = numbers[number1]
+            position1 = '2'
+
+        elif level1 == '3':
+            say_('third position')
+            number1 = wait_()
+            number1 = remove_the(number1)
+            if number1 in numbers:
+                number1 = numbers[number1]
+            position1 = '3'
+
+        elif level1 == '4':
+            say_('fourth position')
+            number1 = wait_()
+            number1 = remove_the(number1)
+            if number1 in numbers:
+                number1 = numbers[number1]
+            position1 = '4'
+
+    say_('step 2')
+    level2 = wait_()
+    level2 = remove_the(level2)
+    if level2 in numbers:
+        level2 = numbers[level2]
+
+        if level2 == '1':
+            say_('press 4')
+            number2 = '4'
+            position = wait_()
+            position = remove_the(position)
+            if position in numbers:
+                position2 = numbers[position]
+
+        elif level2 == '2':
+            say_(f' press {position1} position')
+            number2 = wait_()
+            number2 = remove_the(number2)
+            if number2 in numbers:
+                number2 = numbers[number2]
+            position2 = position1
+
+        elif level2 == '3':
+            say_('first position')
+            number2 = wait_()
+            number2 = remove_the(number2)
+            if number2 in numbers:
+                number2 = numbers[number2]
+            position2 = '1'
+
+        elif level2 == '4':
+            say_(f' press {position1} position')
+            number2 = wait_()
+            number2 = remove_the(number2)
+            if number2 in numbers:
+                number2 = numbers[number2]
+            position2 = position1
+
+    say_('step 3')
+    level3 = wait_()
+    level3 = remove_the(level3)
+    if level3 in numbers:
+        level3 = numbers[level3]
+
+        if level3 == '1':
+            say_(f'press {number2}')
+            number3 = number2
+            position = wait_()
+            position = remove_the(position)
+            if position in numbers:
+                position3 = numbers[position]
+
+        elif level3 == '2':
+            say_(f'press {number1}')
+            number3 = number1
+            position = wait_()
+            position = remove_the(position)
+            if position in numbers:
+                position3 = numbers[position]
+
+        elif level3 == '3':
+            say_('third position')
+            number3 = wait_()
+            number3 = remove_the(number3)
+            if number3 in numbers:
+                number3 = numbers[number3]
+            position3 = '3'
+
+        elif level3 == '4':
+            say_(f' press 4')
+            number3 = '4'
+            position = wait_()
+            position = remove_the(position)
+            if position in numbers:
+                position3 = numbers[position]
+
+    say_('step 4')
+    level4 = wait_()
+    level4 = remove_the(level4)
+    if level4 in numbers:
+        level4 = numbers[level4]
+
+        if level4 == '1':
+            say_(f'press {position1} position')
+            number4 = wait_()
+            number4 = remove_the(number4)
+            if number4 in numbers:
+                number4 = numbers[number4]
+            position4 = position1
+
+        elif level4 == '2':
+            say_(f'first position')
+            number4 = wait_()
+            number4 = remove_the(number4)
+            if number4 in numbers:
+                number4 = numbers[number4]
+            position4 = '1'
+
+        elif level4 == '3':
+            say_(f'press {position2} position')
+            number4 = wait_()
+            number4 = remove_the(number4)
+            if number4 in numbers:
+                number4 = numbers[number4]
+            position4 = position2
+
+        elif level4 == '4':
+            say_(f'press {position2} position')
+            number4 = wait_()
+            number4 = remove_the(number4)
+            if number4 in numbers:
+                number4 = numbers[number4]
+            position4 = position2
+
+    say_('step 5')
+    level5 = wait_()
+    level5 = remove_the(level5)
+    if level5 in numbers:
+        level5 = numbers[level5]
+        if level5 == '1':
+
+            say_(f'press {number1}')
+        elif level5 == '2':
+
+            say_(f'press {number2}')
+        elif level5 == '3':
+
+            say_(f'press {number3}')
+        elif level5 == '4':
+
+            say_(f'press {number4}')
 
 while True:
     print("waiting")
@@ -634,10 +1130,10 @@ while True:
         mode = 'play'
     elif mode == 'play':
         #region
-        '''port = 'parallel'
-        serial = 'ee5ek5'
+        port = 'parallel'
+        serial = 'zzzzzz'
         lights = ('asd', 'yes')
-        batteries = 2'''
+        batteries = 2
         #endregion
         #^^^ REMOVE THAT WHEN NOT TESTING OR COMMENT THAT OUR BECAUSE IT WILL OVERWRITE THINGS!!!!!!!!!!!!!!!!!!!!!!!!!!!
         print('entered play mode')
@@ -695,5 +1191,10 @@ while True:
         elif recognized_text == 'wires':
             wires(False,0)
         elif recognized_text == 'complicated':
-            complicated = complicated()
-
+            complicated()
+        elif recognized_text == 'sequence' or recognized_text == 'sequins':
+            sequence('start',0,0,0)
+        elif recognized_text == 'colors' or recognized_text == 'color' or recognized_text == 'carlos':
+            simon_says([],0,0)
+        elif recognized_text == 'memory':
+            memory()
