@@ -28,9 +28,9 @@ positive_answers = ['yes','s','this','us','ps','as']
 #COMPLICATED (COMPLICATED WIRES) - PROB NEXT ONE, REALLY EASY ^^^
 #SEQUENCE (WIRE SEQUENCE) - NEED TO TALK SLOWLY, LAST PUZZLE NOT REALLY DOABLE WHEN BOT TAKES OVER 30 SECONDS TO THINK XD
 #SIMON SAYS - PISS EASY JUST ASK FOR COLORS STRIKES N SHIT, AND CHECK FOR VOWELS
-###UNIMPLEMENTED
 #MEMORY - JUST SAY 2 THINGS, MAIN NUMBER AND WHAT YOURE PRESSING LIKE 'PRESSING 2' AND YOU SHOULD BE DONE, GL WITH THE BOT RECOGNIZING IT EVERY TIME CORRECTLY THO XD
-#MORSE - IDEK, DO BEFORE MAZE BUT STILL KINDA HARD SEEMS, PROB DO THE SAME AS PASSWORD
+#MORSE - LEARN HOW TO READ RETSDFASDFDASAFDSSDFA
+###UNIMPLEMENTED
 #KEYPADS - WELL TOU GONNA DO STH LIKE A SIGN THAT LOOKS LIKE A  C JUST IS A C AND BOT WILL GET IT YE???
 #MAZE - FUCKING HELL NAH
 #KNOBS - SEEMS HARD
@@ -1094,6 +1094,190 @@ def memory():
 
             say_(f'press {number4}')
 
+def morse():
+    morse_LUT = {
+        'shell' : 505,
+        'halls' : 515,
+        'slick' : 522,
+        'trick' : 532,
+        'boxes' : 535,
+        'leaks' : 542,
+        'strobe': 545,
+        'bistro': 552,
+        'flick' : 555,
+        'bombs' : 565,
+        'break' : 572,
+        'brick' : 575,
+        'steak' : 582,
+        'sting' : 592,
+        'vector': 595,
+        'beats' : 600
+    }
+    morse_decode_LUT = {
+        '.-' : 'a',
+        '-...' : 'b',
+        '-.-.' : 'c',
+        '-..' : 'd',
+        '.' : 'e',
+        '..-.': 'f',
+        '--.': 'g',
+        '....':'h',
+        '..':'i',
+        '.---':'j',
+        '-.-':'k',
+        '.-..':'l',
+        '--':'m',
+        '-.':'n',
+        '---':'o',
+        '.--.':'p',
+        '--.-':'q',
+        '.-.':'r',
+        '...':'s',
+        '-':'t',
+        '..-':'u',
+        '...-':'v',
+        '.--':'w',
+        '-..-':'x',
+        '-.--':'y',
+        '--..':'z'
+    }
+    #idea do it like password but all at once, so no optimization here really cuz bot is 2 slow
+    morse_code = wait_()
+    morse_code = remove_the(morse_code)
+
+    morse_code = morse_code.replace('light','line')
+    morse_code = morse_code.replace('lime','line')
+    morse_code = morse_code.replace('lie','line')
+    morse_code = morse_code.split(' ')
+    if morse_code == 'module':
+        return
+    one_sign = []
+    solution = ''
+    for sign in morse_code:
+        if sign == 'next' or sign == 'mixed':
+            temp_word = ''
+            for signs in one_sign:
+                print(f'current sign {sign}', f' one sign: {one_sign}',f'current signs {signs}')
+                if signs == 'dot':
+                    print('adding a dot')
+                    temp_word += '.'
+                elif signs == 'line':
+                    print('adding a line')
+                    temp_word += '-'
+                else:
+                    print('UH OH NOT GOOOD ')
+            print(f'temp word before changing to a sign: {temp_word}')
+            if temp_word in morse_decode_LUT:
+
+                temp_word = morse_decode_LUT[temp_word]
+                print(f'current temp word: {temp_word}')
+
+            solution += temp_word
+            print(f' current solution {solution}')
+            one_sign = []
+        else:
+            one_sign.append(sign)
+            print('appending one sign', one_sign)
+    print(f'solution : {solution}')
+    try:
+        say_(morse_LUT[solution])
+    except KeyError:
+        morse()
+
+def keypads():
+    engine.setProperty('rate',speed_up)
+    say_('keypads')
+    keypad1 = ['o','triangle','gamma','lightning','rocket','hello','c']
+    keypad2 = ['monster','o','c','spring','star','hello','questionmark']
+    keypad3 = ['copyright','bob','spring','octopus','line','gamma','star']
+    keypad4 = ['six','paragraph','table','rocket','questionmark','face']
+    keypad5 = ['trident','face','table','c','paragraph','three','star']
+    keypad6 = ['six','monster','puzzle','something','trident','devil','omega']
+    signs = wait_()
+
+    signs = remove_the(signs)
+    if signs == 'module': return
+    signs = signs.replace('sea','c')
+    signs = signs.replace('see','c')
+    signs = signs.replace('tree','three')
+    signs = signs.replace('free','three')
+    signs = signs.replace('tea','three')
+    signs = signs.replace('start','star')
+    signs = signs.replace('?','questionmark')
+    signs = signs.split(' ')
+    print(signs)
+    kp1 = 0
+    kp2 = 0
+    kp3 = 0
+    kp4 = 0
+    kp5 = 0
+    kp6 = 0
+    k_array1 = []
+    k_array2 = []
+    k_array3 = []
+    k_array4 = []
+    k_array5 = []
+    k_array6 = []
+    for sign in signs:
+        print(sign)
+        if sign in keypad1:
+            k_array1.append(sign)
+            kp1+=1
+            print('kp1 + 1', kp1)
+        if sign in keypad2:
+            k_array2.append(sign)
+            kp2+=1
+            print('kp2 + 1', kp2)
+        if sign in keypad3:
+            k_array3.append(sign)
+            kp3+=1
+            print('kp3 + 1', kp3)
+        if sign in keypad4:
+            k_array4.append(sign)
+            kp4+=1
+            print('kp4 + 1', kp4)
+        if sign in keypad5:
+            k_array5.append(sign)
+            kp5+=1
+            print('kp5 + 1', kp5)
+        if sign in keypad6:
+            k_array6.append(sign)
+            kp6+=1
+            print('kp6 + 1', kp6)
+    print(kp1, kp2, kp3, kp4, kp5, kp6)
+    for keys in keypad1:
+        if keys not in k_array1:
+            k_array1.remove(keys)
+    for keys in keypad2:
+        if keys not in k_array2:
+            k_array2.remove(keys)
+    for keys in keypad3:
+        if keys not in k_array3:
+            k_array3.remove(keys)
+    for keys in keypad4:
+        if keys not in k_array4:
+            k_array4.remove(keys)
+    for keys in keypad5:
+        if keys not in k_array5:
+            k_array5.remove(keys)
+    for keys in keypad6:
+        if keys not in k_array6:
+            k_array6.remove(keys)
+
+    if kp1 == 4:
+        say_(f'{keypad1[0]} {keypad1[1]} {keypad1[2]} {keypad1[3]} ')
+    elif kp2 == 4:
+                say_(f'{keypad2[0]} {keypad2[1]} {keypad2[2]} {keypad2[3]}  ')
+    elif kp3 == 4:
+                say_(f'{keypad3[0]} {keypad3[1]} {keypad3[2]} {keypad3[3]} ')
+    elif kp4 == 4:
+                say_(f'{keypad4[0]} {keypad4[1]} {keypad4[2]} {keypad4[3]}  ')
+    elif kp5 == 4:
+                say_(f'{keypad5[0]} {keypad5[1]} {keypad5[2]} {keypad5[3]} ')
+    elif kp6 == 4:
+                say_(f'{keypad6[0]} {keypad6[1]} {keypad6[2]} {keypad6[3]}  ')
+
+    return
 while True:
     print("waiting")
 
@@ -1197,3 +1381,7 @@ while True:
             simon_says([],0,0)
         elif recognized_text == 'memory':
             memory()
+        elif recognized_text == 'morse' or recognized_text == 'moors' or recognized_text == 'morris' or recognized_text == 'morphs' or recognized_text == 'mars':
+            morse()
+        elif recognized_text == 'key' or recognized_text == 'keys' or  recognized_text == 'pad' or recognized_text == 'pads' or recognized_text == 'keypads' or recognized_text == 'keypad' or recognized_text == 'he':
+            keypads()
