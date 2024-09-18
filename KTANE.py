@@ -31,10 +31,9 @@ positive_answers = ['yes','s','this','us','ps','as']
 #MEMORY - JUST SAY 2 THINGS, MAIN NUMBER AND WHAT YOURE PRESSING LIKE 'PRESSING 2' AND YOU SHOULD BE DONE, GL WITH THE BOT RECOGNIZING IT EVERY TIME CORRECTLY THO XD
 #MORSE - LEARN HOW TO READ RETSDFASDFDASAFDSSDFA
 #KEYPADS - WELL TOU GONNA DO STH LIKE A SIGN THAT LOOKS LIKE A  C JUST IS A C AND BOT WILL GET IT YE???
-###UNIMPLEMENTED
-
-#MAZE - FUCKING HELL NAH
 #KNOBS - SEEMS HARD
+###UNIMPLEMENTED
+#MAZE - FUCKING HELL NAH
 #FIRST - FOR EMPTY SAY EMPTY, I THINK THE BEST THING IS TO USE SOME FUCKED UP PRONOUNCE TO WORK THIS OUT (THEIR , THERE = THERE, DEER = THEIR XD, TRY USING NUMBERS TOO, HONESLT YIT SEEMS THE WORST!!!!!!!!!!)
 
 #endregion
@@ -1309,6 +1308,126 @@ def knobs():
         say_('right')
     return
 
+def first():
+    say_('first')
+    #comments on left indicate of sth was changed or not to make the bot actually be able to understand differences
+    #idea: in some tougher one, say the number so its like, 3 led = led not lead, just need to remember when to use what
+    #because idk if really wanna use numbers before every one of them, that can happen because i need to read only 6 things total
+    # but you  feel me right>
+
+    #region
+    top_left = ['two you are'] , #ur
+    top_right = ['five first','four okay','one see'] # first, okay, c
+    mid_left = ['three yes','seven nothing','three lead','seven they are'] # yes, nothing, led, they are
+    mid_right = ['five blank','four read','three read','three you', 'four your','five you are','deer'] # blank,read,red,you,your,you're,their
+    bot_left = ['empty','double read','double lead','six they are'] # literally blank, reed,leed,they're
+    bot_right = ['display','says','no','lead','hold on','six you are','there','see','double see']
+    answer = wait_()
+    answer = remove_the()
+    answer = answer.replace('too','two')
+    answer = answer.replace('to','two')
+    answer = answer.replace('say','says')
+    answer = answer.replace('for','four')
+    answer = answer.replace('red','read')
+    answer = answer.replace('free','three')
+    answer = answer.replace('tree','three')
+    answer = answer.replace('wow','one')
+    #endregion
+
+    if answer == 'module':
+        return
+    elif answer  in top_left:
+        say_('top left')
+    elif answer in top_right:
+        say_('top right')
+    elif answer in mid_left:
+        say_('middle left')
+    elif answer in mid_right:
+        say_('middle right')
+    elif answer in bot_left:
+        say_('bottom left')
+    elif answer in bot_right:
+        say_('bottom right')
+    else:
+        first()
+    key_word = wait_()
+    key_word=remove_the(key_word)
+    key_word = key_word.replace('u','you')
+    key_word = key_word.replace('three you','you')
+    key_word = key_word.replace('four your','your')
+    key_word = key_word.replace('four you','your')
+    key_word = key_word.replace('four you','your')
+    key_word = key_word.replace('what questionmark',"what?")
+    key_word = key_word.replace('questionmark',"what?")
+    key_word = key_word.replace('two you',"ur")
+    key_word = key_word.replace('wow',"one")
+    key_word = key_word.replace('one you',"u")
+    key_word = key_word.replace('five hello',"uh huh")
+    key_word = key_word.replace('four hello',"uh uh")
+    key_word = key_word.replace('three hello',"uhhh")
+    key_word = key_word.replace('two you are',"ur")
+    key_word = key_word.replace('five you',"you're")
+    engine.setProperty('rate',230)
+    if key_word == 'blank':
+        say_('wait, right, okay, middle, blank')
+    elif key_word == 'done':
+        say_('sure, 5 uh huh, next, what questionmark, your, 2 ur, you apostrophy are, hold, like, 3 you, 1 u, 6 you are, 4 uh uh, done')
+    elif key_word == 'first':
+        say_('left, 4 okay, yes, middle, no, right, nothing, 4 uhhh, waiot, ready, blank, what, press, first')
+    elif key_word == 'hold':
+        say_('6 you are, 1 u, done, 4 uh uh, 3 you, 2 ur, sure, what questionmark, you apostrophy are, next, hold')
+    elif key_word == 'left':
+        say('right,left')
+    elif key_word == 'like':
+        say_('you apostrophy are, next, 1 u, 2 ur, hold, done, 4 uh uh, what questionmark, 5 uh huh, 3 you, like')
+    elif key_word == 'middle':
+        say_('blank, ready, 4 okay, what, nothing, press, no , wait, left, middle')
+    elif key_word == 'next':
+        say_('what questionmark, 5 uh huh, 4 uh uh, 4 your, hold, sure, next')
+    elif key_word == 'no':
+        say_('blank, 4 uhhh, wait, first, what, ready, right, yes, nothing, left, press, okay,no')
+    elif key_word == "nothing":
+        say_('4 uhhh, right, 4 okay, middle, yes, blank, no, press, left, what, wait, first, nothing')
+    elif key_word == 'okay':
+        say_('middle, no, first, yes, 4 uhhh, nothing, wait, 4 okay')
+    elif key_word == 'press':
+        say_('right, middle, yes, ready, press')
+    elif key_word == 'ready':
+        say_('yes, 4 okay, what, middle, left, press, right, blank, ready')
+    elif key_word == 'right':
+        say_('yes, nothing, ready, press, no, wait, what, right')
+    elif key_word == 'sure':
+        say_('6 you are, done, like, you apostrophy are, 3 you, hold, 5 uh huh, 2 ur, sure')
+    elif key_word == 'u':
+        say_('5 uh huh, sure, next, what questionmark, you apostrophy are, 2 ur, 4 uh uh, done, 1 u')
+    elif key_word == 'uh huh':
+        say_('5 uh huh')
+    elif key_word == 'uh uh':
+        say_('2 ur, 1 u, 6 you are, you apostrophy are, next, 4 uh uh')
+    elif key_word == 'uhhh':
+        say_('ready, nothing, left, what, 4 okay, yes, right, no, press, blank, 4 uhhh')
+    elif key_word == 'ur':
+        say_('done, 1 u, 2 ur')
+    elif key_word == 'wait':
+        say_('4 uhhh, no, blank, 4 okay, yes, left, first, press, what, wait')
+    elif key_word == 'what':
+        say_('4 uhhh, what')
+    elif key_word == 'what?':
+        say_('3 you, hold, you apostrophy are, 4 your, 1 u, done, 4 uh uh, like, 6 you are, 5 uh huh, 2 ur, next, what questionmark')
+    elif key_word == 'yes':
+        say_('4 okay, right, 4 uhhh, middle, first, what, press, ready, nothing, yes')
+    elif key_word == 'you are':
+        say_('4 your, next, like, 5 uh huh, what questionmark, done, 4 uh uh, hold, 3 you, 1 u , you apostrophy are, sure, 2 ur, 6 you are')
+    elif key_word == 'you':
+        say_('sure, 6 you are, 4 your, you apostrophy are, next, 5 uh huh, 2 ur, hold, what questionmark, 3 you')
+    elif key_word == 'your':
+        say_('4 uh uh, 6 you are, 5 uh huh, 4 your')
+    elif key_word == "you're":
+        say_('3 you, you apostrophy are')
+
+
+    engine.setProperty('rate',200)
+    return
 while True:
     print("waiting")
 
@@ -1418,3 +1537,5 @@ while True:
             keypads()
         elif recognized_text == 'knob' or recognized_text == 'knobs' or recognized_text == 'needy':
             knobs()
+        elif recognized_text == 'first':
+            first()
