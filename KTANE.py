@@ -30,8 +30,9 @@ positive_answers = ['yes','s','this','us','ps','as']
 #SIMON SAYS - PISS EASY JUST ASK FOR COLORS STRIKES N SHIT, AND CHECK FOR VOWELS
 #MEMORY - JUST SAY 2 THINGS, MAIN NUMBER AND WHAT YOURE PRESSING LIKE 'PRESSING 2' AND YOU SHOULD BE DONE, GL WITH THE BOT RECOGNIZING IT EVERY TIME CORRECTLY THO XD
 #MORSE - LEARN HOW TO READ RETSDFASDFDASAFDSSDFA
-###UNIMPLEMENTED
 #KEYPADS - WELL TOU GONNA DO STH LIKE A SIGN THAT LOOKS LIKE A  C JUST IS A C AND BOT WILL GET IT YE???
+###UNIMPLEMENTED
+
 #MAZE - FUCKING HELL NAH
 #KNOBS - SEEMS HARD
 #FIRST - FOR EMPTY SAY EMPTY, I THINK THE BEST THING IS TO USE SOME FUCKED UP PRONOUNCE TO WORK THIS OUT (THEIR , THERE = THERE, DEER = THEIR XD, TRY USING NUMBERS TOO, HONESLT YIT SEEMS THE WORST!!!!!!!!!!)
@@ -1278,6 +1279,36 @@ def keypads():
                 say_(f'{keypad6[0]} {keypad6[1]} {keypad6[2]} {keypad6[3]}  ')
 
     return
+
+def knobs():
+    say_('knobs')
+
+    answer = wait_()
+    answer = remove_the(answer)
+    if answer == 'module':
+        return
+    answer = answer.replace('too','two')
+    answer = answer.replace('to','two')
+    answer = answer.replace('free','three')
+    answer = answer.replace('tree','three')
+    answer = answer.replace('ate','eight')
+    answer = answer.replace('aids','eight')
+    answer = answer.replace('aid','eight')
+    answer = answer.replace('for','four')
+    answer = answer.replace('wow','one')
+    answer = answer.replace('you','u')
+    if answer == 'one' or answer == 'zero':
+        say_('left')
+    elif answer == 'three':
+        say_('down')
+    elif answer == 'four':
+        say_('up')
+    elif answer == 'five':
+        say_('down')
+    elif answer == 'u':
+        say_('right')
+    return
+
 while True:
     print("waiting")
 
@@ -1385,3 +1416,5 @@ while True:
             morse()
         elif recognized_text == 'key' or recognized_text == 'keys' or  recognized_text == 'pad' or recognized_text == 'pads' or recognized_text == 'keypads' or recognized_text == 'keypad' or recognized_text == 'he':
             keypads()
+        elif recognized_text == 'knob' or recognized_text == 'knobs' or recognized_text == 'needy':
+            knobs()
