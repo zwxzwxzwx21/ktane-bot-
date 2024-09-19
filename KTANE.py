@@ -1,3 +1,4 @@
+import copy
 import os
 from vosk import Model, KaldiRecognizer
 import pyaudio
@@ -38,7 +39,7 @@ positive_answers = ['yes','s','this','us','ps','as']
 
 #endregion
 #code below changes the voice from polish to english
-#region
+'''#region
 engine = pyttsx3.init()
 engine.setProperty('read',210)
 voices = engine.getProperty('voices')
@@ -56,7 +57,7 @@ stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True,frame
 stream.start_stream()
 mode = 'test'
 numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
-           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2}
+           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2}'''
 
 def remove_the(text):
     a = text.replace('the ','')
@@ -131,7 +132,7 @@ def ask_for_advanced(key):
                 'forty five': 'rj',
                 }
     if key == 'port':
-        list = []
+        list_ = []
         number = 1
         while True:
 
@@ -139,35 +140,35 @@ def ask_for_advanced(key):
             answer_  = listening()
             answer = remove_the(answer_)
             if answer in port_LUT:
-                list.append(port_LUT[answer])
+                list_.append(port_LUT[answer])
                 say_(f"{key}, {port_LUT[answer]}, done?")
                 print(f"{key}, {port_LUT[answer]}, done?")
 
                 confirm = wait_()
 
                 if confirm == 'no':
-                    print(list)
+                    print(list_)
                     number += 1
                     say_(f'{key} {number}')
                 elif confirm == key:
-                    print(list)
+                    print(list_)
                     number = 1
                     return ask_for_advanced(key)
                 elif confirm == 'wrong':
-                    if number > len(list):
+                    if number > len(list_):
                         number -= 1
-                    del list[-1]
-                    print(list,number)
+                    del list_[-1]
+                    print(list_,number)
                     say_('removed')
                 elif confirm == 'yes':
-                    print(list)
+                    print(list_)
                     break
-        return list
+        return list_
     #lights  | idea: lets say you have CAR lit and BOB not lit, you say 3 words like 'cristian, arnold, rock' and 'yes'
     #its always 3 long so then it proceses like: take first letter from first 3 words and then lit or 'no' (better over lit and unlit imo)
     #so it does have things going over n shit like that
     elif key == 'lights':
-        list = []
+        list_ = []
         number = 1
         while True:
 
@@ -186,7 +187,7 @@ def ask_for_advanced(key):
                 except IndexError:
                     ask_for_advanced(key)
                 light = (indicator, group[3])
-                list.append(light)
+                list_.append(light)
                 say_(f"{key}, {light}, done?")
                 print(f"{key}, {light}, done?")
 
@@ -194,26 +195,26 @@ def ask_for_advanced(key):
 
                 if confirm == 'no':
 
-                    print(list)
+                    print(list_)
                     number += 1
                     say_(f'{key} {number}')
                 elif confirm == key:
-                    print(list)
+                    print(list_)
                     number = 1
                     return ask_for_advanced(key)
                 elif confirm == 'wrong':
-                    if number > len(list):
+                    if number > len(list_):
                         number -= 1
-                    del list[-1]
-                    print(list, number)
+                    del list_[-1]
+                    print(list_, number)
                     say_('removed')
                 elif confirm == 'yes':
-                    print(list)
+                    print(list_)
                     break
-        return list
+        return list_
 
     elif key == 'serial':
-        list = []
+        list_ = []
         while True:
 
             say_(f'{key} waiting')
@@ -250,7 +251,7 @@ def ask_for_advanced(key):
                     return ask_for_advanced(key)
 
                 elif confirm == 'yes':
-                    print(list)
+                    print(list_)
                     return serial
                     break
 
@@ -1429,7 +1430,73 @@ def first():
 
     engine.setProperty('rate',200)
     return
+def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
+    #loop array is an arrat that has number positions
+    #current number is  number of loops in floodfill search
+    print(current_number,loop_array,goal_position,'cur number and loop array and goal pos')
+    #maze_map[start_pos[1]][start_pos[0]] = current_num
+    array_of_pos = []
+    if goal_position not in loop_array:
+        # temp array to avoid overwriting and fuckery idkkkk
+        current_number += 1
+        for numbers in loop_array:
+            print('numbers variable', numbers)
+            if maze_map[numbers[1]][numbers[0] + 1] != '■':  # right
 
+                if maze_map[numbers[1]][numbers[0] + 2] == 'P':
+                    print('right move is free')
+                    maze_map[numbers[1]][numbers[0] + 2] = str(current_number)
+                    pos = (numbers[0]+2, numbers[1])
+                    print('appending position', pos )
+                    array_of_pos.append(pos) # return as loopm array
+            if maze_map[numbers[1]][numbers[0] - 1] != '■':  # left
+                if maze_map[numbers[1]][numbers[0] - 2] == 'P':
+                    print('left move is free')
+                    maze_map[numbers[1]][numbers[0] - 2] = str(current_number)
+                    pos = (numbers[0] - 2, numbers[1])
+                    print('appending position', pos)
+                    array_of_pos.append(pos)  # return as loopm arra\
+            if maze_map[numbers[1] - 1][numbers[0]] != '■':  # up
+                if maze_map[numbers[1] - 2][numbers[0]] == 'P':
+                    print('up move is free')
+                    maze_map[numbers[1] - 2][numbers[0]] = str(current_number)
+                    pos = (numbers[0], numbers[1] - 2)
+                    print('appending position', pos)
+                    array_of_pos.append(pos)  # return as loopm array
+            if maze_map[numbers[1] + 1][numbers[0]] != '■':  # down
+                if maze_map[numbers[1] + 2][numbers[0]] == 'P':
+                    print('down move is free')
+                    maze_map[numbers[1] + 2][numbers[0]] = str(current_number)
+                    pos = (numbers[0], numbers[1] + 2)
+                    print('appending position', pos)
+                    array_of_pos.append(pos)  # return as loopm array
+        for positions in array_of_pos:
+            maze_map[positions[1]][positions[0]] = str(current_number)
+        for row in maze_map:
+            print(' '.join(row))
+        print('-----------------------------------------')
+    else:
+        print('done')
+    print(current_number, array_of_pos, 'cur number and loop array before calling fucntion')
+    maze_solver(maze_map,starting_pos,goal_position,array_of_pos,current_number)
+
+
+map = [
+        ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+        ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'F', ' ', 'P', '■'],
+        ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
+        ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+        ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+        ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+        ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
+        ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', '0', ' ', 'P', '■'],
+        ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+        ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+        ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
+        ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+        ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+    ]
+maze_solver(map,(9,7),(9,1),[(9,7)],0)
 def maze():
     # cry for help will not save my tarnished soul
     # idea is like, if you will be maze 6 and check both dead ends, just return to starting position and choose different direction
@@ -1437,45 +1504,19 @@ def maze():
     # turn at maze 9 , and you check both dead ends, with no checkpoint behind that, returning to start is fine AS LONG AS you will just block
     #everything you have explored FROM THE CHECKPOINT, so you will not block what is an actuall path
     #circle positions (0 index, (x,y))
-    say_('maze')
+    say_('maze, position')
     position = wait_()
     position = remove_the(position)
+    position = position.replace('you know','zero')
     if position == 'module': return
-    pos = ()
+    circle_pos = ()
     position = position.split(' ')
+    print('circle positions',position)
     for word in position:
         if word in numbers:
-            pos += (numbers[word],)
-
-    maze1 = [(0,1),(5,2),(0,1,),(5,2,)]
-    maze2 = [(1,3),(4,1),(1,3,),(4,1,)]
-    maze3 = [(3,3),(5,3),(3,3,),(5,3,)]
-    maze4 = [(0,0),(0,3),(0,0,),(0,3,)]
-    maze5 = [(4,2),(3,5),(4,2,),(3,5,)]
-    maze6 = [(4,0),(2,4),(4,0,),(2,4,)]
-    maze7 = [(1,0),(1,5),(1,0,),(1,5,)]
-    maze8 = [(3,0),(2,3),(3,0,),(2,3,)]
-    maze9 = [(2,1),(0,4),(2,1,),(0,4,)]
-    # my pos * 2 + 1 = new pos
-    starting_pos = wait_()
-    starting_pos = remove_the(starting_pos)
-    starting_pos = starting_pos.split(' ')
-    for word in starting_pos:
-        if word in numbers:
-            start_pos += (numbers[word]*2+1,)
-    if pos in maze1:
-        print('maze 1')
-        maze_map1[pos[1]][pos[0]] = 'S'
-    start_pos = (pos[0],pos[1])
-    print('start pos ', start_pos)
-    goal = wait_()
-    goal = remove_the(goal)
-    goal = goal.split(' ')
-    for word in goal:
-        if word in numbers:
-            goal_pos += (numbers[word]*2+1,)
-    for pos in goal_pos:
-        maze_map1[pos[1]][pos[0]] = 'F'
+            circle_pos += (numbers[word],)
+    #MAPS
+    #region
     maze_map1 = [
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
         ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -1565,7 +1606,7 @@ def maze():
         ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
         ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-    ] # podwojne rozwidlenie ale read idea
+    ]  # podwojne rozwidlenie ale read idea
     maze_map7 = [
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
         ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
@@ -1610,7 +1651,77 @@ def maze():
         ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■'],
         ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-    ]# check notes 2
+    ]  # check notes 2
+    #endregion
+    print(circle_pos,'position fo circles')
+    maze1 = [(0,1),(5,2),(0,1,),(5,2,)]
+    maze2 = [(1,3),(4,1),(1,3,),(4,1,)]
+    maze3 = [(3,3),(5,3),(3,3,),(5,3,)]
+    maze4 = [(0,0),(0,3),(0,0,),(0,3,)]
+    maze5 = [(4,2),(3,5),(4,2,),(3,5,)]
+    maze6 = [(4,0),(2,4),(4,0,),(2,4,)]
+    maze7 = [(1,0),(1,5),(1,0,),(1,5,)]
+    maze8 = [(3,0),(2,3),(3,0,),(2,3,)]
+    maze9 = [(2,1),(0,4),(2,1,),(0,4,)]
+    # my pos * 2 + 1 = new pos
+    say_('start position')
+    starting_pos = wait_()
+    starting_pos = remove_the(starting_pos)
+    starting_pos = starting_pos.replace('you know','zero')
+    starting_pos = starting_pos.split(' ')
+    print(starting_pos,'starting pos variable')
+    start_pos = ()
+    for word in starting_pos:
+        if word in numbers:
+            start_pos += (numbers[word]*2+1,)
+    print('start pos ', start_pos)
+    if circle_pos in maze1:
+        print('maze 1')
+        maze_map1[start_pos[1]][start_pos[0]] = 'S'
+
+    say_('end position')
+    goal = wait_()
+    goal = remove_the(goal)
+    goal = goal.replace('you know', 'zero')
+    goal = goal.split(' ')
+
+    print(goal, 'goal variable (answer)')
+    goal_pos = ()
+
+    for word in goal:
+        if word in numbers:
+            goal_pos += (numbers[word]*2+1,)
+
+    maze_map1[goal_pos[1]][goal_pos[0]] = 'F'
+    '''for row in maze_map1:
+        print(' '.join(row))'''
+
+    # start_pos = (pos[0],pos[1])
+    ## god help me
+    # 4 check and then 4 more, make a variable that keeps track of newest number and make a check that if position of those newest numbers (i mean one of them, they will be in array that will...)
+    # ...be removing positions of previous numbers uz they useless,
+    '''runner_pos = copy.deepcopy(start_pos)
+        while maze_map1[runner_pos[1]+1][runner_pos[0]] != 'F' or maze_map1[runner_pos[1]-1][runner_pos[0]] != 'F' or maze_map1[runner_pos[1]][runner_pos[0]+1] != 'F' or maze_map1[runner_pos[1]][runner_pos[0]-1] != 'F':
+            available_paths = 0
+            move_to_right = 0 # like a bool 1 = yes 0 = no
+            move_to_left = 0 # like a bool 1 = yes 0 = no
+            move_to_up = 0 # like a bool 1 = yes 0 = no
+            move_to_down = 0 # like a bool 1 = yes 0 = no
+            if maze_map1[runner_pos[1]+1][runner_pos[0]] != '■':
+                if maze_map1[runner_pos[1]+2][runner_pos[0]] != 'P':
+
+                move_to_down = 1
+            elif maze_map1[runner_pos[1]-1][runner_pos[0]] != '■':
+
+                move_to_up = 1
+            elif maze_map1[runner_pos[1]][runner_pos[0]+1] != '■':
+
+                move_to_right = 1
+            elif maze_map1[runner_pos[1]][runner_pos[0]-1] != '■':
+
+                move_to_left = 1'''
+
+
 while True:
     print("waiting")
 
@@ -1722,5 +1833,5 @@ while True:
             knobs()
         elif recognized_text == 'first':
             first()
-        elif recognized_text == 'maze':
+        elif recognized_text == 'maze' or recognized_text == 'maison' or recognized_text == 'made' or recognized_text == 'maith':
             maze() # :(
