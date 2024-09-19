@@ -1430,6 +1430,36 @@ def first():
 
     engine.setProperty('rate',200)
     return
+def maze_reverse(maze_map,current_number,goal_position,array_of_path_pos):
+    while current_number > 0:
+        current_number -= 1
+        print(f' inside while loop checking for {current_number}')
+        if goal_position[0] + 2 < 13:
+            if maze_map[goal_position[1]][goal_position[0] + 2] == str(current_number): # right
+                print(f'current number found at {goal_position[0] + 2}, {goal_position[1]}')
+                goal_position = (goal_position[0] + 2, goal_position[1])
+                array_of_path_pos.append(goal_position)
+        if goal_position[0] - 2 > 0:
+            if maze_map[goal_position[1]][goal_position[0] - 2] == str(current_number): # left
+                print(f'current number found at {goal_position[0] - 2}, {goal_position[1]}')
+                goal_position = (goal_position[0] - 2, goal_position[1])
+                array_of_path_pos.append(goal_position)
+        if goal_position[1] - 2 > 0:
+            if maze_map[goal_position[1] - 2][goal_position[0]] == str(current_number): # up
+                print(f'current number found at {goal_position[0]}, {goal_position[1] - 2}')
+                goal_position = (goal_position[0], goal_position[1] - 2)
+                array_of_path_pos.append(goal_position)
+        if goal_position[1] + 2 < 13:
+            if maze_map[goal_position[1] + 2][goal_position[0]] == str(current_number): # down
+                print(f'current number found at {goal_position[0]}, {goal_position[1] + 2}')
+                goal_position = (goal_position[0], goal_position[1] + 2)
+                array_of_path_pos.append(goal_position)
+
+    else:
+        array_of_path_pos.reverse()
+        print(array_of_path_pos,'123')
+        return array_of_path_pos
+
 def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
     #loop array is an arrat that has number positions
     #current number is  number of loops in floodfill search
@@ -1449,6 +1479,10 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     pos = (numbers[0]+2, numbers[1])
                     print('appending position', pos )
                     array_of_pos.append(pos) # return as loopm array
+                if maze_map[numbers[1]][numbers[0] + 2] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
             if maze_map[numbers[1]][numbers[0] - 1] != '■':  # left
                 if maze_map[numbers[1]][numbers[0] - 2] == 'P':
                     print('left move is free')
@@ -1456,6 +1490,10 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     pos = (numbers[0] - 2, numbers[1])
                     print('appending position', pos)
                     array_of_pos.append(pos)  # return as loopm arra\
+                if maze_map[numbers[1]][numbers[0] - 2] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
             if maze_map[numbers[1] - 1][numbers[0]] != '■':  # up
                 if maze_map[numbers[1] - 2][numbers[0]] == 'P':
                     print('up move is free')
@@ -1463,6 +1501,10 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     pos = (numbers[0], numbers[1] - 2)
                     print('appending position', pos)
                     array_of_pos.append(pos)  # return as loopm array
+                if maze_map[numbers[1] - 2][numbers[0]] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
             if maze_map[numbers[1] + 1][numbers[0]] != '■':  # down
                 if maze_map[numbers[1] + 2][numbers[0]] == 'P':
                     print('down move is free')
@@ -1470,6 +1512,10 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     pos = (numbers[0], numbers[1] + 2)
                     print('appending position', pos)
                     array_of_pos.append(pos)  # return as loopm array
+                if maze_map[numbers[1] + 2][numbers[0]] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
         for positions in array_of_pos:
             maze_map[positions[1]][positions[0]] = str(current_number)
         for row in maze_map:
@@ -1478,12 +1524,31 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
     else:
         print('done')
     print(current_number, array_of_pos, 'cur number and loop array before calling fucntion')
+    moves_to_do = []
+    try:
+        if len(path)>0:
+            for i in range(len(path)):
+                try:
+                    if path[i][0]+2 == path[i+1][0]:
+                        moves_to_do.append('right')
+                    if path[i][0]-2 == path[i+1][0]:
+                        moves_to_do.append('left')
+                    if path[i][1]-2 == path[i+1][1]:
+                        moves_to_do.append('up')
+                    if path[i][1]+2 == path[i+1][1]:
+                        moves_to_do.append('down')
+                except:
+                    break
+        print(moves_to_do,' moves to do')
+        return
+    except:
+        pass
     maze_solver(maze_map,starting_pos,goal_position,array_of_pos,current_number)
 
 
 map = [
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-        ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'F', ' ', 'P', '■'],
+        ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
         ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
         ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
         ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
@@ -1493,10 +1558,10 @@ map = [
         ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
         ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
         ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
-        ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+        ['■', 'P', ' ', 'F', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
     ]
-maze_solver(map,(9,7),(9,1),[(9,7)],0)
+maze_solver(map,(9,7),(3,11),[(9,7)],0)
 def maze():
     # cry for help will not save my tarnished soul
     # idea is like, if you will be maze 6 and check both dead ends, just return to starting position and choose different direction
