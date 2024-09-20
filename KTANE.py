@@ -1605,8 +1605,13 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                 except:
                     break
         print(moves_to_do,' moves to do')
+        string_moves = ''
         for move in moves_to_do:
+            engine.setProperty('rate', 225)
             say_(move)
+            string_moves += move
+
+
         return
     '''except:
         print(' i dont think that is good fella')
@@ -1642,6 +1647,8 @@ def maze():
     position = wait_()
     position = remove_the(position)
     position = position.replace('you know','zero')
+    position = position.replace("i've", 'five')
+
     if position == 'module': return
     circle_pos = ()
     position = position.split(' ')
@@ -1805,6 +1812,8 @@ def maze():
     starting_pos = starting_pos.replace('for', 'four')
     starting_pos = starting_pos.replace('or', 'four')
     starting_pos = starting_pos.replace('boo', 'two')
+    starting_pos = starting_pos.replace("i've", 'five')
+
     starting_pos = starting_pos.replace('to', 'two')
     starting_pos = starting_pos.replace('b', 'three')
     starting_pos = starting_pos.replace('who', 'two')
@@ -1868,6 +1877,7 @@ def maze():
     goal = wait_()
     goal = remove_the(goal)
     goal = goal.replace('you know', 'zero')
+    goal = goal.replace("i've", 'five')
     goal = goal.replace('for', 'four')
     goal = goal.replace('or', 'four')
     goal = goal.replace('boo', 'two')
