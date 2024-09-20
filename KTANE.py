@@ -1605,6 +1605,8 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                 except:
                     break
         print(moves_to_do,' moves to do')
+        for move in moves_to_do:
+            say_(move)
         return
     '''except:
         print(' i dont think that is good fella')
