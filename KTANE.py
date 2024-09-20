@@ -54,6 +54,7 @@ recognizer = KaldiRecognizer(model, 16000)
 p = pyaudio.PyAudio()
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True,frames_per_buffer=8192)
 stream.start_stream()
+
 mode = 'test'
 numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
            'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2}
@@ -1513,7 +1514,9 @@ def maze_reverse(maze_map,current_number,goal_position,array_of_path_pos):
         return array_of_path_pos
 
 def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
+    #path = []
     loop_finished = False
+    finish_found = False
     #loop array is an arrat that has number positions
     #current number is  number of loops in floodfill search
     print(current_number,loop_array,goal_position,'cur number and loop array and goal pos')
@@ -1536,6 +1539,7 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     print('finish found')
                     print(f'calling function with current number {current_number} and array = {[goal_position]}')
                     path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
+                    finish_found = True
             if maze_map[numbers[1]][numbers[0] - 1] != '■':  # left
                 if maze_map[numbers[1]][numbers[0] - 2] == 'P':
                     print('left move is free')
@@ -1547,6 +1551,7 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     print('finish found')
                     print(f'calling function with current number {current_number} and array = {[goal_position]}')
                     path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
+                    finish_found = True
             if maze_map[numbers[1] - 1][numbers[0]] != '■':  # up
                 if maze_map[numbers[1] - 2][numbers[0]] == 'P':
                     print('up move is free')
@@ -1558,6 +1563,7 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     print('finish found')
                     print(f'calling function with current number {current_number} and array = {[goal_position]}')
                     path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
+                    finish_found = True
             if maze_map[numbers[1] + 1][numbers[0]] != '■':  # down
                 if maze_map[numbers[1] + 2][numbers[0]] == 'P':
                     print('down move is free')
@@ -1569,6 +1575,7 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     print('finish found')
                     print(f'calling function with current number {current_number} and array = {[goal_position]}')
                     path = maze_reverse(maze_map,current_number,goal_position,[goal_position])
+                    finish_found = True
         for positions in array_of_pos:
             maze_map[positions[1]][positions[0]] = str(current_number)
         for row in maze_map:
@@ -1579,8 +1586,12 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
         loop_finished = True
     print(current_number, array_of_pos, 'cur number and loop array before calling fucntion')
     moves_to_do = []
-    try:
+
+    #try:
+    if finish_found:
+        print(' finish found ')
         if len(path)>0:
+            print('path', path)
             for i in range(len(path)):
                 try:
                     if path[i][0]+2 == path[i+1][0]:
@@ -1595,9 +1606,9 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
                     break
         print(moves_to_do,' moves to do')
         return
-    except:
+    '''except:
         print(' i dont think that is good fella')
-        pass
+        pass'''
     if current_number <37 and loop_finished == False:
         maze_solver(maze_map,starting_pos,goal_position,array_of_pos,current_number)
 
@@ -1879,6 +1890,7 @@ def maze():
     maze_map7[goal_pos[1]][goal_pos[0]] = 'F'
     maze_map8[goal_pos[1]][goal_pos[0]] = 'F'
     maze_map9[goal_pos[1]][goal_pos[0]] = 'F'
+    map_number[goal_pos[1]][goal_pos[0]] = 'F'
     '''for row in maze_map1:
         print(' '.join(row))'''
     maze_solver(map_number,start_pos,goal_pos,[start_pos],0)
@@ -2022,3 +2034,4 @@ while True:
             first()
         elif recognized_text == 'maze' or recognized_text == 'maison' or recognized_text == 'made' or recognized_text == 'maith' or recognized_text == 'hey' or recognized_text == 'it is' or recognized_text == 'phase' or recognized_text == "he's":
             maze() # :(
+
