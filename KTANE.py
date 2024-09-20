@@ -7,8 +7,7 @@ import json
 
 speed_up = 225 # speed and slowed down voice for bot to read faster or slower if needed
 slow_down = 175
-# LIST OF WORDS THAT SHOULD BE PUT INTO LUT BECAUSE BOT STUPID DD
-# #desolate = detonate
+
 positive_answers = ['yes','s','this','us','ps','as']
 #potential bugs n todo:
 #uhh i think when serial is not long enough it kinda fucks it over unsure tho
@@ -39,7 +38,7 @@ positive_answers = ['yes','s','this','us','ps','as']
 
 #endregion
 #code below changes the voice from polish to english
-'''#region
+#region
 engine = pyttsx3.init()
 engine.setProperty('read',210)
 voices = engine.getProperty('voices')
@@ -57,10 +56,11 @@ stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True,frame
 stream.start_stream()
 mode = 'test'
 numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
-           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2}'''
+           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2}
 
 def remove_the(text):
     a = text.replace('the ','')
+    #a = text.replace('the','')
     return a
 
 def convert_json(json_text):
@@ -112,7 +112,8 @@ def ask_for(key):
 def wait_():
     while True:
         response = listening()
-        if response:
+        response = remove_the(response)
+        if len(response):
             return response
         else: continue
 def ask_for_advanced(key):
@@ -1199,11 +1200,21 @@ def keypads():
     signs = remove_the(signs)
     if signs == 'module': return
     signs = signs.replace('sea','c')
+    signs = signs.replace('bulb','bob')
+    signs = signs.replace('or ','')
+    signs = signs.replace('the ','')
     signs = signs.replace('see','c')
     signs = signs.replace('tree','three')
     signs = signs.replace('free','three')
     signs = signs.replace('tea','three')
     signs = signs.replace('start','star')
+    signs = signs.replace('debbie','devil')
+    signs = signs.replace('grandma','gamma')
+    signs = signs.replace('gum','gamma')
+    signs = signs.replace('gunma','gamma')
+    signs = signs.replace('government','gamma')
+    signs = signs.replace('spraying','spring')
+    signs = signs.replace('string','spring')
     signs = signs.replace('?','questionmark')
     signs = signs.split(' ')
     print(signs)
@@ -1246,37 +1257,62 @@ def keypads():
             kp6+=1
             print('kp6 + 1', kp6)
     print(kp1, kp2, kp3, kp4, kp5, kp6)
-    for keys in keypad1:
-        if keys not in k_array1:
-            k_array1.remove(keys)
-    for keys in keypad2:
-        if keys not in k_array2:
-            k_array2.remove(keys)
-    for keys in keypad3:
-        if keys not in k_array3:
-            k_array3.remove(keys)
-    for keys in keypad4:
-        if keys not in k_array4:
-            k_array4.remove(keys)
-    for keys in keypad5:
-        if keys not in k_array5:
-            k_array5.remove(keys)
-    for keys in keypad6:
-        if keys not in k_array6:
-            k_array6.remove(keys)
-
+    print(k_array1, k_array2, k_array3,k_array4, k_array5, k_array6)
     if kp1 == 4:
+        print(f'entire array{keypad1} and what you said {k_array1}')
+        for keys in keypad1[:]:
+            print(f'current key {keys}')
+            if keys not in k_array1:
+                keypad1.remove(keys)
+                print(f'removing {keys}, current array {keypad1}')
+        print(keypad1, 'keypad1')
         say_(f'{keypad1[0]} {keypad1[1]} {keypad1[2]} {keypad1[3]} ')
     elif kp2 == 4:
-                say_(f'{keypad2[0]} {keypad2[1]} {keypad2[2]} {keypad2[3]}  ')
+        print(f'entire array{keypad2} and what you said {k_array2}')
+        for keys in keypad2[:]:
+            print(f'current key {keys}')
+            if keys not in k_array2:
+                keypad2.remove(keys)
+                print(f'removing {keys}, current array {keypad2}')
+        print(keypad2, 'keypad2')
+        say_(f'{keypad2[0]} {keypad2[1]} {keypad2[2]} {keypad2[3]}  ')
     elif kp3 == 4:
-                say_(f'{keypad3[0]} {keypad3[1]} {keypad3[2]} {keypad3[3]} ')
+        print(f'entire array{keypad3} and what you said {k_array3}')
+        for keys in keypad3[:]:
+            print(f'current key {keys}')
+            if keys not in k_array3:
+                keypad3.remove(keys)
+                print(f'removing {keys}, current array {keypad3}')
+        print(keypad3, 'keypad3')
+        say_(f'{keypad3[0]} {keypad3[1]} {keypad3[2]} {keypad3[3]} ')
     elif kp4 == 4:
-                say_(f'{keypad4[0]} {keypad4[1]} {keypad4[2]} {keypad4[3]}  ')
+        print(f'entire array{keypad4} and what you said {k_array4}')
+        for keys in keypad4[:]:
+            print(f'current key {keys}')
+            if keys not in k_array4:
+                keypad4.remove(keys)
+                print(f'removing {keys}, current array {keypad4}')
+        print(keypad4, 'keypad4')
+        say_(f'{keypad4[0]} {keypad4[1]} {keypad4[2]} {keypad4[3]}  ')
     elif kp5 == 4:
-                say_(f'{keypad5[0]} {keypad5[1]} {keypad5[2]} {keypad5[3]} ')
+        print(f'entire array {keypad5} and what you said {k_array5}')
+        for keys in keypad5[:]:  # Iterate over a copy of the list
+            print(f'current key {keys}')
+            if keys not in k_array5:
+                keypad5.remove(keys)
+                print(f'removing {keys}, current array {keypad5}')
+        print(keypad5, 'keypad5')
+        say_(f'{keypad5[0]} {keypad5[1]} {keypad5[2]} {keypad5[3]}')
+
     elif kp6 == 4:
-                say_(f'{keypad6[0]} {keypad6[1]} {keypad6[2]} {keypad6[3]}  ')
+        print(f'entire array{keypad6} and what you said {k_array6}')
+        for keys in keypad6[:]:
+            print(f'current key {keys}')
+            if keys not in k_array6:
+                keypad6.remove(keys)
+                print(f'removing {keys}, current array {keypad6}')
+        print(keypad6, 'keypad6')
+        say_(f'{keypad6[0]} {keypad6[1]} {keypad6[2]} {keypad6[3]}  ')
 
     return
 
@@ -1285,7 +1321,7 @@ def knobs():
 
     answer = wait_()
     answer = remove_the(answer)
-    answer = answer.split(' ')
+
     if answer == 'module':
         return
     answer = answer.replace('too','two')
@@ -1298,6 +1334,8 @@ def knobs():
     answer = answer.replace('for','four')
     answer = answer.replace('wow','one')
     answer = answer.replace('you','u')
+    #answer = answer.split(' ')
+    print(answer, 'knobs answer')
     if answer == 'one' or answer == 'zero':
         say_('left')
     elif answer == 'three':
@@ -1325,8 +1363,11 @@ def first():
     bot_left = ['empty','double read','double lead','six they are'] # literally blank, reed,leed,they're
     bot_right = ['display','says','no','lead','hold on','six you are','there','see','double see']
     answer = wait_()
-    answer = remove_the()
+    print(answer,'1')
+    answer = remove_the(answer)
+    print(answer,'2')
     answer = answer.replace('too','two')
+    answer = answer.replace('blog','blank')
     answer = answer.replace('to','two')
     answer = answer.replace('say','says')
     answer = answer.replace('for','four')
@@ -1335,10 +1376,11 @@ def first():
     answer = answer.replace('tree','three')
     answer = answer.replace('wow','one')
     #endregion
-
+    print(answer)
+    print(type(answer))
     if answer == 'module':
         return
-    elif answer  in top_left:
+    elif answer in top_left:
         say_('top left')
     elif answer in top_right:
         say_('top right')
@@ -1353,9 +1395,16 @@ def first():
     else:
         first()
     key_word = wait_()
+    print(key_word,'1')
     key_word=remove_the(key_word)
-    key_word = key_word.replace('u','you')
+    print(key_word,'2')
+    #key_word = key_word.replace('u','you')
+    key_word = key_word.replace('day','they')
     key_word = key_word.replace('three you','you')
+    key_word = key_word.replace('view','you')
+    key_word = key_word.replace('our','are')
+    key_word = key_word.replace('day','are')
+    key_word = key_word.replace('seeks','six')
     key_word = key_word.replace('four your','your')
     key_word = key_word.replace('four you','your')
     key_word = key_word.replace('four you','your')
@@ -1363,13 +1412,15 @@ def first():
     key_word = key_word.replace('questionmark',"what?")
     key_word = key_word.replace('two you',"ur")
     key_word = key_word.replace('wow',"one")
+    key_word = key_word.replace('to',"too")
     key_word = key_word.replace('one you',"u")
     key_word = key_word.replace('five hello',"uh huh")
     key_word = key_word.replace('four hello',"uh uh")
     key_word = key_word.replace('three hello',"uhhh")
     key_word = key_word.replace('two you are',"ur")
     key_word = key_word.replace('five you',"you're")
-    engine.setProperty('rate',230)
+    print(key_word,'3')
+    engine.setProperty('rate',200)
     if key_word == 'blank':
         say_('wait, right, okay, middle, blank')
     elif key_word == 'done':
@@ -1426,8 +1477,9 @@ def first():
         say_('4 uh uh, 6 you are, 5 uh huh, 4 your')
     elif key_word == "you're":
         say_('3 you, you apostrophy are')
-
-
+    else: first()
+    print('returning ')
+    return
     engine.setProperty('rate',200)
     return
 def maze_reverse(maze_map,current_number,goal_position,array_of_path_pos):
@@ -1461,6 +1513,7 @@ def maze_reverse(maze_map,current_number,goal_position,array_of_path_pos):
         return array_of_path_pos
 
 def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
+    loop_finished = False
     #loop array is an arrat that has number positions
     #current number is  number of loops in floodfill search
     print(current_number,loop_array,goal_position,'cur number and loop array and goal pos')
@@ -1523,6 +1576,7 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
         print('-----------------------------------------')
     else:
         print('done')
+        loop_finished = True
     print(current_number, array_of_pos, 'cur number and loop array before calling fucntion')
     moves_to_do = []
     try:
@@ -1542,11 +1596,13 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
         print(moves_to_do,' moves to do')
         return
     except:
+        print(' i dont think that is good fella')
         pass
-    maze_solver(maze_map,starting_pos,goal_position,array_of_pos,current_number)
+    if current_number <37 and loop_finished == False:
+        maze_solver(maze_map,starting_pos,goal_position,array_of_pos,current_number)
 
 
-map = [
+'''map = [
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
         ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
         ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
@@ -1561,7 +1617,7 @@ map = [
         ['■', 'P', ' ', 'F', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
         ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
     ]
-maze_solver(map,(9,7),(3,11),[(9,7)],0)
+maze_solver(map,(9,7),(3,11),[(9,7)],0)'''
 def maze():
     # cry for help will not save my tarnished soul
     # idea is like, if you will be maze 6 and check both dead ends, just return to starting position and choose different direction
@@ -1733,6 +1789,13 @@ def maze():
     starting_pos = wait_()
     starting_pos = remove_the(starting_pos)
     starting_pos = starting_pos.replace('you know','zero')
+    starting_pos = starting_pos.replace('for', 'four')
+    starting_pos = starting_pos.replace('or', 'four')
+    starting_pos = starting_pos.replace('boo', 'two')
+    starting_pos = starting_pos.replace('to', 'two')
+    starting_pos = starting_pos.replace('b', 'three')
+    starting_pos = starting_pos.replace('who', 'two')
+    starting_pos = starting_pos.replace('too', 'two')
     starting_pos = starting_pos.split(' ')
     print(starting_pos,'starting pos variable')
     start_pos = ()
@@ -1742,12 +1805,62 @@ def maze():
     print('start pos ', start_pos)
     if circle_pos in maze1:
         print('maze 1')
-        maze_map1[start_pos[1]][start_pos[0]] = 'S'
+        maze_map1[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map1)
+
+    elif circle_pos in maze2:
+        print('maze 2')
+        maze_map2[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map2)
+
+    elif circle_pos in maze3:
+        print('maze 3')
+        maze_map3[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map3)
+
+    elif circle_pos in maze4:
+        print('maze 4')
+        maze_map4[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map4)
+
+    elif circle_pos in maze5:
+        print('maze 5')
+        maze_map5[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map5)
+
+    elif circle_pos in maze6:
+        print('maze 6')
+        maze_map6[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map6)
+
+    elif circle_pos in maze7:
+        print('maze 7')
+        maze_map7[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map7)
+
+    elif circle_pos in maze8:
+        print('maze 8')
+        maze_map8[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map8)
+
+    elif circle_pos in maze9:
+        print('maze 9')
+        maze_map9[start_pos[1]][start_pos[0]] = '0'
+        map_number = copy.deepcopy(maze_map9)
+
+
+
 
     say_('end position')
     goal = wait_()
     goal = remove_the(goal)
     goal = goal.replace('you know', 'zero')
+    goal = goal.replace('for', 'four')
+    goal = goal.replace('or', 'four')
+    goal = goal.replace('boo', 'two')
+    goal = goal.replace('to', 'two')
+    goal = goal.replace('who', 'two')
+    goal = goal.replace('too', 'two')
     goal = goal.split(' ')
 
     print(goal, 'goal variable (answer)')
@@ -1758,9 +1871,17 @@ def maze():
             goal_pos += (numbers[word]*2+1,)
 
     maze_map1[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map2[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map3[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map4[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map5[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map6[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map7[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map8[goal_pos[1]][goal_pos[0]] = 'F'
+    maze_map9[goal_pos[1]][goal_pos[0]] = 'F'
     '''for row in maze_map1:
         print(' '.join(row))'''
-
+    maze_solver(map_number,start_pos,goal_pos,[start_pos],0)
     # start_pos = (pos[0],pos[1])
     ## god help me
     # 4 check and then 4 more, make a variable that keeps track of newest number and make a check that if position of those newest numbers (i mean one of them, they will be in array that will...)
@@ -1792,6 +1913,7 @@ while True:
 
     if mode == 'wait':
         recognized_text = listening()
+        recognized_text = remove_the(recognized_text)
         if recognized_text == 'go':
             say_('start')
             mode = 'go'
@@ -1896,7 +2018,7 @@ while True:
             keypads()
         elif recognized_text == 'knob' or recognized_text == 'knobs' or recognized_text == 'needy':
             knobs()
-        elif recognized_text == 'first':
+        elif recognized_text == 'speech':
             first()
-        elif recognized_text == 'maze' or recognized_text == 'maison' or recognized_text == 'made' or recognized_text == 'maith':
+        elif recognized_text == 'maze' or recognized_text == 'maison' or recognized_text == 'made' or recognized_text == 'maith' or recognized_text == 'hey' or recognized_text == 'it is' or recognized_text == 'phase' or recognized_text == "he's":
             maze() # :(
