@@ -55,9 +55,9 @@ p = pyaudio.PyAudio()
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True,frames_per_buffer=8192)
 stream.start_stream()
 
-mode = 'test'
+mode = 'wait'
 numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
-           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2}
+           'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2,'poor':4}
 
 def remove_the(text):
     a = text.replace('the ','')
@@ -96,18 +96,11 @@ def ask_for(key):
             response = resp.replace(' ','')
             if response in numbers:
                 response = numbers[response]
-            say_(f"{key}, {response}, correct?")
             print(f"{key}, {response}, correct?")
 
-        confirm = listening()
-        if confirm in positive_answers:
+
             return response
-        elif confirm == key:
-            say_(f'lets try again')
-        elif confirm == 'wrong':
-            ask_for(key)
-        else:
-            say_(f'unknown')
+
             conf = True #makes the bot remember the batteries if it wont understand 'yes' as an answer, you dont have to say it again
 
 def wait_():
@@ -122,7 +115,12 @@ def ask_for_advanced(key):
     # for ports its cereal = serial, RCA (stereo),DVI,parallel,ps,rj
     port_LUT = {
                 'cereal':'serial',
+                'audio':'serial',
                 'steral':'stereo',
+                'red':'stereo',
+                'read':'stereo',
+                'bread':'stereo',
+                'bed':'stereo',
                 'sterile':'stereo',
                 'stereo':'stereo',
                 'serial':'serial',
@@ -130,6 +128,7 @@ def ask_for_advanced(key):
                 'd v i':'dvi',
                 'ps': 'ps2',
                 '2':'ps2',
+                'two':'ps2',
                 'parallel':'parallel',
                 'forty five': 'rj',
                 }
@@ -141,9 +140,14 @@ def ask_for_advanced(key):
             say_(f'{key} waiting')
             answer_  = listening()
             answer = remove_the(answer_)
+            if answer == 'no': break
+            if answer == 'none': break
+            if answer == 'non': break
+            print(answer)
+
             if answer in port_LUT:
                 list_.append(port_LUT[answer])
-                say_(f"{key}, {port_LUT[answer]}, done?")
+                say_(f"done?")
                 print(f"{key}, {port_LUT[answer]}, done?")
 
                 confirm = wait_()
@@ -174,11 +178,16 @@ def ask_for_advanced(key):
         number = 1
         while True:
 
-            say_(f'{key} waiting')
+            say_(f'{key}')
             answer_ = listening()
             answer = remove_the(answer_)
+            if answer == 'no': break
+            if answer == 'none': break
             if answer:
+
                 answer_corrected = answer.replace('the ','')
+                answer_corrected = answer.replace('of','off')
+                answer_corrected = answer.replace('offf','off')
                 print(answer_corrected)
                 indicator = ''
                 group = answer_corrected.split() #group ofwords from answer
@@ -190,7 +199,7 @@ def ask_for_advanced(key):
                     ask_for_advanced(key)
                 light = (indicator, group[3])
                 list_.append(light)
-                say_(f"{key}, {light}, done?")
+                say_(f"done?")
                 print(f"{key}, {light}, done?")
 
                 confirm = wait_()
@@ -219,7 +228,7 @@ def ask_for_advanced(key):
         list_ = []
         while True:
 
-            say_(f'{key} waiting')
+            say_(f'{key}')
             answer = listening()
 
             if answer:
@@ -239,14 +248,15 @@ def ask_for_advanced(key):
 
                 serial = (indicator)
 
-                say_(f"{key}, {' '.join(indicator)}, correct?")
+                say_(f"{' '.join(indicator)}")
                 print(f"{key}, {serial}, correct?")
 
                 confirm = wait_()
 
                 if confirm == 'no':
                     print(serial)
-                    say_(f'{key} ')
+                    #say_(f'{key} ')
+                    list_ = []
 
                 elif confirm == key:
                     print(serial)
@@ -477,11 +487,12 @@ def wires(wires_done,wire_numb):
     colors_replaced = colors_replaced2.replace('read', 'red')
     colors_group = colors_replaced.split(' ')
     if len(colors_group) != wire_number:
+        print(colors_group, wire_number)
         say_('wrong colors')
         wires(True,wire_number)
 
-    say_(f'{colors_group}')
-    answer_ = wait_()
+
+    answer_ = 'yes'
     answer = remove_the(answer_)
     if answer in positive_answers:
         if wire_number == 3:
@@ -494,35 +505,33 @@ def wires(wires_done,wire_numb):
                 say_('cut last blue')
             else: say_('cut last')
         elif wire_number == 4:
-            for signs in serial:
-                try:
-                    #int(signs)
-                    last_int = int(signs)
-                except ValueError:
-                    continue
+            for i in range(1,7):
+                if serial[-i].isdigit():
+                    last_int = int(serial[-i]);
+                    break
+
             if last_int % 2 == 1 and colors_group.count('red')>1: say_('cut last red')
             elif colors_group.count('red') == 0 and colors_group[-1] == 'yellow': say_('cut first')
             elif colors_group.count('blue') == 1: say_('cut first')
             elif colors_group.count('yellow') > 1: say_('cut last')
             else: say_('cut second')
         elif wire_number == 5:
-            for signs in serial:
-                try:
-                    #int(signs)
-                    last_int = int(signs)
-                except ValueError:
-                    continue
+            for i in range(1, 7):
+                print(serial)
+                print(serial[-i])
+                if serial[-i].isdigit():
+                    print('is digit')
+                    last_int = int(serial[-i]);
+                    break
             if last_int % 2 == 1 and colors_group[-1] =='black': say_('cut fourth')
             elif colors_group.count('red') == 1 and colors_group.count('yellow') > 1: say_('cut first')
             elif colors_group.count('black') == 0: say_('cut second')
             else: say_('cut first')
         elif wire_number == 6:
-            for signs in serial:
-                try:
-                    #int(signs)
-                    last_int = int(signs)
-                except ValueError:
-                    continue
+            for i in range(1, 7):
+                if serial[-i].isdigit():
+                    last_int = int(serial[-i]);
+                    break
             if last_int % 2 == 1 and colors_group.count('yellow') == 0: say_('cut third')
             elif colors_group.count('yellow') == 1 and colors_group.count('white') > 1: say_('cut fourth')
             elif colors_group.count('red') == 0: say_('cut last')
@@ -822,6 +831,7 @@ def simon_says(color_array,loop,strike):
         if sign in vowels:
             has_vowel = True
             break
+    print(has_vowel, 'serial has vowel or not ')
     strikes = strike
     if loop == 0:
         say_('colors, strikes')
@@ -839,6 +849,7 @@ def simon_says(color_array,loop,strike):
     say_('color')
     flashing = wait_()
     flashing = remove_the(flashing)
+    if flashing == 'done':return
     print(flashing)
     if has_vowel:
         if strikes == 0:
@@ -1092,10 +1103,10 @@ def memory():
             say_(f'press {number2}')
         elif level5 == 3:
 
-            say_(f'press {number3}')
+            say_(f'press {number4}')
         elif level5 == 4:
 
-            say_(f'press {number4}')
+            say_(f'press {number3}')
 
 def morse():
     morse_LUT = {
@@ -1938,7 +1949,7 @@ while True:
     if mode == 'wait':
         recognized_text = listening()
         recognized_text = remove_the(recognized_text)
-        if recognized_text == 'go':
+        if recognized_text == 'go' or recognized_text == 'goal':
             say_('start')
             mode = 'go'
         else:
@@ -1946,19 +1957,19 @@ while True:
     elif mode == 'go':
         port = ask_for_advanced("port")
         info_dict["port"] = port
-        say_(f"port: {', '.join(port)}")
+        #say_(f"port: {', '.join(port)}")
 
         serial = ask_for_advanced("serial")
         info_dict["serial"] = serial
-        say_(f'serial: {serial}')
+        #say_(f'serial: {serial}')
 
         lights = ask_for_advanced("lights")
         info_dict["lights"] = lights
-        say_(f'lights: {lights}')
+        #say_(f'lights: {lights}')
 
         batteries = ask_for("batteries")
         info_dict["batteries"] = batteries
-        say_(f'batteries: {batteries}')
+        #say_(f'batteries: {batteries}')
         mode = 'play'
     elif mode == 'test':
         port = 'parallel'
@@ -1969,7 +1980,7 @@ while True:
     elif mode == 'play':
         #region
         port = 'parallel'
-        serial = 'zzzzzz'
+        serial = 'asd1b4'
         lights = ('asd', 'yes')
         batteries = 2
         #endregion
@@ -1996,16 +2007,16 @@ while True:
             if answer in positive_answers:
                 if color_of_button == 'blue' and state_on_button == 'abort':
                     button_held = True
-                    say_('hold')
+
                 elif int(batteries) > 1 and state_on_button == 'detonate':
                     say_('press and release')
                 elif color_of_button == 'white' and ('car','yes') in lights:
-                    say_('hold')
+
                     button_held = True
                 elif int(batteries) > 2 and ('frk','yes') in lights:
                     say_('press and release')
                 elif color_of_button == 'yellow':
-                    say_('hold')
+
                     button_held = True
                 elif color_of_button == 'red' and state_on_button == 'hold':
                     say_('press and release')
