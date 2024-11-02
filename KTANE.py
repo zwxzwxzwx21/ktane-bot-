@@ -1,14 +1,329 @@
 import copy
 import os
-from vosk import Model, KaldiRecognizer
+#from vosk import Model, KaldiRecognizer
 import pyaudio
 import pyttsx3
 import json
+#import speech_recognition as sr
+import pyautogui
+import time
+import numpy as np
+from matplotlib import pyplot as plt
+import cv2
+import os
+import cv2
+import numpy as np
+import pyautogui
+import time
 
+
+def distance_to_colors(pixel):
+    white = np.array([255, 255, 255])
+    black = np.array([0, 0, 0])
+    distance_to_white = np.linalg.norm(pixel - white)
+    distance_to_black = np.linalg.norm(pixel - black)
+    return distance_to_white, distance_to_black
+
+
+def take_and_display_screenshot(serial,x, y, width, height):
+    #screenshot = pyautogui.screenshot(region=(x, y, width, height))
+    serial = serial
+    #screenshot_np = np.array(screenshot)
+    #my_image = cv2.cvtColor(screenshot_np, cv2.COLOR_RGB2BGR)
+    check_array = ''
+    number_LUT = {
+        '001100011100010010111111100001': 'A',
+        '111110100011111110100001111100': 'B',
+        '011101100001100000100001011110': 'C',
+        '011101100001100000100001011100': 'C',
+        '111110100001100001100011111100': 'D',
+        '111111100000111110100000111111': 'E',
+        '111111100000111110100000100000': 'F',
+        '011101100001100111100001011110': 'G',
+        '011101100001100111100001011100': 'G',
+        '100011100011111111100011100011': 'H',
+        '011110001100001100001100011110': 'I',
+        '011110001000001000001000011110': 'I',
+        '000011000011000011100010011100': 'J',
+        '000011000011000011100011011100': 'J',
+        '100010101100111000100110100011': 'K',
+        '100010101100111000100100100011': 'K',
+        '100000100000100000100000111111': 'L',
+        '110011110111101111100011100011': 'M',
+        '110011111011101111100111100011': 'N',
+        '111110100001111110100000100000': 'P',
+        '111110100001111110100100100011': 'R',
+        '011110100001100001100011011100': 'Q',
+        '011110100010001110100011101110': 'S',
+        '011111100011001110100011101110': 'S',
+        '111111101001001000001000011110': 'T',
+        '111111101101001100001100011110': 'T',
+        '100011100011100011100011011100': 'U',
+        '100001100011010010011100001100': 'V',
+        '100001100001101111110110010010': 'W',
+        '110111010110001100010110110111': 'X',
+        '111110100110001000010011111111': 'Z',
+        '111110100110001100010011111111': 'Z',
+
+        '011110100011101001100011011100': '0',
+
+        '001000111000001000001000011110': '1',
+        '011110100011000110011011111111': "2",
+        '011110100011001110100011011110': "3",
+        '000100011100100100000100001111': '4',
+        '000100011100100100000110001111': '4',
+        '111110100000110011100011011100': '5',
+        '011110100000100011100001011110': '6',
+        '111111100010000100001000001000': '7',
+        '011110100011011110100001011110': '8',
+        '011110100011100011000011011100': "9"
+    }
+    # only number here, made on 3rd pos
+    N_LUT = {
+
+        '011110100011101001100011011100': '0',
+        '001000111000001000001000011110': '1',
+        '011110100011000110011011111111': "2",
+        '011110100011001110100011011110': '3',
+        '000100011100100100000110001111': '4',
+        '111110100000110011100001011100': "5",
+        '111110100000110011100011011100': '5',
+        '011110100000100011100001011110': '6',
+        '111111100010000100001000001000': '7',
+        '011110100011011110100001011110': '8',
+        '011110100011100011000011011100': '9',
+        '011110100001100011000011011100': '9'
+    }
+    # ONLY ON 6 POS HERE
+    N_LUT2 = {
+
+        '011110100011101001110001011100': '0',
+        '011110100011101001110011011100': '0',
+        '001100111100001100001100011110': '1',
+        '011110100011000110011011111111': '2',
+        '011110100011001110100001011110': '3',
+        '000110011110100110000110001111': '4',
+        '111111100000110011100001011100': '5',
+        '011110100000100011100001011110': '6',
+        '111111100010000100001000001000': '7',
+        '011110100011011110100001011110': '8',
+        '011110100001110011000011011100': '9'
+
+    }
+
+    for j in range(5):
+        for i in range(6):
+            dot_x, dot_y = 4 + i * 4, 2 + j * 8
+            #my_image[dot_x, dot_y] = (0, 0, 255)
+            screen_pixet_rgb = pyautogui.pixel(x + dot_x, y + dot_y)
+
+            distance_to_white, distance_to_black = distance_to_colors(np.array(screen_pixet_rgb))
+            closer_color = "white" if distance_to_white < distance_to_black else "black"
+            if closer_color == "white":
+                check_array += '0'
+            else:
+                check_array += '1'
+
+    try:
+        if x != 1825:
+            if x != 1915:
+                serial += number_LUT[check_array]
+            else:
+                serial +=N_LUT2[check_array]
+        else:
+            serial +=N_LUT[check_array]
+    except KeyError:
+        print(check_array, 'not in LUT')
+    return serial
+# can check for second and third leter in labels because __K is only for FRK and _A_ is only for CAR, but i think it is
+# better to ccheck for 3rd pos only and then just check one pixel to determine if the second position is A or L if third one is R.
+# i think doing it just like serial number is good, just use less pixels to save time
+
+
+# to do
+# widgets image recognition: we can now detect how many widgets are there and based on that we can determine
+# the position we will be checking numbers using lookup table, for example, if we have 5 widgets, we check position 1651
+# and then add 30 pixels each time we take a screenshot and compare it with pictures in the folder, then we can
+# just extract signs from file name and use those, (if this turns out to kinda fail because comapring images will
+# be fucked due to images being too long in height, just make them shorter and set 6 pixels to check for Q sign instead)
+# TRY  TO KEEP IMAGE RECOGNITION SMALL, CHECK PIXELS OVER IMAGES, IT TAKES MUCH LESS TIME!
+# ideas for modules to not forget and have them in one place:
+# button:
+# button is rather simple, one pixel for color and you can make something like this: check one pixel for word detonate
+# because its the longest, then check another pixel for some shorter word, or any word, just check the pixel right so
+# its definitely covered only by one of the remainign words and that way you can use image regocnition from 2-5 times rather
+# than using it 5, saving time.stripe is simply just check one pixel and then for timer i think the best idea is
+# to simply make 7 pixel checks for each sign in clock and just use LUT
+# keys: optimizing image recognition might be hard, id honeslty just take entire pictures and fuck it, it wont save like more than a second anyway
+# rest should be trivial
+# simon says:
+# idk how to check strikes, ig use the twitch thing for it, but you should not be striking at all so idk if there is a pointlol.
+#make checks every 0.2 seconds on 4 pixels and when they turn different color, indicating flashing, just go for it
+# i guess later would be better to have less checks cuz the module is now more normalized, and you can wait specified amount
+# of time after a button press like: you make one press, and then you make a check exactly one second later when another button should be at its peak flash color
+# take screen and go with it, keep in mind that image rec might be delayed!!!!!!!!!
+# maze:
+# you can optimize it by checking only selected green circles, but the rest should be really easy, you have start pos and ending pos, you even have
+# scrript that can solve maze so its not hard lol just do it my boi
+# memory:
+# minor pixel checks to save some time, and optimized button presses for some more time save, the faster the better
+# .
+
+
+# Ścieżka do folderu na Pulpicie
+'''desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
+widgets_path = os.path.join(desktop_path, 'widgets')'''
+
+# Współrzędne lewego górnego rogu prostokąta
+# Możesz zmienić te wartości na własne
+
+# for 5 widgets (only x varies)
+# pos of 6th serial number : 1801 + 26 | 61 + 45
+# pos of 5th serial number : 1771
+# pos of 4th serial number : 1741
+# pos of 3th serial number : 1711
+# pos of 2th serial number : 1681
+# pos of 1th serial number : 1651 spaced 30px
+# for 7 widgets, start at 1879
+# for 6 widgets, start at 1765
+# for 4 widgets, start at 1535
+# fro 3 widgets, start at 1420
+# Funkcja do wykonania zrzutu ekranu
+'''def take_screenshot(counter,x,y):
+   #x, y = 1801, 61
+    screenshot = pyautogui.screenshot(region=(x, y, 26, 45))
+    screenshot.save(os.path.join(widgets_path, f'{counter}.png'))
+    image = cv2.imread(os.path.join(widgets_path, f'{counter}.png'))
+# Sprawdź, ile plików już istnieje w folderze
+existing_files = len([name for name in os.listdir(widgets_path) if os.path.isfile(os.path.join(widgets_path, name)) and name.endswith('.png')])
+'''
+# Licznik zrzutów ekranu zaczyna się od liczby istniejących plików + 1
+'''counter = existing_files + 1'''
+def check_pixel(x,y):
+    a = pyautogui.pixel(x, y)
+    print(a)
+    return a
+'''while True:
+    x = 1942
+    y = 58 #change to 61
+    take_screenshot(counter,x,y);counter += 1
+    take_screenshot(counter,x+30,y);counter += 1
+    take_screenshot(counter,x+60,y);counter += 1
+    take_screenshot(counter,x+90,y);counter += 1
+    take_screenshot(counter,x+120,y);counter += 1
+    take_screenshot(counter,x+150,y);counter += 1
+    print(f'Zrzut ekranu zapisany jako {counter}.png')
+
+    input("Naciśnij Enter, aby wykonać kolejny zrzut ekranu lub zakończ program, naciskając Ctrl+C.")
+'''
+'''def check_serial_numbers(numb_of_widgets):
+    print('test')
+    # this function takes the x position and then based on that checks serial numbers,
+    # it will work on 16 pixel checks, mby more mby less
+    first_sign = ''
+    second_sign = ''
+    third_sign = ''
+    fourth_sign = ''
+    fifth_sign = ''
+    sixth_sign = ''
+    if numb_of_widgets == 6:
+        # check for Q sign
+        if pyautogui.pixel(1780,100) == (48,47,45):
+            first_sign = 'Q'
+            print('first one is a q')
+        print(pyautogui.pixel(1810,100))
+        if pyautogui.pixel(1810,100) == (51, 49, 47) or pyautogui.pixel(1810,100) == (48, 46, 44):
+            print('second one is a q')
+            second_sign = 'Q'
+
+        if pyautogui.pixel(1870,100) == (44, 43, 40):
+            print('fourth one is a q')
+            fourth_sign = 'Q'
+        if pyautogui.pixel(1900,100) == (45,44,41):
+            fifth_sign = 'Q'
+            print("fifth sign is a q")
+
+    pass'''
+'''def check_numb_widgets():
+    #this one just checks how many widgets are there on the bomb by checking pixels on top of the screen,
+    widgets = 8
+    for i in range(5):
+        print(f"checking for {widgets} widgets")
+        widgets -= 1
+        match widgets:
+            case 8:
+                # if statement if pixel is red, if it is, return. if not, continue
+                #pixel_check = ImageGrab.grab()
+                print(check_pixel(2123,27), 'bad check for good luck')
+                if check_pixel(2123,27) == (69, 17, 16):
+                    print("sth is wwrong")
+                    return widgets
+                else:
+                    continue
+            case 7:
+                print(check_pixel(2075,27),'case 7 should be (83, 13, 9)')
+                if check_pixel(2075,27) == (83, 13, 9) or check_pixel(2075,27) == (85, 13, 9):
+                    check_serial_numbers(7)
+                    print("7 widgets")
+                    return widgets
+                else:
+                    continue
+            case 6:
+                print(check_pixel(1960, 27),'case 6 should be (83, 13, 9)')
+                if check_pixel(1960, 27) == (83, 13, 9) or check_pixel(1960, 27) == (85, 13, 9):
+                    check_serial_numbers(6)
+                    print("6 widgets")
+                    return widgets
+                else:
+                    continue
+            case 5:
+                print(check_pixel(1843, 27),'case 5, should be (89, 13, 10)')
+                if check_pixel(1843, 27) == (89, 13, 10):
+                    print("5 widgets")
+                    return widgets
+                else:
+                    continue
+            case 4:
+                print(check_pixel(1730, 27),'case 4 should be (83, 13, 9)')
+                if check_pixel(1730, 27) == (83, 13, 9):
+                    print("4 widgets")
+                    return widgets
+                else:
+                    continue
+            case 3:
+                print(check_pixel(1613, 27),'case 3 should be (89, 13, 10)')
+                if check_pixel(1613, 27) == (89, 13, 10):
+                    print("3 widgets")
+                    return widgets
+                else:
+                    continue'''
+serial = ''
+while True:
+
+    if len(serial) != 6:
+        for i in range(6):
+            y = 61
+            if i == 0:
+                x = 1765
+            elif i == 1:
+                x = 1795
+            elif i == 2:
+                x = 1825
+            elif i == 3:
+                x = 1855
+            elif i == 4:
+                x = 1885
+            elif i == 5:
+                x = 1915
+            width, height = 176, 45
+            serial = take_and_display_screenshot(serial,x, y, width, height)
+    print(f"serial number: {serial}")
+
+'''
 speed_up = 225 # speed and slowed down voice for bot to read faster or slower if needed
 slow_down = 175
 
-positive_answers = ['yes','s','this','us','ps','as']
+positive_answers = ['yes','s','this','us','ps','as','vince']
 #potential bugs n todo:
 #uhh i think when serial is not long enough it kinda fucks it over unsure tho
 #not really a bug but sth that can be changed, on password gamemode i use double brackets because i tought there was a bug, you can remove one of the brackets but you would need to
@@ -39,6 +354,10 @@ positive_answers = ['yes','s','this','us','ps','as']
 #endregion
 #code below changes the voice from polish to english
 #region
+print("Available microphones:")
+for index, name in enumerate(sr.Microphone.list_microphone_names()):
+    print(f"Microphone with index {index}: {name}")
+
 engine = pyttsx3.init()
 engine.setProperty('read',210)
 voices = engine.getProperty('voices')
@@ -49,13 +368,16 @@ for voice in voices:
 info_dict = {} #this one stores values | CEREAL = SERIAL IDCCCCC
 
 debug = True
-model = Model('A:\\ktane bot\\vosk-model-en-us-0.22')
-recognizer = KaldiRecognizer(model, 16000)
+#model = Model('A:\\ktane bot\\vosk-model-en-us-0.22')
+#recognizer = KaldiRecognizer(model, 16000)
+recognizer = sr.Recognizer()
 p = pyaudio.PyAudio()
 stream = p.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True,frames_per_buffer=8192)
 stream.start_stream()
 
-mode = 'wait'
+
+
+mode = 'test'
 numbers = {'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9,
            'for': 4, 'aids': 8, 'aid': 8, 'tree': 3, 'free': 3, 'wow':1,'too':2,'poor':4}
 
@@ -74,17 +396,6 @@ def say_(text):
     engine.runAndWait()
 
 
-def listening():
-
-
-
-        while True:
-            data = stream.read(4096, exception_on_overflow=False)
-            if recognizer.AcceptWaveform(data):
-                result = recognizer.Result()
-                result_dict = json.loads(result)
-                recognized_text = result_dict.get('text', '')
-                return recognized_text
 
 def ask_for(key):
     conf = False
@@ -113,116 +424,43 @@ def wait_():
 def ask_for_advanced(key):
     #ports
     # for ports its cereal = serial, RCA (stereo),DVI,parallel,ps,rj
-    port_LUT = {
-                'cereal':'serial',
-                'audio':'serial',
-                'steral':'stereo',
-                'red':'stereo',
-                'read':'stereo',
-                'bread':'stereo',
-                'bed':'stereo',
-                'sterile':'stereo',
-                'stereo':'stereo',
-                'serial':'serial',
-                'd':'dvi',
-                'd v i':'dvi',
-                'ps': 'ps2',
-                '2':'ps2',
-                'two':'ps2',
-                'parallel':'parallel',
-                'forty five': 'rj',
-                }
-    if key == 'port':
-        list_ = []
-        number = 1
-        while True:
+    if key == 'edgework':
+        lights = []
+        port_return = []
+        say_('parallel port?')
+        answer_ = listening()
+        answer = remove_the(answer_)
+        print(answer)
+        if answer == 'no' or answer == 'none' or answer =='non':
+            port_return = []
+        elif answer in positive_answers:
+            port_return = ['parallel']
+            print(port_return)
+        say_('lit car?')
+        answer_ = listening()
+        answer = remove_the(answer_)
+        print(answer)
+        if answer == 'no' or answer == 'none' or answer =='non':
+            pass
+        elif answer in positive_answers:
+            light = ('car','yes')
+            lights.append(light)
+            print(lights)
+        say_('lit frk?')
+        answer_ = listening()
+        answer = remove_the(answer_)
+        print(answer)
+        if answer == 'no' or answer == 'none' or answer == 'non':
+            pass
+        elif answer in positive_answers:
+            light = ('frk', 'yes')
+            lights.append(light)
+            print(lights)
 
-            say_(f'{key} waiting')
-            answer_  = listening()
-            answer = remove_the(answer_)
-            if answer == 'no': break
-            if answer == 'none': break
-            if answer == 'non': break
-            print(answer)
 
-            if answer in port_LUT:
-                list_.append(port_LUT[answer])
-                say_(f"done?")
-                print(f"{key}, {port_LUT[answer]}, done?")
 
-                confirm = wait_()
+        return lights,port_return
 
-                if confirm == 'no':
-                    print(list_)
-                    number += 1
-                    say_(f'{key} {number}')
-                elif confirm == key:
-                    print(list_)
-                    number = 1
-                    return ask_for_advanced(key)
-                elif confirm == 'wrong':
-                    if number > len(list_):
-                        number -= 1
-                    del list_[-1]
-                    print(list_,number)
-                    say_('removed')
-                elif confirm == 'yes':
-                    print(list_)
-                    break
-        return list_
-    #lights  | idea: lets say you have CAR lit and BOB not lit, you say 3 words like 'cristian, arnold, rock' and 'yes'
-    #its always 3 long so then it proceses like: take first letter from first 3 words and then lit or 'no' (better over lit and unlit imo)
-    #so it does have things going over n shit like that
-    elif key == 'lights':
-        list_ = []
-        number = 1
-        while True:
-
-            say_(f'{key}')
-            answer_ = listening()
-            answer = remove_the(answer_)
-            if answer == 'no': break
-            if answer == 'none': break
-            if answer:
-
-                answer_corrected = answer.replace('the ','')
-                answer_corrected = answer.replace('of','off')
-                answer_corrected = answer.replace('offf','off')
-                print(answer_corrected)
-                indicator = ''
-                group = answer_corrected.split() #group ofwords from answer
-                print(group)
-                try:
-                    for i in range(3):
-                        indicator += group[i][0]
-                except IndexError:
-                    ask_for_advanced(key)
-                light = (indicator, group[3])
-                list_.append(light)
-                say_(f"done?")
-                print(f"{key}, {light}, done?")
-
-                confirm = wait_()
-
-                if confirm == 'no':
-
-                    print(list_)
-                    number += 1
-                    say_(f'{key} {number}')
-                elif confirm == key:
-                    print(list_)
-                    number = 1
-                    return ask_for_advanced(key)
-                elif confirm == 'wrong':
-                    if number > len(list_):
-                        number -= 1
-                    del list_[-1]
-                    print(list_, number)
-                    say_('removed')
-                elif confirm == 'yes':
-                    print(list_)
-                    break
-        return list_
 
     elif key == 'serial':
         list_ = []
@@ -247,8 +485,9 @@ def ask_for_advanced(key):
                     ask_for_advanced(key)
 
                 serial = (indicator)
-
-                say_(f"{' '.join(indicator)}")
+                if len(serial) == 6:
+                    say_(f"{' '.join(indicator)}")
+                else: continue
                 print(f"{key}, {serial}, correct?")
 
                 confirm = wait_()
@@ -262,13 +501,41 @@ def ask_for_advanced(key):
                     print(serial)
                     return ask_for_advanced(key)
 
-                elif confirm == 'yes':
+                elif confirm in positive_answers:
                     print(list_)
                     return serial
                     break
 
         return serial
+def edgework():
 
+    say_('edgework')
+    lights_list =[]
+    answer = listening()
+    port_to_return = ''
+    answer = remove_the(answer)
+    answer = answer.split(' ')
+    if len(answer) == 4:
+        if answer[3] in numbers:
+            batteries = numbers[answer[3]]
+        else:
+            edgework()
+        for answer_number in range(3):
+            if answer[answer_number] in positive_answers:
+                if answer_number == 0:
+                    port_to_return = 'parallel'
+                elif answer_number == 1:
+                    light = ('car','yes')
+                    lights_list.append(light)
+                elif answer_number == 2:
+                    light = ('frk','yes')
+                    lights_list.append(light)
+
+
+    else:
+        edgework()
+    if batteries == None: batteries = 2
+    return port_to_return, lights_list, batteries
 def password(rows_done,r1,r2,r3,r4,r5):
     row1 = r1
     row2 = r2
@@ -286,6 +553,12 @@ def password(rows_done,r1,r2,r3,r4,r5):
         say_('password')
         letters = wait_()
         letters_replaced = letters.replace('the ', '')
+        letters_replaced = letters.replace('why', 'y')
+        letters_replaced = letters.replace('you', 'u')
+        letters_replaced = letters.replace('eye', 'i')
+        letters_replaced = letters.replace('new', 'u')
+        letters_replaced = letters.replace('see', 'c')
+        letters_replaced = letters.replace('sea', 'c')
         letters_group = letters_replaced.split(' ')
         try:
             row_one = [letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
@@ -294,7 +567,10 @@ def password(rows_done,r1,r2,r3,r4,r5):
             password('one',r1,r2,r3,r4,r5)
         row1 = row_one
         engine.setProperty('rate', speed_up)
+
         say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        print(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+
         engine.setProperty('rate', 200)
         answer_ = wait_()
         answer = remove_the(answer_)
@@ -312,6 +588,12 @@ def password(rows_done,r1,r2,r3,r4,r5):
         say_('row two')
         letters = wait_()
         letters_replaced = letters.replace('the ', '')
+        letters_replaced = letters.replace('why', 'y')
+        letters_replaced = letters.replace('you', 'u')
+        letters_replaced = letters.replace('eye', 'i')
+        letters_replaced = letters.replace('new', 'u')
+        letters_replaced = letters.replace('see', 'c')
+        letters_replaced = letters.replace('sea', 'c')
         letters_group = letters_replaced.split(' ')
         try:
             row_two = [letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
@@ -321,6 +603,7 @@ def password(rows_done,r1,r2,r3,r4,r5):
             password('two',r1,r2,r3,r4,r5)
         row2 = row_two
         say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        print(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
         answer_ = wait_()
         answer = remove_the(answer_)
         print(answer)
@@ -351,6 +634,12 @@ def password(rows_done,r1,r2,r3,r4,r5):
         say_('row three')
         letters = wait_()
         letters_replaced = letters.replace('the ', '')
+        letters_replaced = letters.replace('why', 'y')
+        letters_replaced = letters.replace('you', 'u')
+        letters_replaced = letters.replace('eye', 'i')
+        letters_replaced = letters.replace('new', 'u')
+        letters_replaced = letters.replace('see', 'c')
+        letters_replaced = letters.replace('sea', 'c')
         letters_group = letters_replaced.split(' ')
         try:
             row_three =[letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
@@ -360,6 +649,7 @@ def password(rows_done,r1,r2,r3,r4,r5):
         row3 = row_three
         engine.setProperty('rate',speed_up)
         say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        print(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
         engine.setProperty('rate', 200)
         answer_ = wait_()
         answer = remove_the(answer_)
@@ -392,6 +682,12 @@ def password(rows_done,r1,r2,r3,r4,r5):
         say_('row four')
         letters = wait_()
         letters_replaced = letters.replace('the ', '')
+        letters_replaced = letters.replace('why', 'y')
+        letters_replaced = letters.replace('you', 'u')
+        letters_replaced = letters.replace('eye', 'i')
+        letters_replaced = letters.replace('new', 'u')
+        letters_replaced = letters.replace('see', 'c')
+        letters_replaced = letters.replace('sea', 'c')
         letters_group = letters_replaced.split(' ')
         try:
             row_four = [letters_group[0][0],letters_group[1][0],letters_group[2][0],letters_group[3][0],letters_group[4][0],letters_group[5][0]]
@@ -401,6 +697,7 @@ def password(rows_done,r1,r2,r3,r4,r5):
         row4 = row_four
         engine.setProperty('rate', speed_up)
         say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        print(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
         engine.setProperty('rate', 200)
         answer_ = wait_()
         answer = remove_the(answer_)
@@ -434,6 +731,12 @@ def password(rows_done,r1,r2,r3,r4,r5):
         say_('row five')
         letters = wait_()
         letters_replaced = letters.replace('the ', '')
+        letters_replaced = letters.replace('why', 'y')
+        letters_replaced = letters.replace('you', 'u')
+        letters_replaced = letters.replace('eye', 'i')
+        letters_replaced = letters.replace('new', 'u')
+        letters_replaced = letters.replace('see', 'c')
+        letters_replaced = letters.replace('sea', 'c')
         letters_group = letters_replaced.split(' ')
         try:
             row_five = [letters_group[0][0], letters_group[1][0], letters_group[2][0],letters_group[3][0], letters_group[4][0], letters_group[5][0]]
@@ -443,6 +746,7 @@ def password(rows_done,r1,r2,r3,r4,r5):
         row5 = row_five
         engine.setProperty('rate', speed_up)
         say_(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
+        print(f'{letters_group[0][0]} {letters_group[1][0]} {letters_group[2][0]} {letters_group[3][0]} {letters_group[4][0]} {letters_group[5][0]}, correct?')
         engine.setProperty('rate', 200)
         answer_ = wait_()
         answer = remove_the(answer_)
@@ -660,6 +964,8 @@ def sequence(str,red_count,blue_count,black_count):
         word = word.replace('eight', 'c')
         word = word.replace('bee', 'b')
         word = word.replace('bat', 'b')
+        word = word.replace('mix', 'next')
+        word = word.replace('ban', 'b')
         word = word.replace('blow', 'blue')
         word = word.replace('baten', 'b')
         word = word.replace('rather', 'red')
@@ -821,7 +1127,7 @@ def sequence(str,red_count,blue_count,black_count):
     say_(huj)
 
     engine.setProperty('rate', 200)
-
+    sequence('',red,blue,black)
 def simon_says(color_array,loop,strike):
     colors = color_array
     engine.setProperty('rate', speed_up)
@@ -849,7 +1155,8 @@ def simon_says(color_array,loop,strike):
     say_('color')
     flashing = wait_()
     flashing = remove_the(flashing)
-    if flashing == 'done':return
+    flashing = flashing.replace('read','red')
+    if flashing == 'done' or flashing =='don' or flashing == 'dawn':return
     print(flashing)
     if has_vowel:
         if strikes == 0:
@@ -1127,6 +1434,7 @@ def morse():
         'vector': 595,
         'beats' : 600
     }
+    morse_LUT2 = ['shell','halls','slick','trick','boxes','leaks','strobe','bistro','flick','bombs','break','brick','steak','sting','vector','beats']
     morse_decode_LUT = {
         '.-' : 'a',
         '-...' : 'b',
@@ -1162,12 +1470,24 @@ def morse():
     morse_code = morse_code.replace('light','line')
     morse_code = morse_code.replace('lime','line')
     morse_code = morse_code.replace('lie','line')
+    morse_code = morse_code.replace('like','line')
+    morse_code = morse_code.replace('ninth','line')
+    morse_code = morse_code.replace('that','dot')
+    morse_code = morse_code.replace('net','next')
+    morse_code = morse_code.replace('he','')
+    morse_code = morse_code.replace('thought','dot')
+    morse_code = morse_code.replace("don't",'dot')
+    morse_code = morse_code.replace("do",'dot')
+    morse_code = morse_code.replace("got",'dot')
     morse_code = morse_code.split(' ')
     if morse_code == 'module':
         return
     one_sign = []
     solution = ''
+
+    numb_of_signs = 0
     for sign in morse_code:
+        possible_sols = []
         if sign == 'next' or sign == 'mixed':
             temp_word = ''
             for signs in one_sign:
@@ -1187,9 +1507,16 @@ def morse():
                 print(f'current temp word: {temp_word}')
 
             solution += temp_word
+            numb_of_signs += 1
+            for morse_codes in morse_LUT2:
+                if solution == morse_codes[:numb_of_signs]:
+                    possible_sols.append(morse_codes)
+            if len(possible_sols) == 1:
+                say_(possible_sols);return
             print(f' current solution {solution}')
             one_sign = []
         else:
+            if sign == 'module':return
             one_sign.append(sign)
             print('appending one sign', one_sign)
     print(f'solution : {solution}')
@@ -1223,6 +1550,8 @@ def keypads():
     signs = signs.replace('debbie','devil')
     signs = signs.replace('grandma','gamma')
     signs = signs.replace('gum','gamma')
+    signs = signs.replace('oh','o')
+    signs = signs.replace('all','o')
     signs = signs.replace('gunma','gamma')
     signs = signs.replace('government','gamma')
     signs = signs.replace('spraying','spring')
@@ -1379,9 +1708,13 @@ def first():
     answer = remove_the(answer)
     print(answer,'2')
     answer = answer.replace('too','two')
+    answer = answer.replace('sayss','says')
+    answer = answer.replace('sas','says')
+    answer = answer.replace('sas','says')
     answer = answer.replace('blog','blank')
     answer = answer.replace('to','two')
     answer = answer.replace('say','says')
+    answer = answer.replace('for','four')
     answer = answer.replace('for','four')
     answer = answer.replace('red','read')
     answer = answer.replace('free','three')
@@ -1411,6 +1744,7 @@ def first():
     key_word=remove_the(key_word)
     print(key_word,'2')
     #key_word = key_word.replace('u','you')
+    key_word = key_word.replace('for', 'four')
     key_word = key_word.replace('day','they')
     key_word = key_word.replace('three you','you')
     key_word = key_word.replace('view','you')
@@ -1422,9 +1756,12 @@ def first():
     key_word = key_word.replace('four you','your')
     key_word = key_word.replace('what questionmark',"what?")
     key_word = key_word.replace('questionmark',"what?")
+    key_word = key_word.replace('questionmark',"what?")
     key_word = key_word.replace('two you',"ur")
     key_word = key_word.replace('wow',"one")
     key_word = key_word.replace('to',"too")
+    key_word = key_word.replace('sas',"says")
+    key_word = key_word.replace('sayss',"says")
     key_word = key_word.replace('one you',"u")
     key_word = key_word.replace('five hello',"uh huh")
     key_word = key_word.replace('four hello',"uh uh")
@@ -1491,7 +1828,7 @@ def first():
         say_('3 you, you apostrophy are')
     else: first()
     print('returning ')
-    return
+
     engine.setProperty('rate',200)
     return
 def maze_reverse(maze_map,current_number,goal_position,array_of_path_pos):
@@ -1624,29 +1961,11 @@ def maze_solver(maze_map,starting_pos,goal_position,loop_array,current_number):
 
 
         return
-    '''except:
-        print(' i dont think that is good fella')
-        pass'''
+    
     if current_number <37 and loop_finished == False:
         maze_solver(maze_map,starting_pos,goal_position,array_of_pos,current_number)
 
 
-'''map = [
-        ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-        ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-        ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
-        ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-        ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-        ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-        ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
-        ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', '0', ' ', 'P', '■'],
-        ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-        ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-        ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
-        ['■', 'P', ' ', 'F', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-        ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-    ]
-maze_solver(map,(9,7),(3,11),[(9,7)],0)'''
 def maze():
     # cry for help will not save my tarnished soul
     # idea is like, if you will be maze 6 and check both dead ends, just return to starting position and choose different direction
@@ -1659,7 +1978,19 @@ def maze():
     position = remove_the(position)
     position = position.replace('you know','zero')
     position = position.replace("i've", 'five')
-
+    position = position.replace('you know', 'zero')
+    position = position.replace('for', 'four')
+    position = position.replace('or', 'four')
+    position = position.replace('boo', 'two')
+    position = position.replace("i've", 'five')
+    position = position.replace("fouren", 'four')
+    position = position.replace('to', 'two')
+    position = position.replace('b', 'three')
+    position = position.replace('who', 'two')
+    position = position.replace('too', 'two')
+    position = position.replace('be', 'three')
+    position = position.replace('free', 'three')
+    position = position.replace('twoo', 'two')
     if position == 'module': return
     circle_pos = ()
     position = position.split(' ')
@@ -1706,9 +2037,9 @@ def maze():
         ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
         ['■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
         ['■', 'P', ' ', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-        ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
+        ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
         ['■', 'P', '■', 'P', '■', 'P', '■', 'P', '■', 'P', '■', 'P', '■'],
-        ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
+        ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
         ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■', 'P', '■'],
         ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■'],
         ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
@@ -1824,11 +2155,14 @@ def maze():
     starting_pos = starting_pos.replace('or', 'four')
     starting_pos = starting_pos.replace('boo', 'two')
     starting_pos = starting_pos.replace("i've", 'five')
-
+    starting_pos = starting_pos.replace("fouren", 'four')
     starting_pos = starting_pos.replace('to', 'two')
     starting_pos = starting_pos.replace('b', 'three')
     starting_pos = starting_pos.replace('who', 'two')
     starting_pos = starting_pos.replace('too', 'two')
+    starting_pos = starting_pos.replace('be', 'three')
+    starting_pos = starting_pos.replace('free', 'three')
+    starting_pos = starting_pos.replace('twoo', 'two')
     starting_pos = starting_pos.split(' ')
     print(starting_pos,'starting pos variable')
     start_pos = ()
@@ -1888,13 +2222,21 @@ def maze():
     goal = wait_()
     goal = remove_the(goal)
     goal = goal.replace('you know', 'zero')
+    goal = goal.replace('we', 'three')
     goal = goal.replace("i've", 'five')
+    goal = goal.replace("fouren", 'four')
     goal = goal.replace('for', 'four')
     goal = goal.replace('or', 'four')
+    goal = goal.replace('b', 'four')
     goal = goal.replace('boo', 'two')
     goal = goal.replace('to', 'two')
     goal = goal.replace('who', 'two')
     goal = goal.replace('too', 'two')
+    goal = goal.replace('euro', 'zero')
+    goal = goal.replace('pre', 'three')
+    goal = goal.replace('be', 'three')
+    goal = goal.replace('free', 'three')
+    goal = goal.replace('twoo', 'two')
     goal = goal.split(' ')
 
     print(goal, 'goal variable (answer)')
@@ -1914,14 +2256,16 @@ def maze():
     maze_map8[goal_pos[1]][goal_pos[0]] = 'F'
     maze_map9[goal_pos[1]][goal_pos[0]] = 'F'
     map_number[goal_pos[1]][goal_pos[0]] = 'F'
-    '''for row in maze_map1:
-        print(' '.join(row))'''
+    
     maze_solver(map_number,start_pos,goal_pos,[start_pos],0)
     # start_pos = (pos[0],pos[1])
     ## god help me
     # 4 check and then 4 more, make a variable that keeps track of newest number and make a check that if position of those newest numbers (i mean one of them, they will be in array that will...)
     # ...be removing positions of previous numbers uz they useless,
-    '''runner_pos = copy.deepcopy(start_pos)
+    
+    # not sure what code below does, apparently its not usefull since it was commented out so i think you can remove it, im leaving it cuz mby there is something
+    # valuable in there but im p sure you can just remove it no problem 
+    runner_pos = copy.deepcopy(start_pos)
         while maze_map1[runner_pos[1]+1][runner_pos[0]] != 'F' or maze_map1[runner_pos[1]-1][runner_pos[0]] != 'F' or maze_map1[runner_pos[1]][runner_pos[0]+1] != 'F' or maze_map1[runner_pos[1]][runner_pos[0]-1] != 'F':
             available_paths = 0
             move_to_right = 0 # like a bool 1 = yes 0 = no
@@ -1940,7 +2284,7 @@ def maze():
                 move_to_right = 1
             elif maze_map1[runner_pos[1]][runner_pos[0]-1] != '■':
 
-                move_to_left = 1'''
+                move_to_left = 1
 
 
 while True:
@@ -1949,41 +2293,32 @@ while True:
     if mode == 'wait':
         recognized_text = listening()
         recognized_text = remove_the(recognized_text)
-        if recognized_text == 'go' or recognized_text == 'goal':
-            say_('start')
+        if recognized_text == 'go' or recognized_text == 'goal' or recognized_text == 'girl':
+            #say_('start')
             mode = 'go'
         else:
             print(recognized_text)
     elif mode == 'go':
-        port = ask_for_advanced("port")
-        info_dict["port"] = port
-        #say_(f"port: {', '.join(port)}")
+
 
         serial = ask_for_advanced("serial")
         info_dict["serial"] = serial
         #say_(f'serial: {serial}')
+        lights, port, batteries = edgework()
+        #lights,port = ask_for_advanced("edgework")
 
-        lights = ask_for_advanced("lights")
-        info_dict["lights"] = lights
-        #say_(f'lights: {lights}')
-
-        batteries = ask_for("batteries")
-        info_dict["batteries"] = batteries
+        #batteries = ask_for("batteries")
+        #info_dict["batteries"] = batteries
         #say_(f'batteries: {batteries}')
         mode = 'play'
     elif mode == 'test':
         port = 'parallel'
-        serial = 'ee5ek5'
+        serial = 'jjjjk5'
         lights = ('asd','yes')
         batteries = 2
         mode = 'play'
     elif mode == 'play':
-        #region
-        port = 'parallel'
-        serial = 'asd1b4'
-        lights = ('asd', 'yes')
-        batteries = 2
-        #endregion
+
         #^^^ REMOVE THAT WHEN NOT TESTING OR COMMENT THAT OUR BECAUSE IT WILL OVERWRITE THINGS!!!!!!!!!!!!!!!!!!!!!!!!!!!
         print('entered play mode')
         say_('module')
@@ -1997,18 +2332,20 @@ while True:
             button_held = False
             say_('label')
             state_on_button = listening()
+            state_on_button = remove_the(state_on_button)
             say_('color')
             color_of_button = listening()
+            color_of_button = remove_the(color_of_button)
             if color_of_button == 'read':
                 color_of_button = 'red'
             say_(f'button: {state_on_button}, color: {color_of_button}, correct?')
             answer_ = wait_()
             answer = remove_the(answer_)
             if answer in positive_answers:
-                if color_of_button == 'blue' and state_on_button == 'abort':
+                if color_of_button == 'blue' and state_on_button[0] == 'abort':
                     button_held = True
 
-                elif int(batteries) > 1 and state_on_button == 'detonate':
+                elif int(batteries) > 1 and state_on_button[0] == 'detonate':
                     say_('press and release')
                 elif color_of_button == 'white' and ('car','yes') in lights:
 
@@ -2018,7 +2355,7 @@ while True:
                 elif color_of_button == 'yellow':
 
                     button_held = True
-                elif color_of_button == 'red' and state_on_button == 'hold':
+                elif color_of_button == 'red' and state_on_button[0] == 'hold':
                     say_('press and release')
                 else:
                     say_('hold')
@@ -2026,7 +2363,7 @@ while True:
                 if button_held:
                     say_('stripe color')
                     stripe_color = wait_()
-                    if stripe_color == 'blue':
+                    if stripe_color  == 'blue':
                         say_('4 at any position')
                     elif stripe_color == 'white':
                         say_('1 at any position')
@@ -2053,8 +2390,9 @@ while True:
             keypads()
         elif recognized_text == 'knob' or recognized_text == 'knobs' or recognized_text == 'needy':
             knobs()
-        elif recognized_text == 'speech':
+        elif recognized_text == 'speech' or recognized_text == 'peach' or recognized_text == 'bitch':
             first()
         elif recognized_text == 'maze' or recognized_text == 'maison' or recognized_text == 'made' or recognized_text == 'maith' or recognized_text == 'hey' or recognized_text == 'it is' or recognized_text == 'phase' or recognized_text == "he's":
             maze() # :(
 
+'''
