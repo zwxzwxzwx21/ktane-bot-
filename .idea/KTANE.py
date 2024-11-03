@@ -284,6 +284,12 @@ def take_and_display_screenshot(serial,x, y, width, height):
 # minor pixel checks to save some time, and optimized button presses for some more time save, the faster the better
 # .
 
+# IMPORTANT NOTES, PREVENTION OF POTENTIAL ERRORS: ############################################
+# if you are doing button, make some check that would indicate if you have seconds left or minutes, for example you can just
+# run your own times and try to sync it up which would be good idea, or something worse, you can check if there are numbers higher than 5 in
+# first position in seconds and maybe check if the first number of minutes is higher than 1, cuz i think there are no bombs that give you
+# 20 minutes, so it should be 1 or 0 always.
+
 # for 5 widgets (only x varies)
 # pos of 6th serial number : 1801 + 26 | 61 + 45
 # pos of 5th serial number : 1771
@@ -296,7 +302,7 @@ def take_and_display_screenshot(serial,x, y, width, height):
 # for 4 widgets, start at 1535
 # fro 3 widgets, start at 1420
 
-
+#IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
     a = pyautogui.pixel(x, y)
     print(a)
@@ -305,7 +311,37 @@ def check_pixel(x,y):
 serial = ''
 batteries = -1 # nothing is checked yet
 while True:
+    import win32api
+    import win32con
+    import time
+    import pygetwindow as gw
+    import keyboard
+    import winsound
+    import threading # to use multiple winsounds
+    window = gw.getWindowsWithTitle("Keep Talking and Nobody Explodes")
 
+
+    if keyboard.is_pressed(']'):
+        winsound.PlaySound("SystemHand", winsound.SND_ASYNC)
+        time.sleep(0.1)
+        winsound.PlaySound("SystemHand", winsound.SND_ASYNC)
+        time.sleep(0.1)
+        winsound.PlaySound("SystemHand", winsound.SND_ASYNC)
+        time.sleep(0.1)
+        winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+
+        break
+    if window:
+        window[0].activate()
+        time.sleep(1)
+        pyautogui.click(1200, 1000)
+
+
+    #win32api.SetCursorPos((1200, 1000))
+    # Click at the position
+    #win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0)
+    #win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, 0, 0)
+    #loop for serial number
     if len(serial) != 6:
         for i in range(6):
             y = 61
@@ -323,12 +359,122 @@ while True:
                 x = 1915
             width, height = 176, 45
             serial = take_and_display_screenshot(serial,x, y, width, height)
-
+    #FLAG for widgets
     if batteries == -1:
         labels, batteries = check_wdgets(600, 0)
         print(f"serial number: {serial} | batteries: {batteries} | labels: {labels} | parallel port {parallel_port}")
+    #loop to check 6 pixels for position of the modules
+    module_screenshot = pyautogui.screenshot(region=(800,240,1300,600))
+    module_screenshot_np = np.array(module_screenshot)
+    xx,yy = 150,15 # by how much shift pixels to check more or less the same pos (its normalized anyway, just has to be on the light to make things easier)
+    test_image = cv2.cvtColor(module_screenshot_np, cv2.COLOR_BGR2RGB)
+    #lut for colors that indicate we have a module
+    modules_LUT = [(33, 31, 28),(45, 41, 36),(0, 1, 0),(35, 29, 25),(22, 22, 20),(141, 130, 114),
+                   (33, 30, 26),(45, 42, 36),(35, 31, 26),(21, 21, 20),
+                   (33, 30, 28),(22, 21, 20),(31, 28, 26),(37, 33, 30),(21, 21, 19),(139, 128, 113)
+                   ]
 
+    # accesing modules on demand:
+    # have a tuble that will have things stored in ("module name",x pos, y pos,bool which would tell if front or back side).
+    module_array_front = []
+    module_array_back = []
+    #these 2 will be filled with exact name of module and its pos, could do that in upper arrays but idc
+    modules_in_front = []
+    modules_in_back = []
+    front_side = 1 # our bool
+    is_on_flipped = False # bool that keeps track of all the 180 rotations
+    # VALUES HERE MIGHT BE USEFULL; FOR ACCESIING MODULES LATER ON
+    for loop in range(2):
+        if loop > 0:
+            front_side = 0
+
+        for x in range(3):
+            for y in range(2):
+                test_image[yy+y*550,xx+x*550] = (0,0,255)
+                print(pyautogui.pixel(800+x*550+xx,yy+ 240+y*550))
+                if pyautogui.pixel(800+x*550+xx,yy+ 240+y*550) in modules_LUT:
+
+                    #print(f"we have module at ")
+
+                    tuple = ("X module",x,y)
+                    if front_side == 1:
+                        module_array_front.append(tuple)
+                    else:
+                        module_array_back.append(tuple)
+                else: print(f' not in table {pyautogui.pixel(800+x*550+xx,yy+ 240+y*550)}')
+        if front_side == 1:
+            pyautogui.dragTo(700,None,0.12,button="right")
+            pyautogui.click(button='right')
+            time.sleep(0.1)
+            pyautogui.click(1200,1000,button='left')
+            is_on_flipped = True
+        time.sleep(2.5)
+
+    print(module_array_back,"back \n", module_array_front, "front")
+    # this one is what pixel color is what module
+
+    type_of_module_LUT = \
+        {
+            (18, 24, 39) : "password",
+            (165, 150, 132) : 'sequence',
+            (24, 70, 90) : "maze",
+            (43, 49, 67) : "simon",
+            (221, 208, 188) : "keypads",
+            (92, 89, 84): "memory",
+        }
+    for module in module_array_back: # back because we are on the back
+        # module is ("name",x,y)
+
+        print(module)
+        pyautogui.click(650+module[1]*550,400+module[2]*550)
+        #image to show what im clicking at more or less
+        '''press_position = pyautogui.screenshot(region=(650+module[1]*550, 400+module[2]*550, 50, 50))
+        press_position = np.array(press_position)
+        press_position = cv2.cvtColor(press_position, cv2.COLOR_BGR2RGB)
+        cv2.imshow("test",press_position)
+        cv2.waitKey(0)'''
+        time.sleep(0.5)
+        single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
+        single_module_image_np = np.array(single_module_image)
+        single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
+        single_module_image_with_pixels[355,617] = (0, 0, 255)
+
+        print("pixel of module: " ,pyautogui.pixel(617+800,240+355))
+        cv2.imshow("test", single_module_image_with_pixels)
+        cv2.waitKey(0)
+        pyautogui.click(button = "right")
+        time.sleep(0.5)
+
+    pyautogui.dragTo(700, None, 0.12, button="right")
+    pyautogui.click(button='right')
+    time.sleep(0.1)
+    pyautogui.click(1200, 1000, button='left')
+    is_on_flipped = False
     time.sleep(1)
+    #checking modules on other side
+    for module in module_array_front:
+        print(module)
+        pyautogui.click(650 + module[1] * 550, 400 + module[2] * 550)
+        time.sleep(0.5)
+        single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
+        single_module_image_np = np.array(single_module_image)
+        single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
+        single_module_image_with_pixels[355, 617] = (0, 0, 255)
+
+        print("pixel of module: ", pyautogui.pixel(617 + 800, 240 + 355))
+        cv2.imshow("test", single_module_image_with_pixels)
+        cv2.waitKey(0)
+        pyautogui.click(button="right")
+        time.sleep(0.5)
+    print(f"printing ciapka at {module[1]*550}, {module[2]*550}")
+
+
+    #single_module_image_with_pixels[yy + y , xx + x ] = (0, 0, 255)
+
+
+    #cv2.imshow("test", test_image)
+    cv2.waitKey(0)
+    time.sleep(999)
 '''
 speed_up = 225 # speed and slowed down voice for bot to read faster or slower if needed
 slow_down = 175
