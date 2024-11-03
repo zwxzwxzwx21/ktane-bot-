@@ -16,6 +16,8 @@ import numpy as np
 import pyautogui
 import time
 
+global parallel_port
+parallel_port = False
 
 def distance_to_colors(pixel):
     white = np.array([255, 255, 255])
@@ -24,6 +26,116 @@ def distance_to_colors(pixel):
     distance_to_black = np.linalg.norm(pixel - black)
     return distance_to_white, distance_to_black
 
+
+def check_wdgets(x, y):
+    global parallel_port
+
+    check_array = ''
+
+
+    # having 2 lookup tables for the savety, could use the second one for speed but its not worth the risk of it not
+    # working when big battery and 2 batteries barely differ
+
+    widgets_LUT = \
+        {
+            (255, 255, 135): 1,
+            (255, 255, 166): 1,
+            (151, 153, 143): 2,
+            (130, 135, 136): 2,
+            (156, 162, 165): 2,
+            (36, 13, 16): "label",
+            (43, 26, 29): "label",
+            (77, 27, 28): "label",
+            (39, 15, 16): "label",
+            (78, 82, 81): "port plate",  # works on every position
+            (78, 81, 81): "port plate",
+
+        }
+    # this one checks for batteries, battery
+
+    # this one checks for labels and port plates
+
+    numb_of_batteries = 0
+    labels = []
+    for i in range(5):
+        dot_x, dot_y = 168 + i * 230, 79
+
+        # Zczytaj piksel z ekranu w odpowiedniej pozycji
+        screen_pixel_rgb = pyautogui.pixel(x + dot_x, y + dot_y)
+        # print(f'Loop {i} | Pixel at ({dot_x}, {dot_y}):', screen_pixel_rgb)
+        label_LUT = \
+            {
+                "0110101011001110101101101": "FRK",
+                "0001101101000010110101101": 'A',
+                "0000101100000010110101101": 'A',
+                '0000101101000010110101101': 'A'
+            }
+
+        try:
+            # Sprawdź wartość w `labels_LUT`
+            labels_value = widgets_LUT[screen_pixel_rgb]
+
+            # Zwiększ licznik baterii, jeśli etykieta to liczba
+            if isinstance(labels_value, int):
+                numb_of_batteries += labels_value
+
+            # Warunek, jeśli etykieta to "label"
+            if labels_value == "label":
+                #print("label")
+
+                # Sprawdzenie pikseli w odpowiedniej pozycji
+
+                xx, yy = 2, 25
+                #print(pyautogui.pixel(645 + i * 230 + xx, 34 + yy))
+
+                # Jeśli piksel jest biały
+                if pyautogui.pixel(645 + i * 230 + xx, 34 + yy) == (255, 255, 255):
+                    # Kontynuacja rozpoznawania obrazu
+
+                    check_array = ''
+                    for j in range(5):
+                        for k in range(5):
+                            dot_x, dot_y = 3 + k * 4, 6 + j * 8
+                            screen_pixel_rgb = pyautogui.pixel(745 + i * 230 + dot_x, 34 + dot_y)
+                            # print(dot_x, dot_y, screen_pixel_rgb)
+
+                            # Oblicz odległości od kolorów
+                            distance_to_white, distance_to_black = distance_to_colors(np.array(screen_pixel_rgb))
+                            closer_color = "white" if distance_to_white < distance_to_black else "black"
+
+                            check_array += '0' if closer_color == "white" else '1'
+
+                    #print(check_array)
+                    if check_array in label_LUT:
+                        if label_LUT[check_array] == "FRK":
+                            labels.append("FRK")
+                            #print("LIT FRK")
+                        if label_LUT[check_array] == "A":
+
+                            #print('pixel', pyautogui.pixel(725 + i * 230 + 1, 34 + 6))
+                            if pyautogui.pixel(725 + i * 230 + 1, 34 + 6) == (210, 206, 191):
+                                pass
+                            else:
+                                labels.append("CAR")
+                                #print("car label")
+
+            elif labels_value == "port plate" and parallel_port == False:
+                #print("port plate")
+
+                xx, yy = 80, 26
+
+                #print(pyautogui.pixel(585 + i * 230 + xx, 20 + yy))
+                if pyautogui.pixel(585 + i * 230 + xx, 20 + yy) == (255, 150, 217) or pyautogui.pixel(
+                        585 + i * 230 + xx, 20 + yy) == (255, 150, 218):
+                    parallel_port = True
+                    #print("parallel port found")
+                    break
+
+        except KeyError:
+            print(f"{check_array} not in LUT")
+
+    #print(f'Number of batteries: {numb_of_batteries}')
+    return labels,numb_of_batteries
 
 def take_and_display_screenshot(serial,x, y, width, height):
     #screenshot = pyautogui.screenshot(region=(x, y, width, height))
@@ -116,6 +228,7 @@ def take_and_display_screenshot(serial,x, y, width, height):
             dot_x, dot_y = 4 + i * 4, 2 + j * 8
             #my_image[dot_x, dot_y] = (0, 0, 255)
             screen_pixet_rgb = pyautogui.pixel(x + dot_x, y + dot_y)
+            screen_pixet_rgb = pyautogui.pixel(x + dot_x, y + dot_y)
 
             distance_to_white, distance_to_black = distance_to_colors(np.array(screen_pixet_rgb))
             closer_color = "white" if distance_to_white < distance_to_black else "black"
@@ -134,6 +247,8 @@ def take_and_display_screenshot(serial,x, y, width, height):
             serial +=N_LUT[check_array]
     except KeyError:
         print(check_array, 'not in LUT')
+
+
     return serial
 # can check for second and third leter in labels because __K is only for FRK and _A_ is only for CAR, but i think it is
 # better to ccheck for 3rd pos only and then just check one pixel to determine if the second position is A or L if third one is R.
@@ -169,14 +284,6 @@ def take_and_display_screenshot(serial,x, y, width, height):
 # minor pixel checks to save some time, and optimized button presses for some more time save, the faster the better
 # .
 
-
-# Ścieżka do folderu na Pulpicie
-'''desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
-widgets_path = os.path.join(desktop_path, 'widgets')'''
-
-# Współrzędne lewego górnego rogu prostokąta
-# Możesz zmienić te wartości na własne
-
 # for 5 widgets (only x varies)
 # pos of 6th serial number : 1801 + 26 | 61 + 45
 # pos of 5th serial number : 1771
@@ -188,116 +295,15 @@ widgets_path = os.path.join(desktop_path, 'widgets')'''
 # for 6 widgets, start at 1765
 # for 4 widgets, start at 1535
 # fro 3 widgets, start at 1420
-# Funkcja do wykonania zrzutu ekranu
-'''def take_screenshot(counter,x,y):
-   #x, y = 1801, 61
-    screenshot = pyautogui.screenshot(region=(x, y, 26, 45))
-    screenshot.save(os.path.join(widgets_path, f'{counter}.png'))
-    image = cv2.imread(os.path.join(widgets_path, f'{counter}.png'))
-# Sprawdź, ile plików już istnieje w folderze
-existing_files = len([name for name in os.listdir(widgets_path) if os.path.isfile(os.path.join(widgets_path, name)) and name.endswith('.png')])
-'''
-# Licznik zrzutów ekranu zaczyna się od liczby istniejących plików + 1
-'''counter = existing_files + 1'''
+
+
 def check_pixel(x,y):
     a = pyautogui.pixel(x, y)
     print(a)
     return a
-'''while True:
-    x = 1942
-    y = 58 #change to 61
-    take_screenshot(counter,x,y);counter += 1
-    take_screenshot(counter,x+30,y);counter += 1
-    take_screenshot(counter,x+60,y);counter += 1
-    take_screenshot(counter,x+90,y);counter += 1
-    take_screenshot(counter,x+120,y);counter += 1
-    take_screenshot(counter,x+150,y);counter += 1
-    print(f'Zrzut ekranu zapisany jako {counter}.png')
 
-    input("Naciśnij Enter, aby wykonać kolejny zrzut ekranu lub zakończ program, naciskając Ctrl+C.")
-'''
-'''def check_serial_numbers(numb_of_widgets):
-    print('test')
-    # this function takes the x position and then based on that checks serial numbers,
-    # it will work on 16 pixel checks, mby more mby less
-    first_sign = ''
-    second_sign = ''
-    third_sign = ''
-    fourth_sign = ''
-    fifth_sign = ''
-    sixth_sign = ''
-    if numb_of_widgets == 6:
-        # check for Q sign
-        if pyautogui.pixel(1780,100) == (48,47,45):
-            first_sign = 'Q'
-            print('first one is a q')
-        print(pyautogui.pixel(1810,100))
-        if pyautogui.pixel(1810,100) == (51, 49, 47) or pyautogui.pixel(1810,100) == (48, 46, 44):
-            print('second one is a q')
-            second_sign = 'Q'
-
-        if pyautogui.pixel(1870,100) == (44, 43, 40):
-            print('fourth one is a q')
-            fourth_sign = 'Q'
-        if pyautogui.pixel(1900,100) == (45,44,41):
-            fifth_sign = 'Q'
-            print("fifth sign is a q")
-
-    pass'''
-'''def check_numb_widgets():
-    #this one just checks how many widgets are there on the bomb by checking pixels on top of the screen,
-    widgets = 8
-    for i in range(5):
-        print(f"checking for {widgets} widgets")
-        widgets -= 1
-        match widgets:
-            case 8:
-                # if statement if pixel is red, if it is, return. if not, continue
-                #pixel_check = ImageGrab.grab()
-                print(check_pixel(2123,27), 'bad check for good luck')
-                if check_pixel(2123,27) == (69, 17, 16):
-                    print("sth is wwrong")
-                    return widgets
-                else:
-                    continue
-            case 7:
-                print(check_pixel(2075,27),'case 7 should be (83, 13, 9)')
-                if check_pixel(2075,27) == (83, 13, 9) or check_pixel(2075,27) == (85, 13, 9):
-                    check_serial_numbers(7)
-                    print("7 widgets")
-                    return widgets
-                else:
-                    continue
-            case 6:
-                print(check_pixel(1960, 27),'case 6 should be (83, 13, 9)')
-                if check_pixel(1960, 27) == (83, 13, 9) or check_pixel(1960, 27) == (85, 13, 9):
-                    check_serial_numbers(6)
-                    print("6 widgets")
-                    return widgets
-                else:
-                    continue
-            case 5:
-                print(check_pixel(1843, 27),'case 5, should be (89, 13, 10)')
-                if check_pixel(1843, 27) == (89, 13, 10):
-                    print("5 widgets")
-                    return widgets
-                else:
-                    continue
-            case 4:
-                print(check_pixel(1730, 27),'case 4 should be (83, 13, 9)')
-                if check_pixel(1730, 27) == (83, 13, 9):
-                    print("4 widgets")
-                    return widgets
-                else:
-                    continue
-            case 3:
-                print(check_pixel(1613, 27),'case 3 should be (89, 13, 10)')
-                if check_pixel(1613, 27) == (89, 13, 10):
-                    print("3 widgets")
-                    return widgets
-                else:
-                    continue'''
 serial = ''
+batteries = -1 # nothing is checked yet
 while True:
 
     if len(serial) != 6:
@@ -317,8 +323,12 @@ while True:
                 x = 1915
             width, height = 176, 45
             serial = take_and_display_screenshot(serial,x, y, width, height)
-    print(f"serial number: {serial}")
 
+    if batteries == -1:
+        labels, batteries = check_wdgets(600, 0)
+        print(f"serial number: {serial} | batteries: {batteries} | labels: {labels} | parallel port {parallel_port}")
+
+    time.sleep(1)
 '''
 speed_up = 225 # speed and slowed down voice for bot to read faster or slower if needed
 slow_down = 175
