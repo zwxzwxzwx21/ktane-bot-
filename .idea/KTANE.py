@@ -25,22 +25,26 @@ def maze_reverse(maze_map, current_number, goal_position, array_of_path_pos):
         current_number -= 1
         print(f' inside while loop checking for {current_number}')
         if goal_position[0] + 2 < 13:
-            if maze_map[goal_position[1]][goal_position[0] + 2] == str(current_number):  # right
+            if maze_map[goal_position[1]][goal_position[0] + 2] == str(current_number)\
+                    and maze_map[goal_position[1]][goal_position[0] + 1] != '■':  # right
                 print(f'current number found at {goal_position[0] + 2}, {goal_position[1]}')
                 goal_position = (goal_position[0] + 2, goal_position[1])
                 array_of_path_pos.append(goal_position)
         if goal_position[0] - 2 > 0:
-            if maze_map[goal_position[1]][goal_position[0] - 2] == str(current_number):  # left
+            if maze_map[goal_position[1]][goal_position[0] - 2] == str(current_number)\
+                    and maze_map[goal_position[1]][goal_position[0] - 1] != '■':  # left
                 print(f'current number found at {goal_position[0] - 2}, {goal_position[1]}')
                 goal_position = (goal_position[0] - 2, goal_position[1])
                 array_of_path_pos.append(goal_position)
         if goal_position[1] - 2 > 0:
-            if maze_map[goal_position[1] - 2][goal_position[0]] == str(current_number):  # up
+            if maze_map[goal_position[1] - 2][goal_position[0]] == str(current_number)\
+                    and maze_map[goal_position[1] - 1][goal_position[0]] != '■':  # up
                 print(f'current number found at {goal_position[0]}, {goal_position[1] - 2}')
                 goal_position = (goal_position[0], goal_position[1] - 2)
                 array_of_path_pos.append(goal_position)
         if goal_position[1] + 2 < 13:
-            if maze_map[goal_position[1] + 2][goal_position[0]] == str(current_number):  # down
+            if maze_map[goal_position[1] + 2][goal_position[0]] == str(current_number)\
+                    and maze_map[goal_position[1] + 1][goal_position[0]] != '■':  # down
                 print(f'current number found at {goal_position[0]}, {goal_position[1] + 2}')
                 goal_position = (goal_position[0], goal_position[1] + 2)
                 array_of_path_pos.append(goal_position)
@@ -144,10 +148,34 @@ def maze_solver(maze_map, starting_pos, goal_position, loop_array, current_numbe
                     break
         print(moves_to_do, ' moves to do')
         string_moves = ''
+
         for move in moves_to_do:
 
             string_moves += move
         print(string_moves, "stirng to do")
+
+        for moves in moves_to_do:
+
+            '''screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+            screen = np.array(screen)
+            screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+            screen[250, 15] = (0, 0, 255) # left
+            screen[250, 450] = (0, 0, 255) # right
+            screen[30, 250] = (0, 0, 255) # up
+            screen[470, 250] = (0, 0, 255) # down'''
+            pyautogui.PAUSE = 0.05
+            if moves == 'left':
+                pyautogui.click(1050+15,460+250)
+            elif moves == 'right':
+                pyautogui.click(1050+450,460+250)
+            elif moves == 'up':
+                pyautogui.click(1050+250,460+30)
+            elif moves == 'down':
+                pyautogui.click(1050+250,460+470)
+            '''cv2.imshow('screen', screen)
+            cv2.waitKey(0)'''
+            print("foing moces")
+            #time.sleep(1)
         return
 
     if current_number < 37 and loop_finished == False:
@@ -401,9 +429,9 @@ def do_maze():
     screen[115, 155] = (0, 0, 255)  # maze 7
     screen[110, 260] = (0, 0, 255)  # maze 8
     screen[165, 200] = (0, 0, 255)  # maze 9'''
-    maze_number = 0
+    maze_number = []
 
-    '''print("pixel color maze #1: ", pyautogui.pixel(1050 + 105, 460 + 115))
+    print("pixel color maze #1: ", pyautogui.pixel(1050 + 105, 460 + 115))
     print("pixel color maze #2: ",pyautogui.pixel(1050+290, 460+180))
     print("pixel color maze #3: ",pyautogui.pixel(1050+385, 460+275))
     print("pixel color maze #4: ", pyautogui.pixel(1050 + 95, 460 + 180))
@@ -411,7 +439,7 @@ def do_maze():
     print("pixel color maze #6: ",pyautogui.pixel(1050+310, 460+115))
     print("pixel color maze #7: ",pyautogui.pixel(1050+155, 460+115))
     print("pixel color maze #8: ",pyautogui.pixel(1050+260, 460+110))
-    print("pixel color maze #9: ",pyautogui.pixel(1050+200, 460+165))'''
+    print("pixel color maze #9: ",pyautogui.pixel(1050+200, 460+165))
     color_LUT = \
         {
             (76, 163, 57) : "maze 1",
@@ -436,6 +464,7 @@ def do_maze():
             (76, 158, 58) : "maze 7",
             (72, 153, 58) : "maze 7",
             (81, 164, 60) : "maze 7",
+            (75, 157, 59) : "maze 7",
             (74, 154, 53) : "maze 8",
             (75, 156, 54) : "maze 8",
             (75, 155, 54) : "maze 8",
@@ -605,7 +634,14 @@ def do_maze():
             ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    else: print("something is off | try placing the bomb and picking it up again, that helps")
+    else:
+        '''pyautogui.click(button="right")
+        time.sleep(0.1)
+        pyautogui.click(button="right")
+        
+        do_maze()''' #dont worry about it :3
+        #upper one is like, place down and pick up bomb nbut its fucked kinda
+        print("something is off | try placing the bomb and picking it up again, that helps")
 
     start_pos = ()
     end_pos = ()
@@ -620,13 +656,17 @@ def do_maze():
                 #end
                 end_pos = (x,y)
 
-
-
+    '''cv2.imshow('screen', screen)
+    cv2.waitKey(0)'''
     print(start_pos,end_pos)
-    start_pos_resized = (start_pos[0]*2+1,start_pos[1]*2+1)
-    end_pos_resized = (end_pos[0]*2+1,end_pos[1]*2+1)
+    start_pos_resized = [start_pos[0]*2+1,start_pos[1]*2+1]
+    #start_pos_resized = (5,5)
+    end_pos_resized = [end_pos[0]*2+1,end_pos[1]*2+1]
+    print(start_pos_resized, end_pos_resized)
+    print(type(start_pos_resized), ' ???')
     maze_number[start_pos_resized[1]][start_pos_resized[0]] = '0'
     maze_number[end_pos_resized[1]][end_pos_resized[0]] = 'F'
+
     maze_solver(maze_number,start_pos_resized,end_pos_resized,[start_pos_resized],0)
 
     def maze():
@@ -818,8 +858,7 @@ def do_maze():
                 move_to_left = 1
 
     #print(a)
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+
 
 
 # can check for second and third leter in labels because __K is only for FRK and _A_ is only for CAR, but i think it is
