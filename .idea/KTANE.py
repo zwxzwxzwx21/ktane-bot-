@@ -369,9 +369,11 @@ while True:
     xx,yy = 150,15 # by how much shift pixels to check more or less the same pos (its normalized anyway, just has to be on the light to make things easier)
     test_image = cv2.cvtColor(module_screenshot_np, cv2.COLOR_BGR2RGB)
     #lut for colors that indicate we have a module
-    modules_LUT = [(33, 31, 28),(45, 41, 36),(0, 1, 0),(35, 29, 25),(22, 22, 20),(141, 130, 114),
+    modules_LUT = [(33, 31, 28),(45, 41, 36),(35, 29, 25),(22, 22, 20),(141, 130, 114),(0, 1, 0),
                    (33, 30, 26),(45, 42, 36),(35, 31, 26),(21, 21, 20),
-                   (33, 30, 28),(22, 21, 20),(31, 28, 26),(37, 33, 30),(21, 21, 19),(139, 128, 113),(31, 28, 25)
+                   (33, 30, 28),(22, 21, 20),(31, 28, 26),(37, 33, 30),(21, 21, 19),
+                   (31, 28, 25),(35, 30, 25),(35, 32, 28),(139, 128, 113),
+                   (32, 30, 27),(140, 129, 113)
                    ]
 
     # accesing modules on demand:
@@ -408,7 +410,7 @@ while True:
             time.sleep(0.1)
             pyautogui.click(1200,1000,button='left')
             is_on_flipped = True
-        time.sleep(2.5)
+        time.sleep(1.5)
 
     print(module_array_back,"back \n", module_array_front, "front")
     # this one is what pixel color is what module
@@ -416,26 +418,31 @@ while True:
     type_of_module_LUT = \
         {
             (18, 24, 39) : "password",
+            (18, 25, 40) : "password",
             (165, 150, 132) : 'sequence',
             (24, 70, 90) : "maze",
             (43, 49, 67) : "simon",
+            (43, 48, 67) : "simon",
             (221, 208, 188) : "keypads",
             (92, 89, 84): "memory",
         }
     type_of_module_LUT2 = \
     {
         (67, 66, 79) : "sequence",
+        (67, 67, 79) : "sequence",
         (87, 91, 102) : "morse",
         (40, 36, 44) : "whos on first",
         (99, 110, 137): "wires",
+        (99, 111, 137): "wires",
     }
     # if not in any then its button
     pixel_x,pixel_y=670,560 # those are the values to change for pixels checks, they wont be needed
+    pixel_x2,pixel_y2=617,355 # those are the values to change for pixels checks, they wont be needed
     # later so dw changing as much as needed for testing purposes
     for module in module_array_back: # back because we are on the back
         # module is ("name",x,y)
-
-        print(module)
+        module_name = ''
+        #print(module)
         pyautogui.click(650+module[1]*550,400+module[2]*550)
         #image to show what im clicking at more or less
         '''press_position = pyautogui.screenshot(region=(650+module[1]*550, 400+module[2]*550, 50, 50))
@@ -443,17 +450,25 @@ while True:
         press_position = cv2.cvtColor(press_position, cv2.COLOR_BGR2RGB)
         cv2.imshow("test",press_position)
         cv2.waitKey(0)'''
-        time.sleep(0.5)
-        single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
+        time.sleep(0.7)
+        '''single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
         single_module_image_np = np.array(single_module_image)
         single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
-        single_module_image_with_pixels[pixel_y,pixel_x] = (0, 0, 255)
+        single_module_image_with_pixels[pixel_y,pixel_x] = (0, 0, 255)'''
 
-        print("pixel of module: " ,pyautogui.pixel(pixel_x+800,240+pixel_y))
-        if pyautogui.pixel(pixel_x+800,240+pixel_y) in type_of_module_LUT:
-            print(type_of_module_LUT[pyautogui.pixel(pixel_x+800,240+pixel_y)], ' module')
-        cv2.imshow("test", single_module_image_with_pixels)
-        cv2.waitKey(0)
+        print(" " ,pyautogui.pixel(pixel_x2+800,240+pixel_y2)) # pixel check position
+        if pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2) in type_of_module_LUT:
+            module_name = type_of_module_LUT[pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2)]
+            print(module_name, ' module')
+        elif pyautogui.pixel(pixel_x + 800, 240 + pixel_y) in type_of_module_LUT2:
+            module_name = type_of_module_LUT2[pyautogui.pixel(pixel_x + 800, 240 + pixel_y)]
+            print(module_name, ' module')
+        else:
+            module_name = 'button'
+            print("its a button")
+
+        '''cv2.imshow("test", single_module_image_with_pixels)
+        cv2.waitKey(0)'''
         pyautogui.click(button = "right")
         time.sleep(0.5)
 
@@ -465,19 +480,30 @@ while True:
     time.sleep(1)
     #checking modules on other side
     for module in module_array_front:
-        print(module)
+        module_name = ''
+        #print(module)
         pyautogui.click(650 + module[1] * 550, 400 + module[2] * 550)
-        time.sleep(0.5)
-        single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
+        time.sleep(0.7)
+        #image testing
+        '''single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
         single_module_image_np = np.array(single_module_image)
         single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
-        single_module_image_with_pixels[pixel_y, pixel_x] = (0, 0, 255)
-
-        if pyautogui.pixel(pixel_x + 800, 240 + pixel_y) in type_of_module_LUT:
-            print(type_of_module_LUT[pyautogui.pixel(pixel_x + 800, 240 + pixel_y)], ' module')
-        print("pixel of module: ", pyautogui.pixel(pixel_x + 800, 240 + pixel_y))
+        single_module_image_with_pixels[pixel_y, pixel_x] = (0, 0, 255)'''
+        print(" ", pyautogui.pixel(pixel_x + 800, 240 + pixel_y)) # pixel check position
+        if pyautogui.pixel(pixel_x2+800,240+pixel_y2) in type_of_module_LUT:
+            module_name = type_of_module_LUT[pyautogui.pixel(pixel_x2+800,240+pixel_y2)]
+            print(module_name, ' module')
+        elif pyautogui.pixel(pixel_x+800,240+pixel_y) in type_of_module_LUT2:
+            module_name = type_of_module_LUT2[pyautogui.pixel(pixel_x+800,240+pixel_y)]
+            print(module_name, ' module')
+        else:
+            print("its a button");
+            module_name = 'button'
+        '''
         cv2.imshow("test", single_module_image_with_pixels)
-        cv2.waitKey(0)
+        cv2.waitKey(0)'''
+
+
         pyautogui.click(button="right")
         time.sleep(0.5)
     print(f"printing ciapka at {module[1]*550}, {module[2]*550}")
