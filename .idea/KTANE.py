@@ -250,6 +250,86 @@ def take_and_display_screenshot(serial,x, y, width, height):
 
 
     return serial
+
+def do_maze():
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    # i dont feel like doing loop xd
+    screen[180, 95] = (0, 0, 255)   # maze 1
+    screen[180, 290] = (0, 0, 255)  # maze 2
+    screen[275, 385] = (0, 0, 255)  # maze 3
+    screen[115, 105] = (0, 0, 255)  # maze 4
+    screen[400, 270] = (0, 0, 255)  # maze 5
+    screen[110, 310] = (0, 0, 255)  # maze 6
+    screen[115, 155] = (0, 0, 255)  # maze 7
+    screen[110, 260] = (0, 0, 255)  # maze 8
+    screen[165, 200] = (0, 0, 255)  # maze 9
+    print("pixel color maze #1: ", pyautogui.pixel(1050 + 105, 460 + 115))
+    print("pixel color maze #2: ",pyautogui.pixel(1050+290, 460+180))
+    print("pixel color maze #3: ",pyautogui.pixel(1050+385, 460+275))
+    print("pixel color maze #4: ", pyautogui.pixel(1050 + 95, 460 + 180))
+    print("pixel color maze #5: ",pyautogui.pixel(1050+270, 460+400))
+    print("pixel color maze #6: ",pyautogui.pixel(1050+310, 460+115))
+    print("pixel color maze #7: ",pyautogui.pixel(1050+155, 460+115))
+    print("pixel color maze #8: ",pyautogui.pixel(1050+260, 460+110))
+    print("pixel color maze #9: ",pyautogui.pixel(1050+200, 460+165))
+    color_LUT = \
+        {
+            (76, 163, 57) : "maze 1",
+            (77, 164, 57) : "maze 1",
+            (78, 166, 58) : "maze 1",
+            (99, 210, 71) : "maze 2",
+            (66, 136, 51) : "maze 3",
+            (66, 139, 52) : "maze 3",
+            (68, 141, 53) : "maze 3",
+            (99, 206, 70) : "maze 4",
+            (101, 210, 70): "maze 4",
+            (99, 205, 70) : "maze 4",
+            (68, 142, 54) : "maze 5",
+            (69, 144, 54) : "maze 5",
+            (60, 126, 45) : "maze 6",
+            (66, 138, 48) : "maze 6",
+            (65, 135, 47) : "maze 6",
+            (60, 127, 45) : "maze 6",
+            (59, 122, 45) : "maze 6",
+            (57, 121, 43) : "maze 6",
+            (76, 157, 59) : "maze 7",
+            (76, 158, 58) : "maze 7",
+            (72, 153, 58) : "maze 7",
+            (81, 164, 60) : "maze 7",
+            (74, 154, 53) : "maze 8",
+            (75, 156, 54) : "maze 8",
+            (75, 155, 54) : "maze 8",
+            (69, 145, 51) : "maze 8",
+            (103, 215, 73): "maze 9",
+
+
+        }
+    if pyautogui.pixel(1050 + 105, 460 + 115) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050 + 105, 460 + 115)])
+    elif pyautogui.pixel(1050+290, 460+180) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050+290, 460+180)])
+    elif pyautogui.pixel(1050+385, 460+275) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050+385, 460+275)])
+    elif pyautogui.pixel(1050 + 95, 460 + 180) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050 + 95, 460 + 180)])
+    elif pyautogui.pixel(1050+270, 460+400) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050+270, 460+400)])
+    elif pyautogui.pixel(1050+310, 460+115) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050+310, 460+115)])
+    elif pyautogui.pixel(1050 + 155, 460 + 115) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050+155, 460+115)])
+    elif pyautogui.pixel(1050+260, 460+110) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050+260, 460+110)])
+    elif pyautogui.pixel(1050+200, 460+165) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050+200, 460+165)])
+    else: print("something is off | try placing the bomb and picking it up again, that helps")
+
+    print(a)
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+
 # can check for second and third leter in labels because __K is only for FRK and _A_ is only for CAR, but i think it is
 # better to ccheck for 3rd pos only and then just check one pixel to determine if the second position is A or L if third one is R.
 # i think doing it just like serial number is good, just use less pixels to save time
@@ -331,6 +411,7 @@ while True:
         winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
 
         break
+    do_maze()
     if window:
         window[0].activate()
         time.sleep(1)
@@ -466,7 +547,9 @@ while True:
         else:
             module_name = 'button'
             print("its a button")
-
+        #EXECUTING MODULE IMMEDIATELY
+        if module_name == 'maze':
+            do_maze()
         '''cv2.imshow("test", single_module_image_with_pixels)
         cv2.waitKey(0)'''
         pyautogui.click(button = "right")
