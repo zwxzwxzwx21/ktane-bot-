@@ -371,7 +371,7 @@ while True:
     #lut for colors that indicate we have a module
     modules_LUT = [(33, 31, 28),(45, 41, 36),(0, 1, 0),(35, 29, 25),(22, 22, 20),(141, 130, 114),
                    (33, 30, 26),(45, 42, 36),(35, 31, 26),(21, 21, 20),
-                   (33, 30, 28),(22, 21, 20),(31, 28, 26),(37, 33, 30),(21, 21, 19),(139, 128, 113)
+                   (33, 30, 28),(22, 21, 20),(31, 28, 26),(37, 33, 30),(21, 21, 19),(139, 128, 113),(31, 28, 25)
                    ]
 
     # accesing modules on demand:
@@ -422,6 +422,16 @@ while True:
             (221, 208, 188) : "keypads",
             (92, 89, 84): "memory",
         }
+    type_of_module_LUT2 = \
+    {
+        (67, 66, 79) : "sequence",
+        (87, 91, 102) : "morse",
+        (40, 36, 44) : "whos on first",
+        (99, 110, 137): "wires",
+    }
+    # if not in any then its button
+    pixel_x,pixel_y=670,560 # those are the values to change for pixels checks, they wont be needed
+    # later so dw changing as much as needed for testing purposes
     for module in module_array_back: # back because we are on the back
         # module is ("name",x,y)
 
@@ -437,9 +447,11 @@ while True:
         single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
         single_module_image_np = np.array(single_module_image)
         single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
-        single_module_image_with_pixels[355,617] = (0, 0, 255)
+        single_module_image_with_pixels[pixel_y,pixel_x] = (0, 0, 255)
 
-        print("pixel of module: " ,pyautogui.pixel(617+800,240+355))
+        print("pixel of module: " ,pyautogui.pixel(pixel_x+800,240+pixel_y))
+        if pyautogui.pixel(pixel_x+800,240+pixel_y) in type_of_module_LUT:
+            print(type_of_module_LUT[pyautogui.pixel(pixel_x+800,240+pixel_y)], ' module')
         cv2.imshow("test", single_module_image_with_pixels)
         cv2.waitKey(0)
         pyautogui.click(button = "right")
@@ -459,9 +471,11 @@ while True:
         single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
         single_module_image_np = np.array(single_module_image)
         single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
-        single_module_image_with_pixels[355, 617] = (0, 0, 255)
+        single_module_image_with_pixels[pixel_y, pixel_x] = (0, 0, 255)
 
-        print("pixel of module: ", pyautogui.pixel(617 + 800, 240 + 355))
+        if pyautogui.pixel(pixel_x + 800, 240 + pixel_y) in type_of_module_LUT:
+            print(type_of_module_LUT[pyautogui.pixel(pixel_x + 800, 240 + pixel_y)], ' module')
+        print("pixel of module: ", pyautogui.pixel(pixel_x + 800, 240 + pixel_y))
         cv2.imshow("test", single_module_image_with_pixels)
         cv2.waitKey(0)
         pyautogui.click(button="right")
