@@ -19,6 +19,141 @@ import time
 global parallel_port
 parallel_port = False
 
+
+def maze_reverse(maze_map, current_number, goal_position, array_of_path_pos):
+    while current_number > 0:
+        current_number -= 1
+        print(f' inside while loop checking for {current_number}')
+        if goal_position[0] + 2 < 13:
+            if maze_map[goal_position[1]][goal_position[0] + 2] == str(current_number):  # right
+                print(f'current number found at {goal_position[0] + 2}, {goal_position[1]}')
+                goal_position = (goal_position[0] + 2, goal_position[1])
+                array_of_path_pos.append(goal_position)
+        if goal_position[0] - 2 > 0:
+            if maze_map[goal_position[1]][goal_position[0] - 2] == str(current_number):  # left
+                print(f'current number found at {goal_position[0] - 2}, {goal_position[1]}')
+                goal_position = (goal_position[0] - 2, goal_position[1])
+                array_of_path_pos.append(goal_position)
+        if goal_position[1] - 2 > 0:
+            if maze_map[goal_position[1] - 2][goal_position[0]] == str(current_number):  # up
+                print(f'current number found at {goal_position[0]}, {goal_position[1] - 2}')
+                goal_position = (goal_position[0], goal_position[1] - 2)
+                array_of_path_pos.append(goal_position)
+        if goal_position[1] + 2 < 13:
+            if maze_map[goal_position[1] + 2][goal_position[0]] == str(current_number):  # down
+                print(f'current number found at {goal_position[0]}, {goal_position[1] + 2}')
+                goal_position = (goal_position[0], goal_position[1] + 2)
+                array_of_path_pos.append(goal_position)
+
+    else:
+        array_of_path_pos.reverse()
+        print(array_of_path_pos, '123')
+        return array_of_path_pos
+
+
+def maze_solver(maze_map, starting_pos, goal_position, loop_array, current_number):
+    # path = []
+    loop_finished = False
+    finish_found = False
+    # loop array is an arrat that has number positions
+    # current number is  number of loops in floodfill search
+    print(current_number, loop_array, goal_position, 'cur number and loop array and goal pos')
+    # maze_map[start_pos[1]][start_pos[0]] = current_num
+    array_of_pos = []
+    if goal_position not in loop_array:
+        # temp array to avoid overwriting and fuckery idkkkk
+        current_number += 1
+        for numbers in loop_array:
+            print('numbers variable', numbers)
+            if maze_map[numbers[1]][numbers[0] + 1] != '■':  # right
+
+                if maze_map[numbers[1]][numbers[0] + 2] == 'P':
+                    print('right move is free')
+                    maze_map[numbers[1]][numbers[0] + 2] = str(current_number)
+                    pos = (numbers[0] + 2, numbers[1])
+                    print('appending position', pos)
+                    array_of_pos.append(pos)  # return as loopm array
+                if maze_map[numbers[1]][numbers[0] + 2] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
+                    finish_found = True
+            if maze_map[numbers[1]][numbers[0] - 1] != '■':  # left
+                if maze_map[numbers[1]][numbers[0] - 2] == 'P':
+                    print('left move is free')
+                    maze_map[numbers[1]][numbers[0] - 2] = str(current_number)
+                    pos = (numbers[0] - 2, numbers[1])
+                    print('appending position', pos)
+                    array_of_pos.append(pos)  # return as loopm arra\
+                if maze_map[numbers[1]][numbers[0] - 2] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
+                    finish_found = True
+            if maze_map[numbers[1] - 1][numbers[0]] != '■':  # up
+                if maze_map[numbers[1] - 2][numbers[0]] == 'P':
+                    print('up move is free')
+                    maze_map[numbers[1] - 2][numbers[0]] = str(current_number)
+                    pos = (numbers[0], numbers[1] - 2)
+                    print('appending position', pos)
+                    array_of_pos.append(pos)  # return as loopm array
+                if maze_map[numbers[1] - 2][numbers[0]] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
+                    finish_found = True
+            if maze_map[numbers[1] + 1][numbers[0]] != '■':  # down
+                if maze_map[numbers[1] + 2][numbers[0]] == 'P':
+                    print('down move is free')
+                    maze_map[numbers[1] + 2][numbers[0]] = str(current_number)
+                    pos = (numbers[0], numbers[1] + 2)
+                    print('appending position', pos)
+                    array_of_pos.append(pos)  # return as loopm array
+                if maze_map[numbers[1] + 2][numbers[0]] == 'F':
+                    print('finish found')
+                    print(f'calling function with current number {current_number} and array = {[goal_position]}')
+                    path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
+                    finish_found = True
+        for positions in array_of_pos:
+            maze_map[positions[1]][positions[0]] = str(current_number)
+        for row in maze_map:
+            print(' '.join(row))
+        print('-----------------------------------------')
+    else:
+        print('done')
+        loop_finished = True
+    print(current_number, array_of_pos, 'cur number and loop array before calling fucntion')
+    moves_to_do = []
+
+    # try:
+    if finish_found:
+        print(' finish found ')
+        if len(path) > 0:
+            print('path', path)
+            for i in range(len(path)):
+                try:
+                    if path[i][0] + 2 == path[i + 1][0]:
+                        moves_to_do.append('right')
+                    if path[i][0] - 2 == path[i + 1][0]:
+                        moves_to_do.append('left')
+                    if path[i][1] - 2 == path[i + 1][1]:
+                        moves_to_do.append('up')
+                    if path[i][1] + 2 == path[i + 1][1]:
+                        moves_to_do.append('down')
+                except:
+                    break
+        print(moves_to_do, ' moves to do')
+        string_moves = ''
+        for move in moves_to_do:
+
+            string_moves += move
+        print(string_moves, "stirng to do")
+        return
+
+    if current_number < 37 and loop_finished == False:
+        maze_solver(maze_map, starting_pos, goal_position, array_of_pos, current_number)
+
+
 def distance_to_colors(pixel):
     white = np.array([255, 255, 255])
     black = np.array([0, 0, 0])
@@ -251,6 +386,7 @@ def take_and_display_screenshot(serial,x, y, width, height):
 
     return serial
 
+
 def do_maze():
     screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
     screen = np.array(screen)
@@ -266,6 +402,7 @@ def do_maze():
     screen[110, 260] = (0, 0, 255)  # maze 8
     screen[165, 200] = (0, 0, 255)  # maze 9'''
     maze_number = 0
+
     '''print("pixel color maze #1: ", pyautogui.pixel(1050 + 105, 460 + 115))
     print("pixel color maze #2: ",pyautogui.pixel(1050+290, 460+180))
     print("pixel color maze #3: ",pyautogui.pixel(1050+385, 460+275))
@@ -313,33 +450,161 @@ def do_maze():
             (211, 218, 220) : "start",
 
         }
+
+    #im changing maze number to maze map cuz it makes no sense to have 2 variables for the same thing kinda
     if pyautogui.pixel(1050 + 105, 460 + 115) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050 + 105, 460 + 115)])
-        maze_number = 1
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050+290, 460+180) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050+290, 460+180)])
-        maze_number = 2
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050+385, 460+275) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050+385, 460+275)])
-        maze_number = 3
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', '■', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050 + 95, 460 + 180) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050 + 95, 460 + 180)])
-        maze_number = 4
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050+270, 460+400) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050+270, 460+400)])
-        maze_number = 5
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050+310, 460+115) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050+310, 460+115)])
-        maze_number = 6
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
+            ['■', '■', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050 + 155, 460 + 115) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050+155, 460+115)])
-        maze_number = 7
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050+260, 460+110) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050+260, 460+110)])
-        maze_number = 8
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', '■', '■', ' ', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     elif pyautogui.pixel(1050+200, 460+165) in color_LUT:
         print(color_LUT[pyautogui.pixel(1050+200, 460+165)])
-        maze_number = 9
+        maze_number = [
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
+            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■'],
+            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
+            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■'],
+            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
+            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
+        ]
     else: print("something is off | try placing the bomb and picking it up again, that helps")
 
     start_pos = ()
@@ -354,140 +619,15 @@ def do_maze():
             elif pyautogui.pixel(1050+118+x*49, 460  +135+y*49) == (214, 0, 8):
                 #end
                 end_pos = (x,y)
+
+
+
     print(start_pos,end_pos)
-
-    def maze_reverse(maze_map, current_number, goal_position, array_of_path_pos):
-        while current_number > 0:
-            current_number -= 1
-            print(f' inside while loop checking for {current_number}')
-            if goal_position[0] + 2 < 13:
-                if maze_map[goal_position[1]][goal_position[0] + 2] == str(current_number):  # right
-                    print(f'current number found at {goal_position[0] + 2}, {goal_position[1]}')
-                    goal_position = (goal_position[0] + 2, goal_position[1])
-                    array_of_path_pos.append(goal_position)
-            if goal_position[0] - 2 > 0:
-                if maze_map[goal_position[1]][goal_position[0] - 2] == str(current_number):  # left
-                    print(f'current number found at {goal_position[0] - 2}, {goal_position[1]}')
-                    goal_position = (goal_position[0] - 2, goal_position[1])
-                    array_of_path_pos.append(goal_position)
-            if goal_position[1] - 2 > 0:
-                if maze_map[goal_position[1] - 2][goal_position[0]] == str(current_number):  # up
-                    print(f'current number found at {goal_position[0]}, {goal_position[1] - 2}')
-                    goal_position = (goal_position[0], goal_position[1] - 2)
-                    array_of_path_pos.append(goal_position)
-            if goal_position[1] + 2 < 13:
-                if maze_map[goal_position[1] + 2][goal_position[0]] == str(current_number):  # down
-                    print(f'current number found at {goal_position[0]}, {goal_position[1] + 2}')
-                    goal_position = (goal_position[0], goal_position[1] + 2)
-                    array_of_path_pos.append(goal_position)
-
-        else:
-            array_of_path_pos.reverse()
-            print(array_of_path_pos, '123')
-            return array_of_path_pos
-
-    def maze_solver(maze_map, starting_pos, goal_position, loop_array, current_number):
-        # path = []
-        loop_finished = False
-        finish_found = False
-        # loop array is an arrat that has number positions
-        # current number is  number of loops in floodfill search
-        print(current_number, loop_array, goal_position, 'cur number and loop array and goal pos')
-        # maze_map[start_pos[1]][start_pos[0]] = current_num
-        array_of_pos = []
-        if goal_position not in loop_array:
-            # temp array to avoid overwriting and fuckery idkkkk
-            current_number += 1
-            for numbers in loop_array:
-                print('numbers variable', numbers)
-                if maze_map[numbers[1]][numbers[0] + 1] != '■':  # right
-
-                    if maze_map[numbers[1]][numbers[0] + 2] == 'P':
-                        print('right move is free')
-                        maze_map[numbers[1]][numbers[0] + 2] = str(current_number)
-                        pos = (numbers[0] + 2, numbers[1])
-                        print('appending position', pos)
-                        array_of_pos.append(pos)  # return as loopm array
-                    if maze_map[numbers[1]][numbers[0] + 2] == 'F':
-                        print('finish found')
-                        print(f'calling function with current number {current_number} and array = {[goal_position]}')
-                        path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
-                        finish_found = True
-                if maze_map[numbers[1]][numbers[0] - 1] != '■':  # left
-                    if maze_map[numbers[1]][numbers[0] - 2] == 'P':
-                        print('left move is free')
-                        maze_map[numbers[1]][numbers[0] - 2] = str(current_number)
-                        pos = (numbers[0] - 2, numbers[1])
-                        print('appending position', pos)
-                        array_of_pos.append(pos)  # return as loopm arra\
-                    if maze_map[numbers[1]][numbers[0] - 2] == 'F':
-                        print('finish found')
-                        print(f'calling function with current number {current_number} and array = {[goal_position]}')
-                        path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
-                        finish_found = True
-                if maze_map[numbers[1] - 1][numbers[0]] != '■':  # up
-                    if maze_map[numbers[1] - 2][numbers[0]] == 'P':
-                        print('up move is free')
-                        maze_map[numbers[1] - 2][numbers[0]] = str(current_number)
-                        pos = (numbers[0], numbers[1] - 2)
-                        print('appending position', pos)
-                        array_of_pos.append(pos)  # return as loopm array
-                    if maze_map[numbers[1] - 2][numbers[0]] == 'F':
-                        print('finish found')
-                        print(f'calling function with current number {current_number} and array = {[goal_position]}')
-                        path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
-                        finish_found = True
-                if maze_map[numbers[1] + 1][numbers[0]] != '■':  # down
-                    if maze_map[numbers[1] + 2][numbers[0]] == 'P':
-                        print('down move is free')
-                        maze_map[numbers[1] + 2][numbers[0]] = str(current_number)
-                        pos = (numbers[0], numbers[1] + 2)
-                        print('appending position', pos)
-                        array_of_pos.append(pos)  # return as loopm array
-                    if maze_map[numbers[1] + 2][numbers[0]] == 'F':
-                        print('finish found')
-                        print(f'calling function with current number {current_number} and array = {[goal_position]}')
-                        path = maze_reverse(maze_map, current_number, goal_position, [goal_position])
-                        finish_found = True
-            for positions in array_of_pos:
-                maze_map[positions[1]][positions[0]] = str(current_number)
-            for row in maze_map:
-                print(' '.join(row))
-            print('-----------------------------------------')
-        else:
-            print('done')
-            loop_finished = True
-        print(current_number, array_of_pos, 'cur number and loop array before calling fucntion')
-        moves_to_do = []
-
-        # try:
-        if finish_found:
-            print(' finish found ')
-            if len(path) > 0:
-                print('path', path)
-                for i in range(len(path)):
-                    try:
-                        if path[i][0] + 2 == path[i + 1][0]:
-                            moves_to_do.append('right')
-                        if path[i][0] - 2 == path[i + 1][0]:
-                            moves_to_do.append('left')
-                        if path[i][1] - 2 == path[i + 1][1]:
-                            moves_to_do.append('up')
-                        if path[i][1] + 2 == path[i + 1][1]:
-                            moves_to_do.append('down')
-                    except:
-                        break
-            print(moves_to_do, ' moves to do')
-            string_moves = ''
-            for move in moves_to_do:
-                engine.setProperty('rate', 225)
-                say_(move)
-                string_moves += move
-
-            return
-
-        if current_number < 37 and loop_finished == False:
-            maze_solver(maze_map, starting_pos, goal_position, array_of_pos, current_number)
+    start_pos_resized = (start_pos[0]*2+1,start_pos[1]*2+1)
+    end_pos_resized = (end_pos[0]*2+1,end_pos[1]*2+1)
+    maze_number[start_pos_resized[1]][start_pos_resized[0]] = '0'
+    maze_number[end_pos_resized[1]][end_pos_resized[0]] = 'F'
+    maze_solver(maze_number,start_pos_resized,end_pos_resized,[start_pos_resized],0)
 
     def maze():
         # cry for help will not save my tarnished soul
@@ -523,141 +663,10 @@ def do_maze():
                 circle_pos += (numbers[word],)
         # MAPS
         # region
-        maze_map1 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]
-        maze_map2 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]
-        maze_map3 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', '■', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', '■', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]
-        maze_map4 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]
-        maze_map5 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]
-        maze_map6 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
-            ['■', '■', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]  # podwojne rozwidlenie ale read idea
-        maze_map7 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]
-        maze_map8 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', '■', '■', ' ', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]
-        maze_map9 = [
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
-            ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■'],
-            ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', '■', '■', '■', '■', ' ', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■', ' ', '■'],
-            ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■'],
-            ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
-            ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
-        ]  # check notes 2
+
+        #maze maps were here
+          # podwojne rozwidlenie ale read idea
+          # check notes 2
         # endregion
         print(circle_pos, 'position fo circles')
         maze1 = [(0, 1), (5, 2), (0, 1,), (5, 2,)]
@@ -797,7 +806,7 @@ def do_maze():
             if maze_map1[runner_pos[1] + 1][runner_pos[0]] != '■':
                 if maze_map1[runner_pos[1] + 2][runner_pos[0]] != 'P':
 
-                move_to_down = 1
+                    move_to_down = 1
             elif maze_map1[runner_pos[1] - 1][runner_pos[0]] != '■':
 
                 move_to_up = 1
