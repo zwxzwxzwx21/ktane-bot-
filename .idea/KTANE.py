@@ -1116,15 +1116,12 @@ def password_word(row1,row2,row3,row4,row5):
                         # print(row5)
                         # print(row4)
                         word = row1[o] + row2[j] + row3[k] + row4[l] + row5[m]
-                        print(word)
+                        #print(word)
                         if word in password_LUT:
-                            print(word)
+                            #print(word)
                             return word
 def do_password():
 
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
     # IT GOES LIKE:
     # 1 4 7
     # 2 5 8
@@ -1147,18 +1144,24 @@ def do_password():
     letter_lut2 = \
         {
             '0123457101216' : 'P',
+            '01234571115' : 'P',
+            '0123457101115' : 'P',
             '012347121516171819' : 'H',
             '012391415161718' : 'U',
             '01234571012' : "F",
+            '015678910121517' : "F",
             "012345791012141618" : "B",
+            '012345791011131517' : 'B',
             '01234914' : "L",
             '1235910141618' : 'C',
             '12359101214151718' : 'G',
             '05678910' : 'T',
             '05678101112131415' : 'T',
+            '05101112131415': "T",
             '145791012141518' : 'S',
             '01234591014161718' : "D",
             '01234579101214' : "E",
+            '012345781013' : 'E',
             '01234711131519' : "K",
             '01234571012131619' : "R",
             '23912131516' : "V",
@@ -1169,6 +1172,10 @@ def do_password():
         }
     #big loop outside to check every letter
     for loop in range(6):
+        screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+        screen = np.array(screen)
+        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
         for i in range(5):
             #print('NEW LETTER')
             letter_array = [] # new for each letter thats why inside this loop
@@ -1213,17 +1220,25 @@ def do_password():
                     print(temp_numb, letter_lut2[temp_numb], "numb")
                     if i < len(rows):
                         rows[i].append(letter_lut2[temp_numb])'''
+
+            print("first checkl",temp_numb)
             if temp_numb in letter_lut2:
                 print(temp_numb, letter_lut2[temp_numb], "numb")
+                print("temp numb is in letter_lut2", temp_numb, letter_lut2[temp_numb], i)
                 if i == 0:
+                    print(row1, loop, letter_lut2[temp_numb])
                     row1.append(letter_lut2[temp_numb])
                 elif i == 1:
+                    print(row1, loop, letter_lut2[temp_numb])
                     row2.append(letter_lut2[temp_numb])
                 elif i == 2:
+                    print(row1, loop, letter_lut2[temp_numb])
                     row3.append(letter_lut2[temp_numb])
                 elif i == 3:
+                    print(row1, loop, letter_lut2[temp_numb])
                     row4.append(letter_lut2[temp_numb])
                 elif i == 4:
+                    print(row1, loop, letter_lut2[temp_numb])
                     row5.append(letter_lut2[temp_numb])
             for x in range(3):
                 for y in range(4):
@@ -1241,46 +1256,72 @@ def do_password():
 
             if temp_numb in letter_lut:
                 print(temp_numb, letter_lut[temp_numb], "numb")
+                print("temp numb is in letter_lut", temp_numb, letter_lut[temp_numb], i)
                 if i == 0:
-                    if len(row1) < loop+1:
+                    print(row1,loop,letter_lut[temp_numb])
+                    if len(row1) < loop+1 :
                         row1.append(letter_lut[temp_numb])
+
                 elif i == 1:
-                    if len(row2) < loop + 1:
+                    print(row1, loop, letter_lut[temp_numb])
+                    if len(row2) < loop + 1 :
                         row2.append(letter_lut[temp_numb])
                 elif i == 2:
-                    if len(row3) < loop + 1:
+                    print(row1, loop, letter_lut[temp_numb])
+                    if len(row3) < loop + 1 :
                         row3.append(letter_lut[temp_numb])
                 elif i == 3:
-                    if len(row4) < loop + 1:
+                    print(row1, loop, letter_lut[temp_numb])
+                    if len(row4) < loop + 1 :
                         row4.append(letter_lut[temp_numb])
                 elif i == 4:
-                    if len(row5) < loop + 1:
+                    print(row1, loop, letter_lut[temp_numb])
+                    if len(row5) < loop + 1 :
                         row5.append(letter_lut[temp_numb])
-        print(f'printing rows: \n row1: {row1} \n row2: {row2} \n row3: {row3} \n row4: {row4} \n row5 {row5}')
+        print(f'printing rows: \n row1: {row1} \n row2: {row2} \n row3: {row3} \n row4: {row4} \n row5: {row5}')
         for row  in range(5):
-            pyautogui.PAUSE = 0.01
+            pyautogui.PAUSE = 0.02
             pyautogui.click(1050+90+row*80,460+120)
-
+        '''cv2.imshow('screen', screen)
+        cv2.waitKey(0)'''
+        time.sleep(0.7)
     word = password_word(row1,row2,row3,row4,row5)
     print("password is ", word)
     print('state of password module is ',row1[0] + row2[0] + row3[0] + row4[0] + row5[0])
-    print(f'printing rows: \n row1: {row1} \n row2: {row2} \n row3: {row3} \n row4: {row4} \n row5 {row5}')
+    print(f'printing rows: \n row1: {row1} \n row2: {row2} \n row3: {row3} \n row4: {row4} \n row5: {row5}')
     rows = [row1, row2, row3, row4, row5]
     moves = []
     #a
-    for index, row in enumerate(rows):
-        for numb in range(5):
-            if row[numb] == word[index]:
-                print(f"number to move up on row {index + 1}", numb)
-                moves.append(numb)
-    pyautogui.PAUSE = 0.05
-    for i in range(5):
-        for j in range(moves[i]):
-            pyautogui.click(1050+90+i*80,460+120)
+    print(rows)
+    for numb1 in range(0, 6):
+        if row1[numb1] == word[0]:
+            print("number to move up on row 1 ", numb1)
+            moves.append(numb1)
+    for numb2 in range(0, 6):
+        if row2[numb2] == word[1]:
+            print("number to move up on row 2 ", numb2)
+            moves.append(numb2)
+    for numb3 in range(0, 6):
+        if row3[numb3] == word[2]:
+            print("number to move up on row 3 ", numb3)
+            moves.append(numb3)
+    for numb4 in range(0, 6):
+        if row4[numb4] == word[3]:
+            print("number to move up on row 4 ", numb4)
+            moves.append(numb4)
+    for numb5 in range(0, 6):
+        if row5[numb5] == word[4]:
+            print("number to move up on row 5 ", numb5)
+            moves.append(numb5)
+
+    pyautogui.PAUSE = 0.1
+    print("moves to do",moves)
+    for huj in range(5):
+        for j in range(moves[huj]):
+            pyautogui.click(1050+90+huj*80,460+120)
     pyautogui.click(1050 + 90 + 2 * 80, 460 + 460)
 
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+
 # can check for second and third leter in labels because __K is only for FRK and _A_ is only for CAR, but i think it is
 # better to ccheck for 3rd pos only and then just check one pixel to determine if the second position is A or L if third one is R.
 # i think doing it just like serial number is good, just use less pixels to save time
