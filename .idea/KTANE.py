@@ -1267,6 +1267,7 @@ def do_password():
     print(f'printing rows: \n row1: {row1} \n row2: {row2} \n row3: {row3} \n row4: {row4} \n row5 {row5}')
     rows = [row1, row2, row3, row4, row5]
     moves = []
+    #a
     for index, row in enumerate(rows):
         for numb in range(5):
             if row[numb] == word[index]:
