@@ -1373,6 +1373,11 @@ def do_password():
 # for 6 widgets, start at 1765
 # for 4 widgets, start at 1535
 # fro 3 widgets, start at 1420
+def click_position(index):
+    x_coord = 1050 + 75 + index * 85
+    y_coord = 460 + 385
+    pyautogui.click(x_coord, y_coord)
+
 def do_memory(previous_answers,stage,numbers):
     # numbers are nubmers that were in prev stages, testing purpose only
     print(numbers , " numbers")
@@ -1439,168 +1444,134 @@ def do_memory(previous_answers,stage,numbers):
 
     #stage 1
     if stage == 1:
-
         if current_number == 1:
-            #press second pos
-            pos = 2
-            pyautogui.click(1050 + 75 + pos * 85-85, 460 + 385)
-            tuple = (bottom_numbers[1], 1)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            previous_answers.append(tuple)
+            pos = 1  # Second position (1-based)
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
         elif current_number == 2:
-            tuple = (bottom_numbers[1], 2)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            previous_answers.append(tuple)
-            pyautogui.click(1050 + 75 + 1 * 85-85, 460 + 385)
+            pos = 1  # Second position (1-based)
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
         elif current_number == 3:
-
-            pyautogui.click(1050 + 75 + 2 * 85-85, 460 + 385)
-            tuple = (bottom_numbers[2], 3)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            previous_answers.append(tuple)
+            pos = 2  # Third position (1-based)
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
         elif current_number == 4:
-            pyautogui.click(1050 + 75 + 3 * 85-85, 460 + 385)
-            tuple = (bottom_numbers[3],4)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            previous_answers.append(tuple)
+            pos = 3  # Fourth position (1-based)
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
         do_memory(previous_answers,2,numbers)
-
+    # Stage 2 Logic
     if stage == 2:
         if current_number == 1:
-            # press labeled 4
-            for i in range(4):
-                if bottom_numbers[i] == 4:
-                    tuple = (bottom_numbers[i],i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    previous_answers.append(tuple)
-                    
-                    pyautogui.click(1050 + 75 + i * 85-85, 460 + 385)
+            # Press button labeled "4"
+            for i, label in enumerate(bottom_numbers):
+                if label == 4:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-        if current_number == 2:
-            #same pos as stage 1
-            tuple = (bottom_numbers[previous_answers[0][1]-1],previous_answers[0][1])
-            previous_answers.append(tuple)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            
-            pyautogui.click(1050 + 75 + previous_answers[0][1] * 85-85, 460 + 385)
-
-        if current_number == 3:
-            tuple = (bottom_numbers[0],1)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            previous_answers.append(tuple)
-            pyautogui.click(1050 + 75 + 0 * 85-85, 460 + 385)
-
-        if current_number == 4:
-            tuple = (bottom_numbers[previous_answers[0][1]-1], previous_answers[0][1])
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            pyautogui.click(1050 + 75 + previous_answers[0][1] * 85-85, 460 + 385)
-            previous_answers.append(tuple)
-        do_memory(previous_answers,3,numbers)
-
-
+        elif current_number == 2:
+            # Press button in the same position as in stage 1
+            pos = previous_answers[0][1]
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        elif current_number == 3:
+            pos = 0  # First position
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        elif current_number == 4:
+            pos = previous_answers[0][1]
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        do_memory(previous_answers, 3, numbers)
+    # Stage 3 Logic
     if stage == 3:
         if current_number == 1:
-            #same label as stage 2
-            for i in range(4):
-                if bottom_numbers[i] == previous_answers[1][0]:
-                    tuple = (bottom_numbers[i], i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    previous_answers.append(tuple)
-                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
-
+            # Press button with same label as in stage 2
+            label_to_match = previous_answers[1][0]
+            for i, label in enumerate(bottom_numbers):
+                if label == label_to_match:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-        if current_number == 2:
-            for i in range(4):
-                if bottom_numbers[i] == previous_answers[0][0]:
-                    tuple = (bottom_numbers[i], i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    previous_answers.append(tuple)
-                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
-
+        elif current_number == 2:
+            # Press button with same label as in stage 1
+            label_to_match = previous_answers[0][0]
+            for i, label in enumerate(bottom_numbers):
+                if label == label_to_match:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-        if current_number == 3:
-            tuple = (bottom_numbers[2],3)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            pyautogui.click(1050 + 75 + 2 * 85, 460 + 385)
-
-            previous_answers.append(tuple)
-        if current_number == 4:
-            for i in range(4):
-                if bottom_numbers[i] == '4':
-                    tuple = (bottom_numbers[i], i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
-
-                    previous_answers.append(tuple)
+        elif current_number == 3:
+            pos = 2  # Third position
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        elif current_number == 4:
+            # Press button labeled "4"
+            for i, label in enumerate(bottom_numbers):
+                if label == 4:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-        do_memory(previous_answers,4,numbers)
+        do_memory(previous_answers, 4, numbers)
+    # Stage 4 Logic
     if stage == 4:
         if current_number == 1:
-            # same pos as stage 1
-            tuple = (bottom_numbers[previous_answers[0][1]-1], previous_answers[0][1])
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            pyautogui.click(1050 + 75 + (previous_answers[0][1]) * 85, 460 + 385)
-
-            previous_answers.append(tuple)
-        if current_number == 2:
-            tuple = (bottom_numbers[0],1)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            pyautogui.click(1050 + 75 + 0 * 85, 460 + 385)
-
-        if current_number == 3:
-            # same pos as stage 1
-            tuple = (bottom_numbers[previous_answers[1][1]-1], previous_answers[1][1])
-            previous_answers.append(tuple)
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            pyautogui.click(1050 + 75 + (previous_answers[1][1]-1) * 85, 460 + 385)
-        if current_number == 4:
-            # same pos as stage 1
-
-            tuple = (bottom_numbers[previous_answers[1][1]-1], previous_answers[1][1])
-            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-            pyautogui.click(1050 + 75 + (previous_answers[1][1]-1) * 85, 460 + 385)
-            previous_answers.append(tuple)
-        do_memory(previous_answers,5,numbers)
+            # Press button in the same position as in stage 1
+            pos = previous_answers[0][1]
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        elif current_number == 2:
+            pos = 0  # First position
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        elif current_number == 3:
+            # Press button in the same position as in stage 2
+            pos = previous_answers[1][1]
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        elif current_number == 4:
+            # Press button in the same position as in stage 2
+            pos = previous_answers[1][1]
+            click_position(pos)
+            previous_answers.append((bottom_numbers[pos], pos))
+        do_memory(previous_answers, 5, numbers)
+    # Stage 5 Logic
     if stage == 5:
         if current_number == 1:
-            # same label as stage 2
-            for i in range(4):
-                if bottom_numbers[i] == previous_answers[0][0]:
-                    tuple = (bottom_numbers[i], i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
-                    previous_answers.append(tuple)
+            # Press button with the same label as in stage 1
+            label_to_match = previous_answers[0][0]
+            for i, label in enumerate(bottom_numbers):
+                if label == label_to_match:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-        if current_number == 2:
-            # same label as stage 2
-            for i in range(4):
-                if bottom_numbers[i] == previous_answers[1][0]:
-                    tuple = (bottom_numbers[i], i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
-                    previous_answers.append(tuple)
+        elif current_number == 2:
+            # Press button with the same label as in stage 2
+            label_to_match = previous_answers[1][0]
+            for i, label in enumerate(bottom_numbers):
+                if label == label_to_match:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-        if current_number == 3:
-            # same label as stage 2
-            for i in range(4):
-                if bottom_numbers[i] == previous_answers[3][0]:
-                    tuple = (bottom_numbers[i], i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
-                    previous_answers.append(tuple)
+        elif current_number == 3:
+            # Press button with the same label as in stage 4
+            label_to_match = previous_answers[3][0]
+            for i, label in enumerate(bottom_numbers):
+                if label == label_to_match:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-        if current_number == 4:
-            # same label as stage 2
-            for i in range(4):
-                if bottom_numbers[i] == previous_answers[2][0]:
-                    tuple = (bottom_numbers[i], i)
-                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
-                    previous_answers.append(tuple)
-                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
-
+        elif current_number == 4:
+            # Press button with the same label as in stage 3
+            label_to_match = previous_answers[2][0]
+            for i, label in enumerate(bottom_numbers):
+                if label == label_to_match:
+                    click_position(i)
+                    previous_answers.append((label, i))
                     break
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+    '''cv2.imshow('screen', screen)
+    cv2.waitKey(0)'''
 do_memory([],1,[])
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
