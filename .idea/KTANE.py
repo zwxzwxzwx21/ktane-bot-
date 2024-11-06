@@ -14,7 +14,7 @@ import os
 import cv2
 import numpy as np
 import pyautogui
-import time
+import math
 
 global parallel_port
 parallel_port = False
@@ -128,7 +128,7 @@ def maze_solver(maze_map, starting_pos, goal_position, loop_array, current_numbe
         loop_finished = True
     print(current_number, array_of_pos, 'cur number and loop array before calling fucntion')
     moves_to_do = []
-
+    pyautogui.PAUSE = 0.15
     # try:
     if finish_found:
         print(' finish found ')
@@ -188,8 +188,75 @@ def distance_to_colors(pixel):
     distance_to_white = np.linalg.norm(pixel - white)
     distance_to_black = np.linalg.norm(pixel - black)
     return distance_to_white, distance_to_black
+cable_LUT =  \
+        {
+            (24, 27, 31) : None,
 
+            (255, 255, 255) : "white",
+            (255, 253, 236) : "white", # pos 3
+            (209, 200, 186) : "white", # pos 4
+            (215, 205, 191) : "white", # pos 4
+            (210, 201, 187) : "white", # pos 4
+            (255, 252, 235) : "white", # pos 6
+            (239, 228, 212) : "white", # pos 5
+            (241, 230, 214) : "white",
 
+            (255, 98, 36) : 'red',
+            (255, 142, 56) : "red", # pos 1
+            (255, 100, 36) : 'red', # pos 2
+            (255, 9, 7) : 'red', # pos 5
+            (234, 8, 6): 'red', # pos 4
+            (255, 10, 12): 'red', # pos 6 / pos 3
+
+            (255, 255, 50) : "yellow",
+            (255, 255, 52) : "yellow", # pos 1
+            (255, 255, 54) : "yellow", # pos 1
+            (255, 255, 36) : "yellow", # pos 2
+            (234, 194, 6): "yellow", # pos 4
+            (238, 197, 6): "yellow", # pos 4
+            (255, 245, 12): "yellow", # pos 3 / pos 6
+            (255, 223, 7) : "yellow", # pos 5
+            (255, 244, 12) : "yellow", # pos 6
+
+            (5, 4, 3) : "black",
+            (8, 8, 8) : "black", # pos 1
+            (10, 9, 8) : "black", # pos 1
+            (2, 3, 2) : "black", # pos 5
+            (6, 6, 6) : "black", # pos 2
+            (0, 0, 0) : "black", # pos 3
+            (2, 2, 2) : "black", # pos 3
+
+            (57, 82, 216) : "blue",
+            (57,82,217): "blue", # pos 3
+            (57,82,218): "blue", # pos 3
+            (57,82,219): "blue", # pos 3
+            (93, 153, 244): "blue",
+            (55, 76, 196): "blue", # pos 5
+            (70, 114, 233): "blue", # pos 2
+            (48, 67, 172): "blue", # pos 4
+            (57, 83, 217): "blue", # pos 6
+            (70, 114, 234): "blue", # pos 2
+        }
+password_color_lut = \
+    {
+        (30, 65, 10) : "go",
+        (126, 204, 22) : None,
+        (51, 74, 7) : "go",
+        (34, 67, 8) : "go",
+        (88, 185, 27) : None,
+        (112, 200, 22) : None,
+        (137, 210, 19) : None,
+        (148, 214, 19) : None,
+    }
+def closest_color(rgb_color,lut):
+    min_distance = float("inf")
+    closest_color_name = None
+    for color,name in lut.items():
+        distance = math.sqrt(sum((rgb_color[i] - color[i]) ** 2 for i in range(3)))
+        if distance < min_distance:
+            min_distance = distance
+            closest_color_name = name
+    return closest_color_name
 def check_wdgets(x, y):
     global parallel_port
 
@@ -431,10 +498,10 @@ def do_maze():
     screen[165, 200] = (0, 0, 255)  # maze 9'''
     maze_number = []
 
-    print("pixel color maze #1: ", pyautogui.pixel(1050 + 105, 460 + 115))
+    print("pixel color maze #1: ", pyautogui.pixel(1050 + 95, 460 + 180))
     print("pixel color maze #2: ",pyautogui.pixel(1050+290, 460+180))
     print("pixel color maze #3: ",pyautogui.pixel(1050+385, 460+275))
-    print("pixel color maze #4: ", pyautogui.pixel(1050 + 95, 460 + 180))
+    print("pixel color maze #4: ", pyautogui.pixel(1050 + 105, 460 + 115))
     print("pixel color maze #5: ",pyautogui.pixel(1050+270, 460+400))
     print("pixel color maze #6: ",pyautogui.pixel(1050+310, 460+115))
     print("pixel color maze #7: ",pyautogui.pixel(1050+155, 460+115))
@@ -481,8 +548,8 @@ def do_maze():
         }
 
     #im changing maze number to maze map cuz it makes no sense to have 2 variables for the same thing kinda
-    if pyautogui.pixel(1050 + 105, 460 + 115) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050 + 105, 460 + 115)])
+    if pyautogui.pixel(1050 + 95, 460 + 180) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050 + 95, 460 + 180)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -532,8 +599,8 @@ def do_maze():
             ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050 + 95, 460 + 180) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050 + 95, 460 + 180)])
+    elif pyautogui.pixel(1050 + 105, 460 + 115) in color_LUT:
+        print(color_LUT[pyautogui.pixel(1050 + 105, 460 + 115)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -859,8 +926,360 @@ def do_maze():
 
     #print(a)
 
+def do_wires(serial):
+
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
+    '''screen[35, 110] = (0, 0, 255)   # wire 1
+    screen[115, 110] = (0, 0, 255)  # wire 2
+    screen[195, 110] = (0, 0, 255)  # wire 3
+    screen[275, 110] = (0, 0, 255)  # wire 4
+    screen[350, 110] = (0, 0, 255)  # wire 5
+    screen[430, 110] = (0, 0, 255)  # wire 6'''
+    print("wire 1",pyautogui.pixel(1050+110,460+35))
+    print("wire 2",pyautogui.pixel(1050+110,460+115))
+    print("wire 3",pyautogui.pixel(1050+110,460+195))
+    print("wire 4",pyautogui.pixel(1050+110,460+275))
+    print("wire 5",pyautogui.pixel(1050+110,460+350))
+    print("wire 6",pyautogui.pixel(1050+110,460+430))
+    print("color found #1:", closest_color(pyautogui.pixel(1050+110,460+35),cable_LUT))
+    print("color found #2:", closest_color(pyautogui.pixel(1050+110,460+115),cable_LUT))
+    print("color found #3:", closest_color(pyautogui.pixel(1050+110,460+195),cable_LUT))
+    print("color found #4:", closest_color(pyautogui.pixel(1050+110,460+275),cable_LUT))
+    print("color found #5:", closest_color(pyautogui.pixel(1050+110,460+350),cable_LUT))
+    print("color found #6:", closest_color(pyautogui.pixel(1050+110,460+430),cable_LUT))
+
+    wire_array = [] # this one is just wires lol
+    # tuple ("wire color", number)
+    if closest_color(pyautogui.pixel(1050+110,460+35),cable_LUT)!= None:
+        tup = (closest_color(pyautogui.pixel(1050+110,460+35),cable_LUT),1)
+        wire_array.append(tup)
+    if closest_color(pyautogui.pixel(1050+110,460+115),cable_LUT) != None:
+        tup = (closest_color(pyautogui.pixel(1050+110,460+115),cable_LUT),2)
+        wire_array.append(tup)
+    if closest_color(pyautogui.pixel(1050+110,460+195),cable_LUT) != None:
+        tup = (closest_color(pyautogui.pixel(1050+110,460+195),cable_LUT),3)
+        wire_array.append(tup)
+    if closest_color(pyautogui.pixel(1050+110,460+275),cable_LUT) != None:
+        tup = (closest_color(pyautogui.pixel(1050+110,460+275),cable_LUT),4)
+        wire_array.append(tup)
+    if closest_color(pyautogui.pixel(1050+110,460+350),cable_LUT) != None:
+        tup = (closest_color(pyautogui.pixel(1050+110,460+350),cable_LUT),5)
+        wire_array.append(tup)
+    if closest_color(pyautogui.pixel(1050+110,460+430),cable_LUT) != None:
+        tup = (closest_color(pyautogui.pixel(1050+110,460+430),cable_LUT),6)
+        wire_array.append(tup)
+
+    last_digit = int(serial[-1]) % 2 == 1
+    #pyautogui.click((1050+110,460+35+80*wire_array[][1]))
+    # case for 3 wires
+    if len(wire_array) == 3:
+        # Rule 1 If there are no red wires, cut second wire
+        if not any(wire[0] == 'red' for wire in wire_array):
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[1][1]-80))
+            print(wire_array[1]," need to be cut")
+            return
+        # rule 2 if the last wire is white, cut last wire
+        elif wire_array[-1][0]=="white":
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[2][1]-80))
+            print(wire_array[2], " need to be cut")
+            return
+        # rule 3 if there is more than one blue wire, cut last blue wire
+        elif sum(1 for wire in wire_array if wire[0] == 'blue') > 1:
+            for wire in reversed(wire_array):
+                if wire[0] == "blue":
+                    pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[i][1]-80))
+                    print(wire_array[i], " need to be cut")
+                return
 
 
+        # rule 4 otherwise, cut the last wire
+        else:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[2][1]-80))
+            print(wire_array[2], " need to be cut")
+            return
+    # case for 4 wires
+    elif len(wire_array) == 4:
+        red_count = sum(1 for wire in wire_array if wire[0] == 'red')
+        yellow_count = sum(1 for wire in wire_array if wire[0] == 'yellow')
+        blue_count = sum(1 for wire in wire_array if wire[0] == 'blue')
+
+        # rule 1 moire than one red wire and last digit of serial is odd
+
+        if red_count > 1 and last_digit:
+            for wire in reversed(wire_array):
+                if wire[0] == 'red':
+                    pyautogui.click((1050 + 110, 460 + 35 + 80 * wire[1]-80))
+                    print(wire," need to be cut")
+                    return
+        # rule 2 last wire is yellow and no red wires
+        elif wire_array[-1][0] == 'yellow' and red_count == 0:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[0][1]-80))
+            print(wire_array[0], " need to be cut")
+            return
+        # rule  3 exactly one blue wire
+        elif blue_count == 1:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[0][1]-80))
+            print(wire_array[0], " need to be cut")
+            return
+        #rule 4 more than one yellow
+        elif yellow_count > 1:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[-1][1]-80))
+            print(wire_array[-1], " need to be cut")
+        # rule 5 otherwise cut second wire
+        else:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[1][1]-80))
+            print(wire_array[1], " need to be cut")
+            return
+    elif len(wire_array) == 5:
+        red_count = sum(1 for wire in wire_array if wire[0] == 'red')
+        yellow_count = sum(1 for wire in wire_array if wire[0] == 'yellow')
+        black_count = sum(1 for wire in wire_array if wire[0] == 'black')
+
+        # rule 1 last wire black and last digit or serial odd
+        if wire_array[-1][0] == "black" and last_digit:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[3][1]-80))
+            print(wire_array[3], " need to be cut")
+            return
+        # rule 2 one red wire and more than 1 yellow
+        elif red_count == 1 and yellow_count > 1:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[0][1]-80))
+            print(wire_array[0], " need to be cut")
+            return
+        # rule 3 no black wires
+        elif black_count == 0:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[1][1]-80))
+            print(wire_array[1], " need to be cut")
+            return
+        # rule 4 otherwise cut first
+        else:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[0][1]-80))
+            print(wire_array[0], " need to be cut")
+            return
+    elif len(wire_array) == 6:
+        yellow_count = sum(1 for wire in wire_array if wire[0] == "yellow")
+        white_count = sum(1 for wire in wire_array if wire[0] == "white")
+        red_count = sum(1 for wire in wire_array if wire[0] == "red")
+
+        # Rule 1: No yellow wires and last digit of serial number is odd
+        if yellow_count == 0 and last_digit:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[2][1]-80))
+            print(wire_array[2], "needs to be cut, rule 1")
+            return
+
+        # Rule 2: Exactly one yellow wire and more than one white wire
+        elif yellow_count == 1 and white_count > 1:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[3][1]-80))
+            print(wire_array[3], "needs to be cut")
+            return
+
+        # Rule 3: No red wires
+        elif red_count == 0:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[-1][1]-80))
+            print(wire_array[-1], "needs to be cut")
+            return
+
+        # Rule 4: Otherwise, cut the fourth wire
+        else:
+            pyautogui.click((1050 + 110, 460 + 35 + 80 * wire_array[3][1]-80))
+            print(wire_array[3], "needs to be cut")
+            return
+
+
+    print(len(wire_array), "number of wires",wire_array)
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+    print(a)
+
+password_LUT = [
+                    'ABOUT', 'AFTER', 'AGAIN', 'BELOW', 'COULD',
+                    'EVERY', 'FIRST', 'FOUND', 'GREAT', 'HOUSE',
+                    'LARGE', 'LEARN', 'NEBER', 'OTHER', 'PLACE',
+                    'PLANT', 'POINT', 'RIGHT', 'SMALL', 'SOUND',
+                    'SPELL', 'STILL', 'STUDY', 'THEIR', 'THERE',
+                    'THESE', 'THING', 'THINK', 'THREE', 'WATER',
+                    'WHERE', 'WHICH', 'WORLD', 'WOULD', 'WRITE'
+                   ]
+def password_word(row1,row2,row3,row4,row5):
+    print(row1, row2, row3, row4, row5)
+    for o in range(6):
+        for j in range(6):
+            for k in range(6):
+                for l in range(6):
+                    for m in range(6):
+
+                        # print(o, j, k, l, m)
+                        # if len(row5) < 6: say_('error')
+                        # print(row1[o], row2[j], row3[k], row4[l], row5[m])
+                        # print(row5)
+                        # print(row4)
+                        word = row1[o] + row2[j] + row3[k] + row4[l] + row5[m]
+                        print(word)
+                        if word in password_LUT:
+                            print(word)
+                            return word
+def do_password():
+
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    # IT GOES LIKE:
+    # 1 4 7
+    # 2 5 8
+    # 3 6 9.
+    # this one checke for dark pixels and bases on the position of dark pixels, it returns letter
+    row1 =[]
+    row2 =[]
+    row3 =[]
+    row4 =[]
+    row5 =[]
+    letter_lut = \
+        {
+            '058' : "M",
+            '4567' : "I",
+            '05678' : "Y",
+            '025810' : "X",
+            '0510' : 'N',
+            '345611' : 'W',
+        }
+    letter_lut2 = \
+        {
+            '0123457101216' : 'P',
+            '012347121516171819' : 'H',
+            '012391415161718' : 'U',
+            '01234571012' : "F",
+            "012345791012141618" : "B",
+            '01234914' : "L",
+            '1235910141618' : 'C',
+            '12359101214151718' : 'G',
+            '05678910' : 'T',
+            '05678101112131415' : 'T',
+            '145791012141518' : 'S',
+            '01234591014161718' : "D",
+            '01234579101214' : "E",
+            '01234711131519' : "K",
+            '01234571012131619' : "R",
+            '23912131516' : "V",
+            '123591014161718' : 'O',
+            '391415161718' : 'J',
+            '034579101114' : 'Z',
+            '123457101216171819': 'A',
+        }
+    #big loop outside to check every letter
+    for loop in range(6):
+        for i in range(5):
+            #print('NEW LETTER')
+            letter_array = [] # new for each letter thats why inside this loop
+            pixel_number = 0
+
+            #second check
+            print("second check")
+            letter_array_2 = []  # new for each letter thats why inside this loop
+            pixel_number_2 = 0
+            screen[ 218 + 5 * 13][ 77 + i * 79 + 3 * 13] = (255,255,255)
+            if closest_color(pyautogui.pixel(1050 + 77 + i * 79 + 3 * 13, 460 + 218 + 5 * 13),
+                             password_color_lut) != None:
+                print('its a Q')
+                if i == 0:
+                    row1.append('Q')
+                elif i == 1:
+                    row2.append('Q')
+                elif i == 2:
+                    row3.append('Q')
+                elif i == 3:
+                    row4.append('Q')
+                elif i == 4:
+                    row5.append('Q')
+                continue
+            for x in range(4):
+                for y in range(5):
+                    # this one keeps track of which pixel is checked so its easier to tell which combination is what letter
+                    screen[218 + y * 13][77 + i * 79 + x * 13] = (255, 0, 0)
+                    #print(pyautogui.pixel(1050 + 77 + i * 79 + x * 13, 460 + 218 + y * 13), pixel_number_2)
+                    if closest_color(pyautogui.pixel(1050 + 77 + i * 79 + x * 13, 460 + 218 + y * 13),
+                                     password_color_lut) != None:
+                        letter_array_2.append(pixel_number_2)
+                        #print("appending", pixel_number_2)
+                    pixel_number_2 += 1
+            print(letter_array_2)
+            temp_numb = ''
+            for number in letter_array_2:
+                temp_numb += str(number)
+            '''rows = [row1,row2,row3,row4,row5]
+            for i,temp_numb in enumerate():
+                if temp_numb in letter_lut2:
+                    print(temp_numb, letter_lut2[temp_numb], "numb")
+                    if i < len(rows):
+                        rows[i].append(letter_lut2[temp_numb])'''
+            if temp_numb in letter_lut2:
+                print(temp_numb, letter_lut2[temp_numb], "numb")
+                if i == 0:
+                    row1.append(letter_lut2[temp_numb])
+                elif i == 1:
+                    row2.append(letter_lut2[temp_numb])
+                elif i == 2:
+                    row3.append(letter_lut2[temp_numb])
+                elif i == 3:
+                    row4.append(letter_lut2[temp_numb])
+                elif i == 4:
+                    row5.append(letter_lut2[temp_numb])
+            for x in range(3):
+                for y in range(4):
+                     # this one keeps track of which pixel is checked so its easier to tell which combination is what letter
+                    screen[226+ y * 13][81+i*79 + x*13 ]=(0,0,255)
+                    #print(pyautogui.pixel(1050+81+i*79 + x*13,460+226+ y * 13), pixel_number)
+                    if closest_color(pyautogui.pixel(1050+81+i*79 + x*13,460+226+ y * 13),password_color_lut) != None:
+                        letter_array.append(pixel_number)
+                        #print("appending",pixel_number)
+                    pixel_number += 1
+            #print(letter_array)
+            temp_numb = ''
+            for number in letter_array:
+                temp_numb += str(number)
+
+            if temp_numb in letter_lut:
+                print(temp_numb, letter_lut[temp_numb], "numb")
+                if i == 0:
+                    if len(row1) < loop+1:
+                        row1.append(letter_lut[temp_numb])
+                elif i == 1:
+                    if len(row2) < loop + 1:
+                        row2.append(letter_lut[temp_numb])
+                elif i == 2:
+                    if len(row3) < loop + 1:
+                        row3.append(letter_lut[temp_numb])
+                elif i == 3:
+                    if len(row4) < loop + 1:
+                        row4.append(letter_lut[temp_numb])
+                elif i == 4:
+                    if len(row5) < loop + 1:
+                        row5.append(letter_lut[temp_numb])
+        print(f'printing rows: \n row1: {row1} \n row2: {row2} \n row3: {row3} \n row4: {row4} \n row5 {row5}')
+        for row  in range(5):
+            pyautogui.PAUSE = 0.01
+            pyautogui.click(1050+90+row*80,460+120)
+
+    word = password_word(row1,row2,row3,row4,row5)
+    print("password is ", word)
+    print('state of password module is ',row1[0] + row2[0] + row3[0] + row4[0] + row5[0])
+    print(f'printing rows: \n row1: {row1} \n row2: {row2} \n row3: {row3} \n row4: {row4} \n row5 {row5}')
+    rows = [row1, row2, row3, row4, row5]
+    moves = []
+    for index, row in enumerate(rows):
+        for numb in range(5):
+            if row[numb] == word[index]:
+                print(f"number to move up on row {index + 1}", numb)
+                moves.append(numb)
+    pyautogui.PAUSE = 0.05
+    for i in range(5):
+        for j in range(moves[i]):
+            pyautogui.click(1050+90+i*80,460+120)
+    pyautogui.click(1050 + 90 + 2 * 80, 460 + 460)
+
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
 # can check for second and third leter in labels because __K is only for FRK and _A_ is only for CAR, but i think it is
 # better to ccheck for 3rd pos only and then just check one pixel to determine if the second position is A or L if third one is R.
 # i think doing it just like serial number is good, just use less pixels to save time
@@ -912,7 +1331,8 @@ def do_maze():
 # for 6 widgets, start at 1765
 # for 4 widgets, start at 1535
 # fro 3 widgets, start at 1420
-
+do_password()
+time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
     a = pyautogui.pixel(x, y)
@@ -942,7 +1362,8 @@ while True:
         winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
 
         break
-    do_maze()
+
+
     if window:
         window[0].activate()
         time.sleep(1)
@@ -971,6 +1392,7 @@ while True:
                 x = 1915
             width, height = 176, 45
             serial = take_and_display_screenshot(serial,x, y, width, height)
+
     #FLAG for widgets
     if batteries == -1:
         labels, batteries = check_wdgets(600, 0)
