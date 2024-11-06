@@ -1373,7 +1373,235 @@ def do_password():
 # for 6 widgets, start at 1765
 # for 4 widgets, start at 1535
 # fro 3 widgets, start at 1420
-do_password()
+def do_memory(previous_answers,stage,numbers):
+    # numbers are nubmers that were in prev stages, testing purpose only
+    print(numbers , " numbers")
+    print(stage, "stage")
+    print(previous_answers, "previous")
+    if stage != 1:
+        time.sleep(4)
+    memory_LUT = \
+        {
+            (50, 89, 72): "green",
+            (255, 255, 255): "white",
+        }
+    memory_lut_bottom = \
+        {
+            (187, 167, 134) : "bg",
+            (49, 44, 35) : "number"
+        }
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    screen[155,200] = (0,0,0)
+    screen[155,235] = (0,0,255)
+    #print(pyautogui.pixel(1050+200,460+155))
+    #print(pyautogui.pixel(1050+235,460+155)) # red
+    color_1 = closest_color(pyautogui.pixel(1050+200,460+155),memory_LUT)
+    color_2 = closest_color(pyautogui.pixel(1050+235,460+155),memory_LUT) # red
+
+    current_number = -1 # number that displays on the top
+    if color_1 == "green" and color_2 == "white":
+        current_number = 3
+    if color_1 == "white" and color_2 =="green":
+        current_number = 2
+    if color_1 == "green" and color_2 =="green":
+        current_number = 1
+    if color_1 == "white" and color_2 =="white":
+        current_number = 4
+    print('number is ',current_number)
+    numbers.append(current_number)
+    bottom_numbers = []
+    for i in range(4):
+        #print(pyautogui.pixel(1050 + 75+i*85, 460 + 385))
+        #print(pyautogui.pixel(1050 + 100+i*85, 460 + 385))
+        screen[385, 75+i*85] = (0, 0, 0)
+        screen[385, 100+i*85] = (0, 0, 255)
+        color_3 =closest_color(pyautogui.pixel(1050 + 75+i*85, 460 + 385),memory_lut_bottom)
+        color_4 = closest_color(pyautogui.pixel(1050 + 100+i*85, 460 + 385),memory_lut_bottom) # red
+        if  color_3== "number" and color_4 == "bg":
+            bottom_numbers.append(2)
+        if  color_3== "bg" and color_4 == "bg":
+            bottom_numbers.append(1)
+        if  color_3== "bg" and color_4 == "number":
+            bottom_numbers.append(3)
+        if  color_3== "number" and color_4 == "number":
+            bottom_numbers.append(4)
+    print(bottom_numbers)
+
+    previous_answers = previous_answers # append items like: (number, position)
+
+
+
+    #we now have everything we need to solve the  module, it will take some place tho so this is like you know
+
+
+
+    #stage 1
+    if stage == 1:
+
+        if current_number == 1:
+            #press second pos
+            pos = 2
+            pyautogui.click(1050 + 75 + pos * 85-85, 460 + 385)
+            tuple = (bottom_numbers[1], 1)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            previous_answers.append(tuple)
+        elif current_number == 2:
+            tuple = (bottom_numbers[1], 2)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            previous_answers.append(tuple)
+            pyautogui.click(1050 + 75 + 1 * 85-85, 460 + 385)
+        elif current_number == 3:
+
+            pyautogui.click(1050 + 75 + 2 * 85-85, 460 + 385)
+            tuple = (bottom_numbers[2], 3)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            previous_answers.append(tuple)
+        elif current_number == 4:
+            pyautogui.click(1050 + 75 + 3 * 85-85, 460 + 385)
+            tuple = (bottom_numbers[3],4)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            previous_answers.append(tuple)
+        do_memory(previous_answers,2,numbers)
+
+    if stage == 2:
+        if current_number == 1:
+            # press labeled 4
+            for i in range(4):
+                if bottom_numbers[i] == 4:
+                    tuple = (bottom_numbers[i],i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    previous_answers.append(tuple)
+                    
+                    pyautogui.click(1050 + 75 + i * 85-85, 460 + 385)
+                    break
+        if current_number == 2:
+            #same pos as stage 1
+            tuple = (bottom_numbers[previous_answers[0][1]-1],previous_answers[0][1])
+            previous_answers.append(tuple)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            
+            pyautogui.click(1050 + 75 + previous_answers[0][1] * 85-85, 460 + 385)
+
+        if current_number == 3:
+            tuple = (bottom_numbers[0],1)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            previous_answers.append(tuple)
+            pyautogui.click(1050 + 75 + 0 * 85-85, 460 + 385)
+
+        if current_number == 4:
+            tuple = (bottom_numbers[previous_answers[0][1]-1], previous_answers[0][1])
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            pyautogui.click(1050 + 75 + previous_answers[0][1] * 85-85, 460 + 385)
+            previous_answers.append(tuple)
+        do_memory(previous_answers,3,numbers)
+
+
+    if stage == 3:
+        if current_number == 1:
+            #same label as stage 2
+            for i in range(4):
+                if bottom_numbers[i] == previous_answers[1][0]:
+                    tuple = (bottom_numbers[i], i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    previous_answers.append(tuple)
+                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
+
+                    break
+        if current_number == 2:
+            for i in range(4):
+                if bottom_numbers[i] == previous_answers[0][0]:
+                    tuple = (bottom_numbers[i], i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    previous_answers.append(tuple)
+                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
+
+                    break
+        if current_number == 3:
+            tuple = (bottom_numbers[2],3)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            pyautogui.click(1050 + 75 + 2 * 85, 460 + 385)
+
+            previous_answers.append(tuple)
+        if current_number == 4:
+            for i in range(4):
+                if bottom_numbers[i] == '4':
+                    tuple = (bottom_numbers[i], i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
+
+                    previous_answers.append(tuple)
+                    break
+        do_memory(previous_answers,4,numbers)
+    if stage == 4:
+        if current_number == 1:
+            # same pos as stage 1
+            tuple = (bottom_numbers[previous_answers[0][1]-1], previous_answers[0][1])
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            pyautogui.click(1050 + 75 + (previous_answers[0][1]) * 85, 460 + 385)
+
+            previous_answers.append(tuple)
+        if current_number == 2:
+            tuple = (bottom_numbers[0],1)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            pyautogui.click(1050 + 75 + 0 * 85, 460 + 385)
+
+        if current_number == 3:
+            # same pos as stage 1
+            tuple = (bottom_numbers[previous_answers[1][1]-1], previous_answers[1][1])
+            previous_answers.append(tuple)
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            pyautogui.click(1050 + 75 + (previous_answers[1][1]-1) * 85, 460 + 385)
+        if current_number == 4:
+            # same pos as stage 1
+
+            tuple = (bottom_numbers[previous_answers[1][1]-1], previous_answers[1][1])
+            print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+            pyautogui.click(1050 + 75 + (previous_answers[1][1]-1) * 85, 460 + 385)
+            previous_answers.append(tuple)
+        do_memory(previous_answers,5,numbers)
+    if stage == 5:
+        if current_number == 1:
+            # same label as stage 2
+            for i in range(4):
+                if bottom_numbers[i] == previous_answers[0][0]:
+                    tuple = (bottom_numbers[i], i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
+                    previous_answers.append(tuple)
+                    break
+        if current_number == 2:
+            # same label as stage 2
+            for i in range(4):
+                if bottom_numbers[i] == previous_answers[1][0]:
+                    tuple = (bottom_numbers[i], i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
+                    previous_answers.append(tuple)
+                    break
+        if current_number == 3:
+            # same label as stage 2
+            for i in range(4):
+                if bottom_numbers[i] == previous_answers[3][0]:
+                    tuple = (bottom_numbers[i], i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
+                    previous_answers.append(tuple)
+                    break
+        if current_number == 4:
+            # same label as stage 2
+            for i in range(4):
+                if bottom_numbers[i] == previous_answers[2][0]:
+                    tuple = (bottom_numbers[i], i)
+                    print(f"tuple is {tuple} stage {stage} curren number {current_number}")
+                    previous_answers.append(tuple)
+                    pyautogui.click(1050 + 75 + i * 85, 460 + 385)
+
+                    break
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+do_memory([],1,[])
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
