@@ -1373,6 +1373,115 @@ def do_password():
 # for 6 widgets, start at 1765
 # for 4 widgets, start at 1535
 # fro 3 widgets, start at 1420
+def do_complicated(serial,batteries,parallel):
+    led_lut = \
+        {
+            (252, 243, 190) : "lit",
+            (1,1,1) : "off"
+        }
+    cable_lut =  \
+        {
+            (29, 59, 126) : "blue",
+            (203, 0, 25) : "red",
+            (255, 253, 235) : "white",
+        }
+    star_lut = \
+        {
+            (32, 26, 18) : "star",
+            (125, 100, 71) : "no star"
+        }
+    last_digit_even = int(serial[-1]) % 2 == 0
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    cable1 = []
+    cable2 = []
+    cable3 = []
+    cable4 = []
+    cable5 = []
+    cable6 = []
+    # cable format: (led,color_1,color_2,star)
+    for led in range(6):
+        # pixels that check for leds
+        screen[50,65+led*58] = (0,0,255)
+        #print(pyautogui.pixel(1050+65+led*58,460+50))
+        if led == 0:
+            cable1.append(closest_color(pyautogui.pixel(1050+65+led*58,460+50),led_lut))
+        elif led == 1:
+            cable2.append(closest_color(pyautogui.pixel(1050 + 65 + led * 58, 460 + 50), led_lut))
+        elif led == 2:
+            cable3.append(closest_color(pyautogui.pixel(1050 + 65 + led * 58, 460 + 50), led_lut))
+        elif led == 3:
+            cable4.append(closest_color(pyautogui.pixel(1050 + 65 + led * 58, 460 + 50), led_lut))
+        elif led == 4:
+            cable5.append(closest_color(pyautogui.pixel(1050 + 65 + led * 58, 460 + 50), led_lut))
+        elif led == 5:
+            cable6.append(closest_color(pyautogui.pixel(1050 + 65 + led * 58, 460 + 50), led_lut))
+
+    screen[93, 65 + 0 * 58] = (0, 255, 0) # cable1 (on blue)
+    screen[90, 62 + 1 * 58] = (0, 255, 0) # cable2 (white) (meaning that second color_2  should check for red)
+    screen[98, 59 + 2 * 58] = (0, 255, 0) # cable3 (red)
+    screen[93, 69 + 3 * 58] = (0, 255, 0) # cable4 (blue)
+    screen[90, 67 + 4 * 58] = (0, 255, 0) # cable5 (white)
+    screen[95, 64 + 5 * 58] = (0, 255, 0) # cable6 (blue)
+    print(pyautogui.pixel(1050 + 65 + 0 * 58, 460 + 93))
+    cable1.append(closest_color(pyautogui.pixel(1050 + 65 + 0 * 58, 460 + 93),cable_lut))
+    print(pyautogui.pixel(1050 + 62 + 1 * 58, 460 + 90))
+    cable2.append(closest_color(pyautogui.pixel(1050 + 62 + 1 * 58, 460 + 90),cable_lut))
+    print(pyautogui.pixel(1050 + 59 + 2 * 58, 460 + 98))
+    cable3.append(closest_color(pyautogui.pixel(1050 + 59 + 2 * 58, 460 + 98),cable_lut))
+    print(pyautogui.pixel(1050 + 69 + 3 * 58, 460 + 93))
+    cable4.append(closest_color(pyautogui.pixel(1050 + 69 + 3 * 58, 460 + 93),cable_lut))
+    print(pyautogui.pixel(1050 + 67 + 4 * 58, 460 + 90))
+    cable5.append(closest_color(pyautogui.pixel(1050 + 67 + 4 * 58, 460 + 90),cable_lut))
+    print(pyautogui.pixel(1050 + 64 + 5 * 58, 460 + 95))
+    cable6.append(closest_color(pyautogui.pixel(1050 + 64 + 5 * 58, 460 + 95),cable_lut))
+    # another cable check
+    print()
+    screen[93, 59 + 0 * 58] = (0, 0, 0)  # cable1
+    screen[95, 67 + 1 * 58] = (0, 0, 0)  # cable2  (meaning that second color_2  should check for red)
+    screen[93, 55 + 2 * 58] = (0, 0, 0)  # cable3
+    screen[110, 80 + 3 * 58] = (0, 0, 0)  # cable4 ()
+    screen[100, 75 + 4 * 58] = (0, 0, 0)  # cable5 ()
+    screen[110, 64 + 5 * 58] = (0, 0, 0)  # cable6 ()
+    print(pyautogui.pixel(1050 + 59 + 0 * 58, 460 + 93))
+    cable1.append(closest_color(pyautogui.pixel(1050 + 59 + 0 * 58, 460 + 93), cable_lut))
+    print(pyautogui.pixel(1050 + 67 + 1 * 58, 460 + 95))
+    cable2.append(closest_color(pyautogui.pixel(1050 + 67 + 1 * 58, 460 + 95), cable_lut))
+    print(pyautogui.pixel(1050 + 55 + 2 * 58, 460 + 93))
+    cable3.append(closest_color(pyautogui.pixel(1050 + 55 + 2 * 58, 460 + 93), cable_lut))
+    print(pyautogui.pixel(1050 + 80 + 3 * 58, 460 + 110))
+    cable4.append(closest_color(pyautogui.pixel(1050 + 80 + 3 * 58, 460 + 110), cable_lut))
+    print(pyautogui.pixel(1050 + 75 + 4 * 58, 460 + 100))
+    cable5.append(closest_color(pyautogui.pixel(1050 + 75 + 4 * 58, 460 + 100), cable_lut))
+    print(pyautogui.pixel(1050 + 64 + 5 * 58, 460 + 110))
+    cable6.append(closest_color(pyautogui.pixel(1050 + 64 + 5 * 58, 460 + 110), cable_lut))
+    # PYAUTOGUI.PIXEL IS NOT CHECKED, CHANGE IT LATER
+    # ALL CABLES LOOK LIKE THEY WORK JSUT NEED TO SET UP PYAUTOGUI AND CHECKS
+    # star check
+    print()
+    screen[450, 70 + 0 * 70] = (255, 255, 0)  # star1
+    screen[450, 72 + 1 * 70] = (255, 255, 0)  #   star2
+    screen[440, 75 + 2 * 70] = (255, 255, 0)  # star3
+    screen[446, 80 + 3 * 70] = (255, 255, 0) #  star4
+    screen[435, 85 + 4 * 70] = (255, 255, 0)  # star5
+    screen[450, 92 + 5 * 70] = (255, 255, 0)  # star6
+    print(pyautogui.pixel(1050 + 70 + 0 * 70, 460 + 450))
+    cable1.append(closest_color(pyautogui.pixel(1050 + 70 + 0 * 70, 460 + 450),star_lut))
+    print(pyautogui.pixel(1050 + 72 + 1 * 70, 460 + 450))
+    cable2.append(closest_color(pyautogui.pixel(1050 + 72 + 1 * 70, 460 + 450), star_lut))
+    print(pyautogui.pixel(1050 + 75 + 2 * 70, 460 + 440))
+    cable3.append(closest_color(pyautogui.pixel(1050 + 75 + 2 * 70, 460 + 440), star_lut))
+    print(pyautogui.pixel(1050 + 80 + 3 * 70, 460 + 446))
+    cable4.append(closest_color(pyautogui.pixel(1050 + 80 + 3 * 70, 460 + 446), star_lut))
+    print(pyautogui.pixel(1050 + 85 + 4 * 70, 460 + 435))
+    cable5.append(closest_color(pyautogui.pixel(1050 + 85 + 4 * 70, 460 + 435), star_lut))
+    print(pyautogui.pixel(1050 + 92 + 5 * 70, 460 + 450))
+    cable6.append(closest_color(pyautogui.pixel(1050 + 92 + 5 * 70, 460 + 450), star_lut))
+    print(f"cable 1: {cable1} \n cable 2: {cable2} \n cable 3: {cable3} \n cable 4: {cable4} \n cable 5: {cable5} \n cable 6: {cable6}")
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+
 def click_position(index):
     x_coord = 1050 + 75 + index * 85
     y_coord = 460 + 385
@@ -1384,7 +1493,7 @@ def do_memory(previous_answers,stage,numbers):
     print(stage, "stage")
     print(previous_answers, "previous")
     if stage != 1:
-        time.sleep(4)
+        time.sleep(3.5)
     memory_LUT = \
         {
             (50, 89, 72): "green",
@@ -1572,7 +1681,12 @@ def do_memory(previous_answers,stage,numbers):
                     break
     '''cv2.imshow('screen', screen)
     cv2.waitKey(0)'''
-do_memory([],1,[])
+
+serial_test = 'aa1bbb1'
+parallel_test = False
+batteries_test = 2
+
+do_complicated(serial_test,batteries_test,parallel_test)
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
