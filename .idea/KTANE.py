@@ -1373,7 +1373,187 @@ def do_password():
 # for 6 widgets, start at 1765
 # for 4 widgets, start at 1535
 # fro 3 widgets, start at 1420
+serial_test = 'zz1ab1'
+parallel_test = False
+batteries_test = 3
+def do_simon(serial):
+    green_light_lut = \
+        {
+            (44, 42, 39) : "gray",
+            (1, 170, 35) : "green"
+        }
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    screen[20,480] = (0,0,255)
+
+    print(pyautogui.pixel(1050+480,480))
+
+    serial_has_vowel = False
+    vowels = ['a','e','i','o','u']
+    for vowel in vowels:
+        if vowel in serial:
+            serial_has_vowel = True
+            print("vowel in serial")
+            break
+    color_lut = \
+        {
+            (22, 100, 5) : "green off",
+            (48, 249, 188) : "green on",
+            (106, 5, 10) : "red off",
+            (251, 122, 48) : 'red on',
+            (188, 70, 31) : 'red on',
+            (0, 1, 126) : "blue off",
+            (28, 189, 251) : 'blue on',
+            (14, 96, 189) : "blue on",
+            (123, 103, 0) : "yellow off",
+            (218, 249, 99) : "yellow on",
+        }
+    press_array = [] # what to press
+    is_flashing = False
+    stage = 1
+    while True: # change true to check if there is green light
+        if closest_color(pyautogui.pixel(1050+480,480),green_light_lut) == "green":
+            break
+        # slows the check time after it notices a flash
+
+        # this one counts colors to compare like on stage 3 should be 3 colors ofc
+        # idea how to approach it
+        # at first we are checking every 0.25 seconds for a flash, after that everything becomes normalized
+        # since we already know what color to press, do it immediately and after that we wait set aomut of time for color to flash
+        # however, first color remains the same, so what we can do is simply check when second color would be flashing
+        # and since it would be normalized, we set the timer precisely and ur done with stage 2, other stages can be done in the same way
+        # the only thing you need to also do check is light in the corner, can be checked after 3rd round to save time but idk really
+        # if its gray, play until win, if its green, yippe you won.
+        if is_flashing == False:
+            time.sleep(0.25)
+            # screen[240,160] = (0,255,255) # red
+            # screen[100,250] = (0,255,255) # blue
+            # screen[240,380] = (0,255,255) # yellow
+            # screen[350,260] = (0,255,255) # green
+            # print('red ',pyautogui.pixel(1050+160,460+240))
+            # print('blue ',pyautogui.pixel(1050+250,460+100))
+            # print('yellow ',pyautogui.pixel(1050+380,460+240))
+            # print('green ',pyautogui.pixel(1050+260,460+350))
+
+            if closest_color(pyautogui.pixel(1050+260,460+350),color_lut) == 'green on':
+                print("flashing green")
+                #flashing_array.append("green")
+                if serial_has_vowel:
+                    pyautogui.click(1050+380,460+240)
+                    press_array.append("yellow")
+                else:
+                    pyautogui.click(1050+260,460+350)
+                    press_array.append("green")
+                is_flashing = True
+            elif closest_color(pyautogui.pixel(1050+380,460+240),color_lut) == 'yellow on':
+                print("flashing yellow")
+                if serial_has_vowel:
+                    pyautogui.click(1050 + 260, 460 + 350)
+                    press_array.append("green")
+
+                else:
+                    pyautogui.click(1050 + 160, 460 + 240)
+                    press_array.append("red")
+                #flashing_array.append("yellow")
+                is_flashing = True
+            elif closest_color(pyautogui.pixel(1050+250,460+100),color_lut) == 'blue on':
+                print("flashing blue")
+                if serial_has_vowel:
+                    pyautogui.click(1050 + 160, 460 + 240)
+                    press_array.append("red")
+                else:
+                    pyautogui.click(1050 + 380, 460 + 240)
+                    press_array.append("yellow")
+                #flashing_array.append("blue")
+                is_flashing = True
+            elif closest_color(pyautogui.pixel(1050+160,460+240),color_lut) == 'red on':
+                print("flashing red")
+                if serial_has_vowel:
+                    pyautogui.click(1050+250,460+100)
+                    press_array.append("blue")
+                else:
+                    pyautogui.click(1050+250,460+100)
+                    press_array.append("blue")
+                #flashing_array.append("red")
+                is_flashing = True
+        if is_flashing:
+
+            #wait set amount of time to see exactly second flash
+            if stage == 1:
+                time.sleep(2.6)
+            if stage == 2:
+                time.sleep(3.5)
+            if stage == 3:
+                time.sleep(4.4)
+            if stage == 4:
+                time.sleep(5.3)
+            screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+            screen = np.array(screen)
+            screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+            # if stage == 2:
+            #     cv2.imshow('screen', screen)
+            #     cv2.waitKey(0)
+            if closest_color(pyautogui.pixel(1050 + 260, 460 + 350), color_lut) == 'green on':
+                print("flashing green")
+                # flashing_array.append("green")
+                if serial_has_vowel:
+                    #pyautogui.click(1050 + 380, 460 + 240)
+                    press_array.append("yellow")
+                else:
+                    #pyautogui.click(1050 + 260, 460 + 350)
+                    press_array.append("green")
+                is_flashing = True
+            elif closest_color(pyautogui.pixel(1050 + 380, 460 + 240), color_lut) == 'yellow on':
+                print("flashing yellow")
+                if serial_has_vowel:
+                    #pyautogui.click(1050 + 260, 460 + 350)
+                    press_array.append("green")
+
+                else:
+                    #pyautogui.click(1050 + 160, 460 + 240)
+                    press_array.append("red")
+                # flashing_array.append("yellow")
+                is_flashing = True
+            elif closest_color(pyautogui.pixel(1050 + 250, 460 + 100), color_lut) == 'blue on':
+                print("flashing blue")
+                if serial_has_vowel:
+                    #pyautogui.click(1050 + 160, 460 + 240)
+                    press_array.append("red")
+                else:
+                    #pyautogui.click(1050 + 380, 460 + 240)
+                    press_array.append("yellow")
+                # flashing_array.append("blue")
+                is_flashing = True
+            elif closest_color(pyautogui.pixel(1050 + 160, 460 + 240), color_lut) == 'red on':
+                print("flashing red")
+                if serial_has_vowel:
+                    #pyautogui.click(1050 + 250, 460 + 100)
+                    press_array.append("blue")
+                else:
+                    #pyautogui.click(1050 + 250, 460 + 100)
+                    press_array.append("blue")
+                # flashing_array.append("red")
+            print(press_array)
+            for color in press_array:
+                if color == 'green':
+                    pyautogui.click(1050 + 260, 460 + 350)
+                elif color == "blue":
+                    pyautogui.click(1050 + 250, 460 + 100)
+                elif color == "red":
+                    pyautogui.click(1050 + 160, 460 + 240)
+                elif color == "yellow":
+                    pyautogui.click(1050 + 380, 460 + 240)
+
+            stage += 1
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+    if serial_has_vowel:
+        pass
+
+
 def do_complicated(serial,batteries,parallel):
+    #region
     led_lut = \
         {
             (252, 243, 190) : "lit",
@@ -1479,6 +1659,60 @@ def do_complicated(serial,batteries,parallel):
     print(pyautogui.pixel(1050 + 92 + 5 * 70, 460 + 450))
     cable6.append(closest_color(pyautogui.pixel(1050 + 92 + 5 * 70, 460 + 450), star_lut))
     print(f"cable 1: {cable1} \n cable 2: {cable2} \n cable 3: {cable3} \n cable 4: {cable4} \n cable 5: {cable5} \n cable 6: {cable6}")
+    #endregion
+    cable_array = [cable1,cable2,cable3,cable4,cable5,cable6]
+    print(last_digit_even,"last digit ven")
+    loop = 0
+    for cable in cable_array:
+        # white
+        to_cut = False
+        if 'red' not in cable and 'blue' not in cable and 'lit' not in cable:
+            print(cable,"cut")
+            to_cut = True
+        # upper one covers if star is in and it lit is in, it wont cut
+
+
+        if 'red' not in cable and 'blue' not in cable and 'lit' in cable and "star" in cable and batteries > 1:
+            print(cable,"cut")
+            to_cut = True
+        # red wire
+
+        if "red" in cable and 'blue' not in cable and 'lit' not in cable and 'star' not in cable and last_digit_even:
+            print(cable,"cut")
+            to_cut = True
+        if "red" in cable and 'blue' not in cable and 'lit' not in cable and 'star' in cable:
+            print(cable,"cut")
+            to_cut = True
+        if "red" in cable and 'blue' not in cable and 'lit' in cable and 'star' not in cable and batteries > 1:
+            print(cable,"cut")
+            to_cut = True
+        if "red" in cable and 'blue' not in cable and 'lit' in cable and 'star' in cable and batteries > 1:
+            print(cable,"cut")
+            to_cut = True
+        # blue
+        if "blue" in cable and "red" not in cable and "lit" not in cable and "star" not in cable and last_digit_even:
+            print(cable,"cut")
+            to_cut = True
+        if 'blue' in cable and 'red' not in cable and 'lit' in cable and 'star' not in cable and parallel:
+            print(cable,"cut")
+            to_cut = True
+        if 'blue' in cable and 'red' not in cable and 'lit' in cable and 'star' in cable and parallel:
+            print(cable, "cut")
+            to_cut = True
+        # both
+        if 'blue' in cable and 'red' in cable and 'lit' not in cable and 'star' not in cable and last_digit_even:
+            print(cable,'cut')
+            to_cut = True
+        if 'blue' in cable and 'red' in cable and 'lit' not in cable and 'star'  in cable and parallel:
+            print(cable, 'cut')
+            to_cut = True
+        if 'blue' in cable and 'red' in cable and 'lit'  in cable and 'star' not in cable and last_digit_even:
+            print(cable, 'cut')
+            to_cut = True
+        if to_cut:
+            pyautogui.click(1050 + 65 + loop * 58, 460 + 93)
+            time.sleep(0.1)
+        loop+=1
     cv2.imshow('screen', screen)
     cv2.waitKey(0)
 
@@ -1682,11 +1916,9 @@ def do_memory(previous_answers,stage,numbers):
     '''cv2.imshow('screen', screen)
     cv2.waitKey(0)'''
 
-serial_test = 'aa1bbb1'
-parallel_test = False
-batteries_test = 2
 
-do_complicated(serial_test,batteries_test,parallel_test)
+
+do_simon(serial_test)
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
