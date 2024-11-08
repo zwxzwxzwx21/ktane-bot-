@@ -1376,6 +1376,52 @@ def do_password():
 serial_test = 'zz1ab1'
 parallel_test = False
 batteries_test = 3
+
+def do_button(labels):
+    text_lut = \
+        {
+            (217, 171, 30) : "bg",
+            (204, 44, 58) : "bg",
+            (197, 154, 27) : "bg",
+            (250, 233, 234) : 'text',
+            (248, 232, 233) : 'text',
+            (232, 236, 248) : "text",
+            (247, 235, 219) : "bg",
+            (41, 39, 37) : "text",
+            (45, 43, 40) : "text",
+            (38, 66, 170) : "bg",
+            (187, 39, 51) : "bg",
+        }
+    but_col_lut = \
+        {
+            (217, 171, 30) : "yellow",
+            (205, 45, 58) : 'red',
+            (247, 235, 219) : "white",
+            (42, 73, 189) : "blue"
+        }
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    screen[325,192] = [0,0,0] # black
+    screen[324,115] = [0,0,255] # red
+    screen[205,168] = [255,255,255] # white (this one checks for button color)
+    print(pyautogui.pixel(1050+192, 460+325)," black")
+    print(pyautogui.pixel(1050+115, 460+324)," red")
+    print(pyautogui.pixel(1050+168, 460+205)," white")
+    button = [] # [color,label]
+    stripe = ''
+    button.append(closest_color(pyautogui.pixel(1050+168, 460+205),but_col_lut))
+    if closest_color(pyautogui.pixel(1050+192, 460+325),text_lut) == "text" and closest_color(pyautogui.pixel(1050+115, 460+324),text_lut) == "text":
+        button.append("detonate")
+    elif closest_color(pyautogui.pixel(1050+192, 460+325),text_lut) == "text" and closest_color(pyautogui.pixel(1050+115, 460+324),text_lut) == "bg":
+        button.append("hold")
+    elif closest_color(pyautogui.pixel(1050+192, 460+325),text_lut) == "bg" and closest_color(pyautogui.pixel(1050+115, 460+324),text_lut) == "text":
+        button.append("press")
+    elif closest_color(pyautogui.pixel(1050+192, 460+325),text_lut) == "bg" and closest_color(pyautogui.pixel(1050+115, 460+324),text_lut) == "bg":
+        button.append("abort")
+    print(button)
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
 def do_simon(serial):
     green_light_lut = \
         {
@@ -1918,8 +1964,8 @@ def do_memory(previous_answers,stage,numbers):
     cv2.waitKey(0)'''
 
 
-
-do_simon(serial_test)
+labels = []
+do_button(labels)
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
