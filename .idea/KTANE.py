@@ -1426,6 +1426,7 @@ def do_simon(serial):
         # the only thing you need to also do check is light in the corner, can be checked after 3rd round to save time but idk really
         # if its gray, play until win, if its green, yippe you won.
         if is_flashing == False:
+            # nice push cutie >w<
             time.sleep(0.25)
             # screen[240,160] = (0,255,255) # red
             # screen[100,250] = (0,255,255) # blue
