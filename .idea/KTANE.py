@@ -1628,17 +1628,55 @@ def do_first(start_flag):
     #endregion
     button_lut = \
         {
-            (214, 179, 99) : "no",
-            (0,0,0) : "text"
+            (186, 165, 130) : "no",
+            (47, 42, 33) : "text"
         }
-    # screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
     from math import floor
+    button_array = [] # this one has all the buttons in set order, what you wanna do is have other
+    # list that like: list when the wors is "display" which you should have lower in commented code for
+    # old bot, then you just iterate through each thing in the list and when a word in list is in this array
+    # you take the position this thing has in the array and based on that you make a button press, solving module
     for button in range(6):
         row = button // 3
         col = button % 3
         # this loops check 6 buttons, that will take some time too aaaaah
+        print(col,row)
         screen[552+col*283,40+row*480] = (0,0,255)
 
+        screen[505+col*283,106 + row * 480] = (0,0,255)
+        screen[504+col*283,159 + row * 480] = (0,0,255)
+        screen[448+col*283,243 + row * 480] = (0,0,255)
+        screen[426+col*283,299 + row * 480] = (0,0,255)
+        screen[416+col*283,175 + row * 480] = (0,0,255)
+        screen[467 + col * 283,187 + row * 480] = (0,0,255)
+        print(pyautogui.pixel(780 + 106 + col * 480, 115 + 505 + row * 283))
+        print(pyautogui.pixel(780 + 159 + row * 480, 115 + 504 + col * 283))
+        print(pyautogui.pixel(780 + 243 + row * 480, 115 + 448 + col * 283))
+        print(pyautogui.pixel(780 + 299 + row * 480, 115 + 426 + col * 283))
+        print(pyautogui.pixel(780 + 175 + row * 480, 115 + 416 + col * 283))
+        print(pyautogui.pixel(780 + 187 + row * 480, 115 + 467 + col * 283))
+        if (closest_color(pyautogui.pixel(780+80+row*480,115+506+col*283),button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 113 + row * 480, 115 + 464 + col * 283),
+                                  button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 165 + row * 480, 115 + 466 + col * 283),
+                                  button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 210 + row * 480, 115 + 470 + col * 283),
+                                  button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 255 + row * 480, 115 + 498 + col * 283),
+                                  button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 320 + row * 480, 115 + 462 + col * 283),
+                                  button_lut) == "text"):
+            print("ready")
+            button_array.append("ready")
+        elif       (closest_color(pyautogui.pixel(780 + 106 + row * 480, 115 + 505 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 159 + row * 480, 115 + 504 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 243 + row * 480, 115 + 448 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 299 + row * 480, 115 + 426 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 175 + row * 480, 115 + 416 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 187 + row * 480, 115 + 467 + col * 283), button_lut) == "text"):
+            print("first")
+            button_array.append("first")
     cv2.imshow('screen', screen)
     cv2.waitKey(0)
 def do_button(labels,batteries):
