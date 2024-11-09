@@ -1376,7 +1376,216 @@ def do_password():
 serial_test = 'zz1ab1'
 parallel_test = False
 batteries_test = 3
+def do_first(start_flag):
+    # this talb e is the one tha checks the mian screen
+    screen_lut = \
+        {
+            (255,255,255) : "text",
+            (0,0,50) : "no"
+        }
+    if start_flag:
+        # this one scrolls 3 up only once cuz i plan to call this function 3 times total
+        pyautogui.scroll(1)
+        pyautogui.scroll(1)
+        pyautogui.scroll(1)
+        start_flag = False
+    screen = pyautogui.screenshot(region=(780, 115, 1000, 1150))
+    screen = np.array(screen)
+    # YOU ARE
+    screen[13,140] = (0,0,255)
+    screen[13,200] = (0,0,255)
+    screen[95,170] = (0,0,255)
+    screen[50,295] = (0,0,255)
+    screen[50,215] = (0,0,255)
+    screen[95,595] = (0,0,255)
+    screen[10,560] = (0,0,255)
+    if (closest_color(pyautogui.pixel(780+140,115+13),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780+200,115+13),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780+170,115+95),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 295, 115 + 50), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 215, 115 + 50), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 595, 115 + 95), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 560, 115 + 10), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 450, 115 + 95), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 670, 115 + 90), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 632, 115 + 47), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 390, 115 + 30), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 480, 115 + 50), screen_lut) == 'no'):
+        print(" word is YOU ARE")
+    elif (closest_color(pyautogui.pixel(780 + 432, 115 + 93),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 532, 115 + 93),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 310, 115 + 98),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 257, 115 + 97),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 288, 115 + 60), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 355, 115 + 10), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 420, 115 + 40), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 525, 115 + 10), screen_lut) == 'text'):
+        print('word is REED')
+    elif (
+         closest_color(pyautogui.pixel(780 + 318, 115 + 44),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 316, 115 + 35),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 400, 115 + 88),screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 358, 115 + 11), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 450, 115 + 34), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 502, 115 + 77), screen_lut) == 'text'
+        and closest_color(pyautogui.pixel(780 + 506, 115 + 21), screen_lut) == 'text'):
+            print('word is YES') # i cuedk up check it later
+    elif (closest_color(pyautogui.pixel(780 + 350, 115 + 16), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 300, 115 + 30), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 346, 115 + 63),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 303, 115 + 93),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 510, 115 + 95), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 463, 115 + 15), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 500, 115 + 50), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 386, 115 + 92), screen_lut) == 'text'):
+        print("word is SEE")
+    elif (closest_color(pyautogui.pixel(780 + 457, 115 + 3), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 467, 115 + 3), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 462, 115 + 39),screen_lut) == 'text'):
+        print("word is YOU'RE")
+    elif (
+          closest_color(pyautogui.pixel(780 + 389, 115 + 69), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 415, 115 + 9),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 365, 115 + 75),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 440, 115 + 90), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 500, 115 + 86), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 553, 115 + 29), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 266, 115 + 87), screen_lut) == 'text'):
+        print("word is OKAY")
+    elif (closest_color(pyautogui.pixel(780 + 262, 115 + 85), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 320, 115 + 63),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 430, 115 + 33),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 490, 115 + 84), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 544, 115 + 22), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 462, 115 + 13), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 373, 115 + 74), screen_lut) == 'text'):
+        print("word is SAYS")
+    elif (closest_color(pyautogui.pixel(780 + 120, 115 + 12), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 120, 115 + 70),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 170, 115 + 50),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 444, 115 + 81), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 217, 115 + 51), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 442, 115 + 16), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 642, 115 + 30), screen_lut) == 'text'):
+        print("word is HOLD ON")
+    elif (closest_color(pyautogui.pixel(780 + 206, 115 + 13), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 235, 115 + 26),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 500, 115 + 66),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 522, 115 + 32), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 588, 115 + 49), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 292, 115 + 96), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 390, 115 + 30), screen_lut) == 'text'):
+        print("word is THERE")
+    elif (closest_color(pyautogui.pixel(780 + 427, 115 + 66), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 458, 115 + 84),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 544, 115 + 83),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 379, 115 + 12), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 300, 115 + 96), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 255, 115 + 96), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 562, 115 + 38), screen_lut) == 'text'):
+        print("word is READ")
+    elif (closest_color(pyautogui.pixel(780 + 236, 115 + 7), screen_lut) == 'text'
 
+          and closest_color(pyautogui.pixel(780 + 426, 115 + 69),screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 377, 115 + 77), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 559, 115 + 63), screen_lut) == 'text'
+           and closest_color(pyautogui.pixel(780 + 271, 115 + 64), screen_lut) == 'text'):
+        print("word is YOUR")
+    elif (closest_color(pyautogui.pixel(780 + 691, 115 + 91), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 140, 115 + 32), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 412, 115 + 46), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 581, 115 + 73), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 581, 115 + 73), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 290, 115 + 35), screen_lut) == 'text'):
+        print("word is NOTHING")
+    elif (closest_color(pyautogui.pixel(780 + 111, 115 + 10), screen_lut) == 'text'
+          ):
+        print("word is THEY ARE")
+    elif (closest_color(pyautogui.pixel(780 + 361, 115 + 17), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 330, 115 + 90), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 514, 115 + 90), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 502, 115 + 47), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 423, 115 + 46), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 315, 115 + 13), screen_lut) == 'text'):
+        print("word is CEE")
+    elif (closest_color(pyautogui.pixel(780 + 350, 115 + 88), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 300, 115 + 94), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 306, 115 + 33), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 405, 115 + 45), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 503, 115 + 73), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 497, 115 + 20), screen_lut) == 'text'):
+        print("word is LED")
+    elif (closest_color(pyautogui.pixel(780 + 457, 115 + 88), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 535, 115 + 79), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 535, 115 + 26), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 456, 115 + 17), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 350, 115 + 46), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 275, 115 + 88), screen_lut) == 'text'):
+        print("word is LEED")
+    elif (closest_color(pyautogui.pixel(780 + 410, 115 + 87), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 434, 115 + 85), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 444, 115 + 39), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 525, 115 + 14), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 486, 115 + 20), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 403, 115 + 15), screen_lut) == 'text'):
+        print("word is FIRST")
+    elif (closest_color(pyautogui.pixel(780 + 259, 115 + 84), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 250, 115 + 55), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 376, 115 + 73), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 317, 115 + 88), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 569, 115 + 61), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 500, 115 + 75), screen_lut) == 'text'):
+        print("word is BLANK")
+    elif (closest_color(pyautogui.pixel(780 + 342, 115 + 97), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 323, 115 + 62), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 298, 115 + 93), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 333, 115 + 21), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 414, 115 + 47), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 507, 115 + 75), screen_lut) == 'text'):
+        print("word is RED")
+    elif (closest_color(pyautogui.pixel(780 + 494, 115 + 3), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 655, 115 + 90), screen_lut) == 'text'):
+        print("word is THEY'RE")
+    elif (closest_color(pyautogui.pixel(780 + 302, 115 + 95), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 300, 115 + 38), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 337, 115 + 17), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 367, 115 + 82), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 415, 115 + 129), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 473, 115 + 82), screen_lut) == 'text'):
+        print("word is YOU")
+    elif (closest_color(pyautogui.pixel(780 + 335, 115 + 11), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 343, 115 + 82), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 383, 115 + 81), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 434, 115 + 96), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 487, 115 + 96), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 478, 115 + 50), screen_lut) == 'text'):
+        print("word is UR")
+    elif (closest_color(pyautogui.pixel(780 + 263, 115 + 10), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 268, 115 + 89), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 413, 115 + 73), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 534, 115 + 84), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 541, 115 + 28), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 350, 115 + 46), screen_lut) == 'text'):
+        print("word is LEAD")
+    elif (closest_color(pyautogui.pixel(780 + 494, 115 + 97), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 580, 115 + 90), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 567, 115 + 24), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 362, 115 + 47), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 262, 115 + 28), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 426, 115 + 47), screen_lut) == 'text'):
+        print("word is TREIR")
+    elif (closest_color(pyautogui.pixel(780 + 220, 115 + 90), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 352, 115 + 86), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 424, 115 + 60), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 506, 115 + 89), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 543, 115 + 72), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 627, 115 + 49), screen_lut) == 'text'):
+        print("word is DISPLAY")
+    else: print("word is <nothing>")
+    # C  NO remaining
+    # screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
 def do_button(labels,batteries):
     text_lut = \
         {
@@ -2101,7 +2310,7 @@ def do_memory(previous_answers,stage,numbers):
 
 
 labels = []
-do_button(labels,batteries_test)
+do_first(start_flag=True)
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
