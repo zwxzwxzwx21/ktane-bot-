@@ -1377,7 +1377,7 @@ serial_test = 'zz1ab1'
 parallel_test = False
 batteries_test = 3
 
-def do_button(labels):
+def do_button(labels,batteries):
     text_lut = \
         {
             (217, 171, 30) : "bg",
@@ -1399,15 +1399,29 @@ def do_button(labels):
             (247, 235, 219) : "white",
             (42, 73, 189) : "blue"
         }
+    stripe_lut = \
+        {
+            (29, 86, 188) : 'blue',
+            (237, 200, 22) : 'yellow',
+            (218, 46, 46) : "red",
+            (247, 247, 247) : "white",
+        }
+    #time.sleep(1)
     screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
     screen = np.array(screen)
     screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
     screen[325,192] = [0,0,0] # black
     screen[324,115] = [0,0,255] # red
     screen[205,168] = [255,255,255] # white (this one checks for button color)
+    screen[380,470] = [0,255,0] # green (checks stripe)
     print(pyautogui.pixel(1050+192, 460+325)," black")
     print(pyautogui.pixel(1050+115, 460+324)," red")
     print(pyautogui.pixel(1050+168, 460+205)," white")
+    print(pyautogui.pixel(1050+470, 460+380)," green")
+
+
+    # cv2.imshow('screen', screen)
+    # cv2.waitKey(0)
     button = [] # [color,label]
     stripe = ''
     button.append(closest_color(pyautogui.pixel(1050+168, 460+205),but_col_lut))
@@ -1419,9 +1433,131 @@ def do_button(labels):
         button.append("press")
     elif closest_color(pyautogui.pixel(1050+192, 460+325),text_lut) == "bg" and closest_color(pyautogui.pixel(1050+115, 460+324),text_lut) == "bg":
         button.append("abort")
+    module_done = False # checks if module is finished, if yes, exit the while loop
     print(button)
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+    stripe_press = False # this one will check for stripe after checks
+    if "blue" in button and "abort" in button:
+        stripe_press = True
+
+    elif batteries > 1 and "detonate" in button:
+        pyautogui.click(1050 + 168, 460 + 205)
+        module_done = True
+        # press and release immediately
+    elif "white" in button and "CAR" in labels:
+        stripe_press = True
+    elif batteries > 2 and "FRK" in labels:
+        pyautogui.click(1050 + 168, 460 + 205) # press and release immediately
+        module_done= True
+    elif "yellow" in button:
+        stripe_press = True
+    elif "red" in button and "hold" in button:
+        pyautogui.click(1050 + 168, 460 + 205) # pess and release immedaitely
+        module_done = True
+    else:
+        stripe_press = True
+
+    if stripe_press:
+        clock_lut = \
+            {
+                (0,0,0) : "off",
+                (12, 10, 10) : "off",
+                (7, 7, 6) : "off",
+                (6, 5, 5) : "off",
+                (0,255,255) : "on",
+                (255,0,0) : "on",
+            }
+        number_lut = \
+            {
+                '1110111':'0',
+                '0010010':'1',
+                '1011101':'2',
+                '1011011':'3',
+                '0111010':'4',
+                '1101011':'5',
+                '1101111':'6',
+                '1010010':'7',
+                '1111111':'8',
+                '1111011':'9'
+            }
+        pyautogui.mouseDown(1050+168, 460+205)
+        time.sleep(0.7)
+        stripe_col = closest_color(pyautogui.pixel(1050+470, 460+380),stripe_lut)
+        print(stripe_col)
+        while True:
+            # the idea is to make it check miliseconds too but i think imrec is too slow, we willsee
+            clock = pyautogui.screenshot(region=(2200, 95, 350, 130))
+            clock = np.array(clock)
+            clock = cv2.cvtColor(clock, cv2.COLOR_BGR2RGB)
+            # cv2.imshow('clock', clock)
+            # cv2.waitKey(0)
+            numbers_array = []
+            for i in range(4):
+                number = ''
+                a = 29 if i > 1 else 0
+                # checking each number in clock
+                # this moves check a little bit to right so dot wont fuck us over
+
+                segment_coords = [
+                    (14, 40 + 65 * i + a),  # up
+                    (40, 20 + 65 * i + a),  # up left
+                    (37, 58 + 65 * i + a),  # up right
+                    (64, 40 + 65 * i + a),  # middle
+                    (90, 20 + 65 * i + a),  # down left
+                    (90, 58 + 65 * i + a),  # down right
+                    (115, 40 + 65 * i + a)  # down
+                ]
+
+                for (y, x) in segment_coords:
+                    pixel_color = pyautogui.pixel(2200 + x , 95 + y)
+                    clock[ y, x ] = (0,0,255)
+                    segment_state = '1' if closest_color(pixel_color, clock_lut) == "on" else '0'
+                    number += segment_state
+                print(number)
+                # cv2.imshow("a",clock)
+                # cv2.waitKey(0)
+                if number in number_lut:
+                    numbers_array.append(number_lut[number])
+                else:
+                    print(f"Unrecognized pattern at position {i}: {number}")
+            # cv2.imshow('clock', clock)
+            # cv2.waitKey(0)
+
+            print(numbers_array)
+            if closest_color(pyautogui.pixel(2350,120),clock_lut) == "on": # that means that we have minutes and seconds not seconds and mili
+                if stripe_col == 'white' or stripe_col == 'red':
+                    if '1' in numbers_array:
+                        pyautogui.mouseUp()
+                        module_done = True
+                        break
+                elif stripe_col == 'blue':
+                    if '4' in numbers_array:
+                        pyautogui.mouseUp()
+                        module_done = True
+                        break
+                elif stripe_col == 'yellow':
+                    if '5' in numbers_array:
+                        pyautogui.mouseUp()
+                        module_done = True
+                        break
+            else: # if it shows miliseconds
+                for j in range(2):#only first 2 numbs
+                    if stripe_col == 'white' or stripe_col == 'red':
+                        if '1' in numbers_array[j]:
+                            pyautogui.mouseUp()
+                            module_done = True
+                            break
+                    elif stripe_col == 'blue':
+                        if '4' in numbers_array[j]:
+                            pyautogui.mouseUp()
+                            module_done = True
+                            break
+                    elif stripe_col == 'yellow':
+                        if '5' in numbers_array[j]:
+                            pyautogui.mouseUp()
+                            module_done = True
+                            break
+            if module_done:
+                break
 def do_simon(serial):
     green_light_lut = \
         {
@@ -1965,7 +2101,7 @@ def do_memory(previous_answers,stage,numbers):
 
 
 labels = []
-do_button(labels)
+do_button(labels,batteries_test)
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
