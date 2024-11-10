@@ -1781,17 +1781,51 @@ def do_first(start_flag):
                 and closest_color(pyautogui.pixel(780 + 314 + row * 480, 115 + 429 + col * 283), button_lut) == "text"):
             print("your")
             button_array.append("your")  #              xxx                    yyy
-        elif       (closest_color(pyautogui.pixel(780 + 131 + row * 480, 115 + 500 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 130 + row * 480, 115 + 452 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 147 + row * 480, 115 + 423 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 113 + row * 480, 115 + 424 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 181 + row * 480, 115 + 421 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 250 + row * 480, 115 + 497 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 224 + row * 480, 115 + 460 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 310 + row * 480, 115 + 468 + col * 283), button_lut) == "text"
-                and closest_color(pyautogui.pixel(780 + 314 + row * 480, 115 + 429 + col * 283), button_lut) == "text"):
-            print("your")
-            button_array.append("your")
+        elif       (closest_color(pyautogui.pixel(780 + 120 + row * 480, 115 + 458 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 144 + row * 480, 115 + 429 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 144 + row * 480, 115 + 475 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 171 + row * 480, 115 + 476 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 205 + row * 480, 115 + 454 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 189 + row * 480, 115 + 416 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 231 + row * 480, 115 + 461 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 240 + row * 480, 115 + 498 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 306 + row * 480, 115 + 492 + col * 283), button_lut) == "text"):
+            print("hold")
+            button_array.append("hold")  #              xxx                    yyy
+        elif       (closest_color(pyautogui.pixel(780 + 283 + row * 480, 115 + 422 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 235 + row * 480, 115 + 471 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 165 + row * 480, 115 + 457 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 124 + row * 480, 115 + 454 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 84  + row * 480, 115 + 436 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 341 + row * 480, 115 + 417 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 355 + row * 480, 115 + 437 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 342 + row * 480, 115 + 461 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 337 + row * 480, 115 + 500 + col * 283), button_lut) == "text"):
+            print("what?")
+            button_array.append("what?")  #             xxx                    yyy
+        elif       (closest_color(pyautogui.pixel(780 + 150 + row * 480, 115 + 464 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 128 + row * 480, 115 + 458 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 60  + row * 480, 115 + 460 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 91  + row * 480, 115 + 495 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 64  + row * 480, 115 + 494 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 215 + row * 480, 115 + 457 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 242 + row * 480, 115 + 460 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 363 + row * 480, 115 + 460 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 285 + row * 480, 115 + 500 + col * 283), button_lut) == "text"):
+            print("uh huh")
+            button_array.append("uh huh")  #            xxx                    yyy
+        elif       (closest_color(pyautogui.pixel(780 + 40  + row * 480, 115 + 418 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 78  + row * 480, 115 + 416 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 60  + row * 480, 115 + 453 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 95  + row * 480, 115 + 460 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 128 + row * 480, 115 + 460 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 156 + row * 480, 115 + 470 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 189 + row * 480, 115 + 447 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 265 + row * 480, 115 + 471 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 393 + row * 480, 115 + 457 + col * 283), button_lut) == "text"
+                and closest_color(pyautogui.pixel(780 + 383 + row * 480, 115 + 414 + col * 283), button_lut) == "text"):
+            print("you are")
+            button_array.append("you are")
     cv2.imshow('screen', screen)
     cv2.waitKey(0)
 def do_button(labels,batteries):
