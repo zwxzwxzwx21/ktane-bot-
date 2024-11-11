@@ -1342,6 +1342,342 @@ def do_password():
 serial_test = 'zz1ab1'
 parallel_test = False
 batteries_test = 3
+def do_sequence():
+    cable_lut =\
+        {
+            (255, 106, 40) : "red",
+            (255, 53, 24) : "red",
+            (61, 100, 204) : "blue",
+            (2, 4, 2) : "black",
+            (42, 47, 54) : "nothing"
+        }
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    # 5 checks each hole tom check for wires
+    #check one top hole
+    coordinates = [
+        (1050 + 155, 460 + 148),
+        (1050 + 153, 460 + 154),
+        (1050 + 149, 460 + 160),
+        (1050 + 146, 460 + 166),
+        (1050 + 143, 460 + 171)
+    ]
+
+
+    color1 = "nothing"
+    for coord in coordinates:
+        color = closest_color(pyautogui.pixel(*coord),cable_lut)
+        if color != 'nothing':
+            color1 = color
+            break
+    #check two middle hole
+
+
+    coordinates2 = [(1050+150, 460+224),(1050+150, 460+231),(1050+150, 460+239),(1050+150, 460+247)]
+    color2 = "nothing"
+    for coord in coordinates2:
+        color = closest_color(pyautogui.pixel(*coord), cable_lut)
+        if color != 'nothing':
+            color2 = color
+            break
+
+
+        # check three, bottom hole
+
+    coordinates3 = [(1050+142, 460+303), (1050+145, 460+309), (1050+148, 460+315), (1050+151, 460+321)]
+    color3 = "nothing"
+    for coord in coordinates3:
+        color = closest_color(pyautogui.pixel(*coord), cable_lut)
+        if color != 'nothing':
+            color3 = color
+            break
+    black_count = 0
+    blue_count = 0
+    red_count = 0
+    #this one has to loop 4 times
+    for j in range(4):
+        print(color1,color2,color3)
+        if color1 != 'nothing':
+            connection = ''
+            #making 3 checks from place of first wire, this doesnt have to be done when wire isnt there, for obvious reasons
+            check_1 = 0
+            check_2 = 0
+            check_3 = 0
+            for i in range(10):
+                if closest_color(pyautogui.pixel(1050+151+i*14, 460+158),cable_lut) == color1:
+                    check_1 +=1
+                #from 1 to B
+                if closest_color(pyautogui.pixel(1050+151+i*14, 460+158+i*7),cable_lut) == color1:
+                    check_2 +=1
+                #from 1 to C
+                if closest_color(pyautogui.pixel(1050+151+i*14, 460+158+i*14),cable_lut) == color1:
+                    check_3 +=1
+                #make 10 pixel checks, if 6 of them match the main color, that means the wire is connected here
+            if color1 == "red":
+                red_count += 1
+            elif color1 == "blue":
+                blue_count += 1
+            elif color1 == "black":
+                black_count += 1
+
+            if check_1 > 5:
+                connection = 'A'
+                print("wire 1 connected to A ")
+            elif check_2 > 5:
+                connection = 'B'
+                print("wire 1 connected to B")
+            elif check_3 > 5:
+                connection = 'C'
+                print("wire 1 connected to C")
+
+            if color1 == 'red':
+                if red_count == 1 and connection == 'C':
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 149,460+160)
+                elif red_count == 2 and connection == 'B':
+                    pyautogui.click(1050 + 149,460+160)
+                elif red_count == 3 and connection == 'A':
+                    pyautogui.click(1050 + 149,460+160)
+                elif (red_count == 4 and connection == 'C') or (connection == 'A' and red_count == 4):
+                    pyautogui.click(1050 + 149,460+160)
+                elif red_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 149,460+160)
+                elif (red_count == 6 and connection == 'C') or (connection == 'A' and red_count == 6):
+                    pyautogui.click(1050 + 149,460+160)
+                elif red_count == 7:
+                    pyautogui.click(1050 + 149,460+160)
+                elif (red_count == 8 and connection == 'B') or (connection == 'A' and red_count == 8):
+                    pyautogui.click(1050 + 149,460+160)
+                elif (red_count == 9 and connection == 'B'):
+                    pyautogui.click(1050 + 149,460+160)
+            if color1 == 'blue':
+                if blue_count == 1 and connection == 'B':
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 149,460+160)
+                elif (blue_count == 2 and connection == 'C') or (connection == 'A' and blue_count == 2):
+                    pyautogui.click(1050 + 149,460+160)
+                elif blue_count == 3 and connection == 'B':
+                    pyautogui.click(1050 + 149,460+160)
+                elif (blue_count == 4 and connection == 'A'):
+                    pyautogui.click(1050 + 149,460+160)
+                elif blue_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 149,460+160)
+                elif (blue_count == 6 and connection == 'C') or (connection == 'C' and blue_count == 6):
+                    pyautogui.click(1050 + 149,460+160)
+                elif blue_count == 7 and connection == 'C':
+                    pyautogui.click(1050 + 149,460+160)
+                elif (blue_count == 8 and connection == 'C') or (connection == 'A' and blue_count == 8):
+                    pyautogui.click(1050 + 149,460+160)
+                elif (blue_count == 9 and connection == 'A'):
+                    pyautogui.click(1050 + 149,460+160)
+            if color1 == 'black':
+                if black_count == 1:
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 149,460+160)
+                elif (black_count == 2 and connection == 'C') or (connection == 'A' and black_count == 2):
+                    pyautogui.click(1050 + 149,460+160)
+                elif black_count == 3 and connection == 'B':
+                    pyautogui.click(1050 + 149,460+160)
+                elif (black_count == 4 and connection == 'C') or (connection == 'A' and black_count == 4):
+                    pyautogui.click(1050 + 149,460+160)
+                elif black_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 149,460+160)
+                elif (black_count == 6 and connection == 'C') or (connection == 'C' and black_count == 6):
+                    pyautogui.click(1050 + 149,460+160)
+                elif (black_count == 7 and connection == 'B') or (connection == 'A' and black_count == 7):
+                    pyautogui.click(1050 + 149,460+160)
+                elif (black_count == 8 and connection == 'C'):
+                    pyautogui.click(1050 + 149,460+160)
+                elif (black_count == 9 and connection == 'C'):
+                    pyautogui.click(1050 + 149,460+160)
+        if color2 != 'nothing':
+            connection = ''
+            check_1 = 0
+            check_2 = 0
+            check_3 = 0
+            for i in range(10):
+                if closest_color(pyautogui.pixel(1050 + 144 + i * 14, 460 + 241-i*7), cable_lut) == color2:
+                    check_1 += 1
+                # from 1 to B
+                if closest_color(pyautogui.pixel(1050 + 144 + i * 14, 460 + 241), cable_lut) == color2:
+                    check_2 += 1
+                # from 1 to C
+                if closest_color(pyautogui.pixel(1050 + 144 + i * 14, 460 + 241 + i * 7), cable_lut) == color2:
+                    check_3 += 1
+                # make 10 pixel checks, if 6 of them match the main color, that means the wire is connected here
+            if check_1 > 5:
+                connection = 'A'
+                print("wire 2 connected to A ")
+            elif check_2 > 5:
+                connection = 'B'
+                print("wire 2 connected to B")
+            elif check_3 > 5:
+                connection = 'C'
+                print("wire 2 connected to C")
+            if color2 == "red":
+                red_count += 1
+            elif color2 == "blue":
+                blue_count += 1
+            elif color2 == "black":
+                black_count += 1
+            if color2 == 'red':
+                if red_count == 1 and connection == 'C':
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 150,460+240)
+                elif red_count == 2 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+240)
+                elif red_count == 3 and connection == 'A':
+                    pyautogui.click(1050 + 150,460+240)
+                elif (red_count == 4 and connection == 'C') or (connection == 'A' and red_count == 4):
+                    pyautogui.click(1050 + 150,460+240)
+                elif red_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+240)
+                elif (red_count == 6 and connection == 'C') or (connection == 'A' and red_count == 6):
+                    pyautogui.click(1050 + 150,460+240)
+                elif red_count == 7:
+                    pyautogui.click(1050 + 150,460+240)
+                elif (red_count == 8 and connection == 'B') or (connection == 'A' and red_count == 8):
+                    pyautogui.click(1050 + 150,460+240)
+                elif (red_count == 9 and connection == 'B'):
+                    pyautogui.click(1050 + 150,460+240)
+            if color2 == 'blue':
+                if blue_count == 1 and connection == 'B':
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 150,460+240)
+                elif (blue_count == 2 and connection == 'C') or (connection == 'A' and blue_count == 2):
+                    pyautogui.click(1050 + 150,460+240)
+                elif blue_count == 3 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+240)
+                elif (blue_count == 4 and connection == 'A'):
+                    pyautogui.click(1050 + 150,460+240)
+                elif blue_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+240)
+                elif (blue_count == 6 and connection == 'C') or (connection == 'C' and blue_count == 6):
+                    pyautogui.click(1050 + 150,460+240)
+                elif blue_count == 7 and connection == 'C':
+                    pyautogui.click(1050 + 150,460+240)
+                elif (blue_count == 8 and connection == 'C') or (connection == 'A' and blue_count == 8):
+                    pyautogui.click(1050 + 150,460+240)
+                elif (blue_count == 9 and connection == 'A'):
+                    pyautogui.click(1050 + 150,460+240)
+            if color2 == 'black':
+                if black_count == 1:
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 150,460+240)
+                elif (black_count == 2 and connection == 'C') or (connection == 'A' and black_count == 2):
+                    pyautogui.click(1050 + 150,460+240)
+                elif black_count == 3 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+240)
+                elif (black_count == 4 and connection == 'C') or (connection == 'A' and black_count == 4):
+                    pyautogui.click(1050 + 150,460+240)
+                elif black_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+240)
+                elif (black_count == 6 and connection == 'C') or (connection == 'C' and black_count == 6):
+                    pyautogui.click(1050 + 150,460+240)
+                elif (black_count == 7 and connection == 'B') or (connection == 'A' and black_count == 7):
+                    pyautogui.click(1050 + 150,460+240)
+                elif (black_count == 8 and connection == 'C'):
+                    pyautogui.click(1050 + 150,460+240)
+                elif (black_count == 9 and connection == 'C'):
+                    pyautogui.click(1050 + 150,460+240)
+        if color3 != 'nothing':
+            connection = ''
+            check_1 = 0
+            check_2 = 0
+            check_3 = 0
+            for i in range(10):
+                if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 319-i*14), cable_lut) == color3:
+                    check_1 += 1
+                # from 1 to B
+                if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 319-i*7), cable_lut) == color3:
+                    check_2 += 1
+                # from 1 to C
+                if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 319 ), cable_lut) == color3:
+                    check_3 += 1
+                # make 10 pixel checks, if 6 of them match the main color, that means the wire is connected here
+            if check_1 > 5:
+                print("wire 3 connected to A ")
+                connection = 'A'
+            elif check_2 > 5:
+                print("wire 3 connected to B")
+                connection = 'B'
+            elif check_3 > 5:
+                print("wire 3 connected to C")
+                connection = 'C'
+            if color3 == "red":
+                red_count += 1
+            elif color3 == "blue":
+                blue_count += 1
+            elif color3 == "black":
+                black_count += 1
+            if color3 == 'red':
+                if red_count == 1 and connection == 'C':
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 150,460+313)
+                elif red_count == 2 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+313)
+                elif red_count == 3 and connection == 'A':
+                    pyautogui.click(1050 + 150,460+313)
+                elif (red_count == 4 and connection == 'C') or (connection == 'A' and red_count == 4):
+                    pyautogui.click(1050 + 150,460+313)
+                elif red_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+313)
+                elif (red_count == 6 and connection == 'C') or (connection == 'A' and red_count == 6):
+                    pyautogui.click(1050 + 150,460+313)
+                elif red_count == 7:
+                    pyautogui.click(1050 + 150,460+313)
+                elif (red_count == 8 and connection == 'B') or (connection == 'A' and red_count == 8):
+                    pyautogui.click(1050 + 150,460+313)
+                elif (red_count == 9 and connection == 'B'):
+                    pyautogui.click(1050 + 150,460+313)
+            if color3 == 'blue':
+                if blue_count == 1 and connection == 'B':
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 150,460+313)
+                elif (blue_count == 2 and connection == 'C') or (connection == 'A' and blue_count == 2):
+                    pyautogui.click(1050 + 150,460+313)
+                elif blue_count == 3 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+313)
+                elif (blue_count == 4 and connection == 'A'):
+                    pyautogui.click(1050 + 150,460+313)
+                elif blue_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+313)
+                elif (blue_count == 6 and connection == 'C') or (connection == 'C' and blue_count == 6):
+                    pyautogui.click(1050 + 150,460+313)
+                elif blue_count == 7 and connection == 'C':
+                    pyautogui.click(1050 + 150,460+313)
+                elif (blue_count == 8 and connection == 'C') or (connection == 'A' and blue_count == 8):
+                    pyautogui.click(1050 + 150,460+313)
+                elif (blue_count == 9 and connection == 'A'):
+                    pyautogui.click(1050 + 150,460+313)
+            if color3 == 'black':
+                if black_count == 1:
+                    # cut first wire, press it in the number field
+                    pyautogui.click(1050 + 150,460+313)
+                elif (black_count == 2 and connection == 'C') or (connection == 'A' and black_count == 2):
+                    pyautogui.click(1050 + 150,460+313)
+                elif black_count == 3 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+313)
+                elif (black_count == 4 and connection == 'C') or (connection == 'A' and black_count == 4):
+                    pyautogui.click(1050 + 150,460+313)
+                elif black_count == 5 and connection == 'B':
+                    pyautogui.click(1050 + 150,460+313)
+                elif (black_count == 6 and connection == 'C') or (connection == 'C' and black_count == 6):
+                    pyautogui.click(1050 + 150,460+313)
+                elif (black_count == 7 and connection == 'B') or (connection == 'A' and black_count == 7):
+                    pyautogui.click(1050 + 150,460+313)
+                elif (black_count == 8 and connection == 'C'):
+                    pyautogui.click(1050 + 150,460+313)
+                elif (black_count == 9 and connection == 'C'):
+                    pyautogui.click(1050 + 150,460+313)
+        pyautogui.click(1050 + 220, 460 + 446)
+
+        if j < 3:
+            time.sleep(4)
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+
 def do_first(start_flag):
     # this talb e is the one tha checks the mian screen
     screen_lut = \
@@ -2755,7 +3091,7 @@ def do_memory(previous_answers,stage,numbers):
 
 
 labels = []
-do_first(start_flag=True)
+do_sequence()
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
