@@ -1365,38 +1365,39 @@ def do_sequence():
     ]
 
 
-    color1 = "nothing"
-    for coord in coordinates:
-        color = closest_color(pyautogui.pixel(*coord),cable_lut)
-        if color != 'nothing':
-            color1 = color
-            break
-    #check two middle hole
 
-
-    coordinates2 = [(1050+150, 460+224),(1050+150, 460+231),(1050+150, 460+239),(1050+150, 460+247)]
-    color2 = "nothing"
-    for coord in coordinates2:
-        color = closest_color(pyautogui.pixel(*coord), cable_lut)
-        if color != 'nothing':
-            color2 = color
-            break
-
-
-        # check three, bottom hole
-
-    coordinates3 = [(1050+142, 460+303), (1050+145, 460+309), (1050+148, 460+315), (1050+151, 460+321)]
-    color3 = "nothing"
-    for coord in coordinates3:
-        color = closest_color(pyautogui.pixel(*coord), cable_lut)
-        if color != 'nothing':
-            color3 = color
-            break
     black_count = 0
     blue_count = 0
     red_count = 0
     #this one has to loop 4 times
     for j in range(4):
+        color1 = "nothing"
+        for coord in coordinates:
+            color = closest_color(pyautogui.pixel(*coord), cable_lut)
+            if color != 'nothing':
+                color1 = color
+                break
+        # check two middle hole
+
+        coordinates2 = [(1050 + 150, 460 + 224), (1050 + 150, 460 + 231), (1050 + 150, 460 + 239),
+                        (1050 + 150, 460 + 247)]
+        color2 = "nothing"
+        for coord in coordinates2:
+            color = closest_color(pyautogui.pixel(*coord), cable_lut)
+            if color != 'nothing':
+                color2 = color
+                break
+
+            # check three, bottom hole
+
+        coordinates3 = [(1050 + 142, 460 + 303), (1050 + 145, 460 + 309), (1050 + 148, 460 + 315),
+                        (1050 + 151, 460 + 321)]
+        color3 = "nothing"
+        for coord in coordinates3:
+            color = closest_color(pyautogui.pixel(*coord), cable_lut)
+            if color != 'nothing':
+                color3 = color
+                break
         print(color1,color2,color3)
         if color1 != 'nothing':
             connection = ''
