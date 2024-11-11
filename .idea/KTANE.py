@@ -1349,11 +1349,9 @@ def do_sequence():
             (255, 53, 24) : "red",
             (61, 100, 204) : "blue",
             (2, 4, 2) : "black",
-            (42, 47, 54) : "nothing"
+            (42, 47, 54) : "nothing",
+            (120, 113, 96) : "nothing",
         }
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
     # 5 checks each hole tom check for wires
     #check one top hole
     coordinates = [
@@ -1371,6 +1369,11 @@ def do_sequence():
     red_count = 0
     #this one has to loop 4 times
     for j in range(4):
+        print(f'reds {red_count} blue: {blue_count} black: {black_count}')
+        screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+        screen = np.array(screen)
+        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
         print(f' stage: {j+1}')
         color1 = "nothing"
         for coord in coordinates:
@@ -1434,15 +1437,13 @@ def do_sequence():
             elif color1 == "black":
                 black_count += 1
             print(f'color 1 checks 1 2 3 {check_1}, {check_2}, {check_3}')
-            if check_1 > 5:
-                connection = 'A'
-                print(f"1 {color1} connected to A ")
-            elif check_2 > 5:
-                connection = 'B'
-                print(f"1 {color1} connected to B")
-            elif check_3 > 5:
-                connection = 'C'
-                print(f"1 {color1} connected to C")
+            check_values = [check_1, check_2, check_3]
+            connections = ['A', 'B', 'C']
+
+            max_value = max(check_values)
+            max_index = check_values.index(max_value)
+
+            connection = connections[max_index]
 
             if color1 == 'red':
                 if red_count == 1 and connection == 'C':
@@ -1510,10 +1511,10 @@ def do_sequence():
             check_2 = 0
             check_3 = 0
             for i in range(10):
-                screen[241-i*7, 144 + i * 14] = (255,0, 0)
-                screen[230, 144 + i * 14] = (255, 0, 0)
-                screen[241+i*7, 144 + i * 14] = (255,0, 0)
-                if closest_color(pyautogui.pixel(1050 + 144 + i * 14, 460 + 241-i*7), cable_lut) == color2:
+                screen[225-i*7, 144 + i * 14] = (255,255, 0)
+                screen[230, 144 + i * 14] = (255, 255, 0)
+                screen[241+i*7, 144 + i * 14] = (255,255, 0)
+                if closest_color(pyautogui.pixel(1050 + 144 + i * 14, 460 + 225-i*7), cable_lut) == color2:
                     check_1 += 1
                 # from 1 to B
                 if closest_color(pyautogui.pixel(1050 + 144 + i * 14, 460 + 230), cable_lut) == color2:
@@ -1523,15 +1524,13 @@ def do_sequence():
                     check_3 += 1
                 # make 10 pixel checks, if 6 of them match the main color, that means the wire is connected here
             print(f'color 2 checks 1 2 3 {check_1}, {check_2}, {check_3}')
-            if check_1 > 7:
-                connection = 'A'
-                print(f"2 {color2} connected to A ")
-            elif check_2 > 5:
-                connection = 'B'
-                print(f"2 {color2} connected to B")
-            elif check_3 > 5:
-                connection = 'C'
-                print(f"2 {color2} connected to C")
+            check_values = [check_1, check_2, check_3]
+            connections = ['A', 'B', 'C']
+
+            max_value = max(check_values)
+            max_index = check_values.index(max_value)
+
+            connection = connections[max_index]
             if color2 == "red":
                 red_count += 1
             elif color2 == "blue":
@@ -1604,10 +1603,10 @@ def do_sequence():
             check_2 = 0
             check_3 = 0
             for i in range(10):
-                screen[319-i*14, 147 + i * 14] = (0, 0, 255)
+                screen[310-i*14, 147 + i * 14] = (0, 0, 255)
                 screen[319-i*7, 147 + i * 14] = (0, 0, 255)
                 screen[319, 147 + i * 14] = (0, 0, 255)
-                if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 319-i*14), cable_lut) == color3:
+                if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 310-i*14), cable_lut) == color3:
                     check_1 += 1
                 # from 1 to B
                 if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 319-i*7), cable_lut) == color3:
@@ -1615,17 +1614,16 @@ def do_sequence():
                 # from 1 to C
                 if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 319 ), cable_lut) == color3:
                     check_3 += 1
-                # make 10 pixel checks, if 6 of them match the main color, that means the wire is connected here
+               # make 10 pixel checks, if 6 of them match the main color, that means the wire is connected here
             print(f'color 3 checks 1 2 3 {check_1}, {check_2}, {check_3}')
-            if check_1 > 5:
-                print(f"3 {color3} connected to A ")
-                connection = 'A'
-            elif check_2 > 5:
-                print(f"3 {color3} connected to B")
-                connection = 'B'
-            elif check_3 > 5:
-                print(f"3 {color3} connected to C")
-                connection = 'C'
+
+            check_values = [check_1, check_2, check_3]
+            connections = ['A', 'B', 'C']
+
+            max_value = max(check_values)
+            max_index = check_values.index(max_value)
+
+            connection = connections[max_index]
             if color3 == "red":
                 red_count += 1
             elif color3 == "blue":
@@ -1697,7 +1695,7 @@ def do_sequence():
         pyautogui.click(1050 + 220, 460 + 446)
 
         if j < 3:
-            time.sleep(4)
+            time.sleep(3)
     cv2.imshow('screen', screen)
     cv2.waitKey(0)
 
