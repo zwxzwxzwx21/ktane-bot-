@@ -1344,6 +1344,11 @@ parallel_test = False
 batteries_test = 3
 
 def do_keypads():
+    #120 274  | 684
+    #116 813    687 812
+    pyautogui.scroll(1)
+    pyautogui.scroll(1)
+    pyautogui.scroll(1)
     #keypads go (top right,top left, ?,? )
     keypad_lut = \
         {
@@ -1354,7 +1359,7 @@ def do_keypads():
             (223, 210, 190) : "bg",
             (229, 215, 194) : "bg",
         }
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = pyautogui.screenshot(region=(780, 115, 1000, 1150))
     screen = np.array(screen)
     screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
     # i think it should be named like row rather thankeypad, its confusing
@@ -1372,15 +1377,16 @@ def do_keypads():
         and closest_color(pyautogui.pixel(1050+308,460+220),keypad_lut) == "key"
         and closest_color(pyautogui.pixel(1050+333,460+227),keypad_lut) == "key"):
             pass'''
-        xx,yy = 0,0
+        xx,yy,aa = 0,0,0
         if i == 1:
-            xx = 1
+            xx = 1; aa = 2
         elif i == 2:
-            xx = 1; yy = 1
+            xx = 1; yy = 1; aa=1
         elif i == 3:
-            yy = 1
-
-        #screen[178+yy*183,324] = (0,0,255)
+            yy = 1; aa = 1
+        screen[274+yy*539,120-aa*4+xx*571]=(255,255,255)
+        # THIS APPROACH PRONE TO ERROR, MAKE IT ZOOM 3 TIMES LIKE IN SEQUENCE, SO CHECKS WONT BE SCREWED THAT EASILY!!!!
+        '''#screen[178+yy*183,324] = (0,0,255)
         screen[178+yy*183,324-xx*190] = (0,0,255)
         #screen[178,324-xx*190] = (0,0,255)
         #screen[178,324] = (255, 0, 255) # this one and 2 below checks for reversed qiuestionmark, dont remove that one, remove bottom 2
@@ -1396,11 +1402,14 @@ def do_keypads():
         if (closest_color(pyautogui.pixel(1050+308-xx*190,460+ 220+yy*183),keypad_lut) == "key"
         and closest_color(pyautogui.pixel(1050+324-xx*190,460+ 178+yy*183),keypad_lut) == "key"
         and closest_color(pyautogui.pixel(1050+333-xx*190,460+ 227+yy*183),keypad_lut) == "key"):
-            keypad[i] = 'questionmark'
+            keypad[i] = "questionmard"'''
 
 
         print(keypad)
         #color = screen[point_x, point_y]
+    pyautogui.scroll(-1)
+    pyautogui.scroll(-1)
+    pyautogui.scroll(-1)
     cv2.imshow('screen', screen)
     cv2.waitKey(0)
 
