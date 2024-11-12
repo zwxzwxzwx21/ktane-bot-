@@ -1386,7 +1386,7 @@ def do_keypads():
             yy = 1; aa = 1
 
 
-
+        #test push
         screen[274+yy*539,120-aa*4+xx*571]=(255,255,255)
 
         screen[ yy * 539 + 361,0 - aa * 4 + xx * 571 + 127]=(255,255,255)
