@@ -1384,7 +1384,23 @@ def do_keypads():
             xx = 1; yy = 1; aa=1
         elif i == 3:
             yy = 1; aa = 1
+
+
+
         screen[274+yy*539,120-aa*4+xx*571]=(255,255,255)
+
+        screen[ yy * 539 + 361,0 - aa * 4 + xx * 571 + 127]=(255,255,255)
+        screen[ yy * 539 + 373,0 - aa * 4 + xx * 571 + 218]=(255,255,255)
+        screen[ yy * 539 + 420,0 - aa * 4 + xx * 571 + 171]=(255,255,255)
+        screen[ yy * 539 + 504,0 - aa * 4 + xx * 571 + 223]=(255,255,255)
+        screen[ yy * 539 + 515,0 - aa * 4 + xx * 571 + 254]=(255,255,255)
+
+        if (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 127,115+yy*539 + 361),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 218,115+yy*539 + 373),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 171,115+yy*539 + 420),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 223,115+yy*539 + 504),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 254,115+yy*539 + 515),keypad_lut) == "key"):
+            keypad[i] = "line"
         # THIS APPROACH PRONE TO ERROR, MAKE IT ZOOM 3 TIMES LIKE IN SEQUENCE, SO CHECKS WONT BE SCREWED THAT EASILY!!!!
         '''#screen[178+yy*183,324] = (0,0,255)
         screen[178+yy*183,324-xx*190] = (0,0,255)
