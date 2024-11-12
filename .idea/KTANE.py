@@ -1342,6 +1342,68 @@ def do_password():
 serial_test = 'zz1ab1'
 parallel_test = False
 batteries_test = 3
+
+def do_keypads():
+    #keypads go (top right,top left, ?,? )
+    keypad_lut = \
+        {
+            (0,0,0) : "key",
+            (225, 211, 190) : "bg",
+            (230, 217, 193) : "bg",
+            (228, 214, 191) : "bg",
+            (223, 210, 190) : "bg",
+            (229, 215, 194) : "bg",
+        }
+    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
+    screen = np.array(screen)
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+    # i think it should be named like row rather thankeypad, its confusing
+    keypad1 = ['o', 'triangle', 'gamma', 'lightning', 'rocket', 'hello', 'c']
+    keypad2 = ['monster', 'o', 'c', 'spring', 'star', 'hello', 'questionmark']
+    keypad3 = ['copyright', 'bob', 'spring', 'octopus', 'line', 'gamma', 'star']
+    keypad4 = ['six', 'paragraph', 'table', 'rocket', 'questionmark', 'face']
+    keypad5 = ['trident', 'face', 'table', 'c', 'paragraph', 'three', 'star']
+    keypad6 = ['six', 'monster', 'puzzle', 'something', 'trident', 'devil', 'omega']
+    #                                      xxx     yyy
+    #keypad width = 190, height 183
+    keypad = ['','','','']
+    for i in range(4):
+        '''if (closest_color(pyautogui.pixel(1050+324,460+178),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(1050+308,460+220),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(1050+333,460+227),keypad_lut) == "key"):
+            pass'''
+        xx,yy = 0,0
+        if i == 1:
+            xx = 1
+        elif i == 2:
+            xx = 1; yy = 1
+        elif i == 3:
+            yy = 1
+
+        #screen[178+yy*183,324] = (0,0,255)
+        screen[178+yy*183,324-xx*190] = (0,0,255)
+        #screen[178,324-xx*190] = (0,0,255)
+        #screen[178,324] = (255, 0, 255) # this one and 2 below checks for reversed qiuestionmark, dont remove that one, remove bottom 2
+        screen[220+yy*183,308-xx*190] = (0,255,255)
+        screen[227+yy*183,333-xx*190] = (0,255,255)
+        print(xx,yy)
+        print(pyautogui.pixel(1050+308 - xx * 190,460+ 220 + yy * 183))
+        print(pyautogui.pixel(1050+324 - xx * 190,460+ 178 + yy * 183))
+        print(pyautogui.pixel(1050+333 - xx * 190,460+ 227 + yy * 183))
+        print(closest_color(pyautogui.pixel(1050+308-xx*190,460+ 220+yy*183),keypad_lut))
+        print(closest_color(pyautogui.pixel(1050+324-xx*190,460+ 178+yy*183),keypad_lut))
+        print(closest_color(pyautogui.pixel(1050+333-xx*190,460+ 227+yy*183),keypad_lut))
+        if (closest_color(pyautogui.pixel(1050+308-xx*190,460+ 220+yy*183),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(1050+324-xx*190,460+ 178+yy*183),keypad_lut) == "key"
+        and closest_color(pyautogui.pixel(1050+333-xx*190,460+ 227+yy*183),keypad_lut) == "key"):
+            keypad[i] = 'questionmark'
+
+
+        print(keypad)
+        #color = screen[point_x, point_y]
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+
 def do_sequence():
     cable_lut =\
         {
@@ -3113,7 +3175,7 @@ def do_memory(previous_answers,stage,numbers):
 
 
 labels = []
-do_sequence()
+do_keypads()
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
