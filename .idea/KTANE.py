@@ -19,6 +19,179 @@ import math
 global parallel_port
 parallel_port = False
 
+def do_morse():
+    light_lut = \
+        {
+            (253, 222, 71) : "lit",
+            (118, 63, 41) : "unlit"
+        }
+    #0.28s dot
+    #0.81s dash
+    #1.10s long break
+    #0.28s short break
+    #2.70s pause.
+    morse_LUT = {
+        'shell': 505,
+        'halls': 515,
+        'slick': 522,
+        'trick': 532,
+        'boxes': 535,
+        'leaks': 542,
+        'strobe': 545,
+        'bistro': 552,
+        'flick': 555,
+        'bombs': 565,
+        'break': 572,
+        'brick': 575,
+        'steak': 582,
+        'sting': 592,
+        'vector': 595,
+        'beats': 600
+    }
+    morse_LUT2 = ['shell', 'halls', 'slick', 'trick', 'boxes', 'leaks', 'strobe', 'bistro', 'flick', 'bombs', 'break',
+                  'brick', 'steak', 'sting', 'vector', 'beats']
+    morse_decode_LUT = {
+        '.-': 'a',
+        '-...': 'b',
+        '-.-.': 'c',
+        '-..': 'd',
+        '.': 'e',
+        '..-.': 'f',
+        '--.': 'g',
+        '....': 'h',
+        '..': 'i',
+        '.---': 'j',
+        '-.-': 'k',
+        '.-..': 'l',
+        '--': 'm',
+        '-.': 'n',
+        '---': 'o',
+        '.--.': 'p',
+        '--.-': 'q',
+        '.-.': 'r',
+        '...': 's',
+        '-': 't',
+        '..-': 'u',
+        '...-': 'v',
+        '.--': 'w',
+        '-..-': 'x',
+        '-.--': 'y',
+        '--..': 'z'
+    }
+    #region
+    '''one_sign = []
+    solution = ''
+
+    numb_of_signs = 0
+    for sign in morse_code:
+        possible_sols = []
+        if sign == 'next' or sign == 'mixed':
+            temp_word = ''
+            for signs in one_sign:
+                print(f'current sign {sign}', f' one sign: {one_sign}', f'current signs {signs}')
+                if signs == 'dot':
+                    print('adding a dot')
+                    temp_word += '.'
+                elif signs == 'line':
+                    print('adding a line')
+                    temp_word += '-'
+                else:
+                    print('UH OH NOT GOOOD ')
+            print(f'temp word before changing to a sign: {temp_word}')
+            if temp_word in morse_decode_LUT:
+                temp_word = morse_decode_LUT[temp_word]
+                print(f'current temp word: {temp_word}')
+
+            solution += temp_word
+            numb_of_signs += 1
+            for morse_codes in morse_LUT2:
+                if solution == morse_codes[:numb_of_signs]:
+                    possible_sols.append(morse_codes)
+            if len(possible_sols) == 1:
+                say_(possible_sols);
+                return
+            print(f' current solution {solution}')
+            one_sign = []
+        else:
+            if sign == 'module': return
+            one_sign.append(sign)
+            print('appending one sign', one_sign)
+    print(f'solution : {solution}')'''
+    #endregion
+    sign_array = []
+
+    '''while True:
+
+        print(f' {pyautogui.pixel(1220, 513)}')
+        time.sleep(0.28)'''
+    import pyautogui
+    import time
+
+    pixel_x, pixel_y = 1220, 513
+
+
+    time_per_loop = 0.01
+    dot_threshold = int(0.30 / time_per_loop)
+    dash_threshold = int(0.85 / time_per_loop)
+    intra_gap_threshold = int(0.30 / time_per_loop)
+    char_gap_threshold = int(1.11 / time_per_loop)
+    word_gap_threshold = int(2.75 / time_per_loop)
+
+    durations = []
+    current_state = None
+    loop_count = 0
+    results = []
+
+    try:
+        print("Monitoring pixel for Morse code... Press Ctrl+C to stop.")
+        while True:
+            pixel_color = pyautogui.pixel(pixel_x, pixel_y)
+
+            if closest_color(pixel_color,light_lut) == "lit":
+                new_state = "lit"
+            else:
+                new_state = "unlit"
+
+            if new_state != current_state:
+                if current_state is not None and loop_count > 0:
+
+                    if current_state == "lit":
+                        if loop_count <= dot_threshold:
+                            result = "dot"
+                        elif loop_count <= dash_threshold:
+                            result = "dash"
+                        else:
+                            result = "long lit"
+                    elif current_state == "unlit":
+                        if loop_count <= intra_gap_threshold:
+                            result = "intra-character gap"
+                        elif loop_count <= char_gap_threshold:
+                            result = "character gap"
+                        elif loop_count <= word_gap_threshold:
+                            result = "word gap"
+                        else:
+                            result = "end-of-word marker"
+
+                    # skip 3 results
+                    if len(results) >= 3:
+                        results.append(result)
+                        print(f"{current_state.capitalize()} interpreted as: {result} (duration: {loop_count} loops)")
+                    else:
+                        if result != 'character gap':
+                            print(f"{result}")
+
+
+                    loop_count = 0
+                current_state = new_state
+
+            loop_count += 1
+
+    except KeyboardInterrupt:
+        print("Monitoring stopped.")
+        print("Final Morse code interpretation:")
+        for res in results:
+            print(res)
+
 
 def maze_reverse(maze_map, current_number, goal_position, array_of_path_pos):
     while current_number > 0:
@@ -1618,8 +1791,8 @@ def do_keypads():
             kp6 += 1
             print('kp6 + 1', kp6)
 
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+    '''cv2.imshow('screen', screen)
+    cv2.waitKey(0)'''
     if kp1 == 4:
 
         for keys in keypad1[:]:
@@ -3466,7 +3639,7 @@ def do_memory(previous_answers,stage,numbers):
 
 
 labels = []
-do_keypads()
+do_morse()
 time.sleep(21)
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
