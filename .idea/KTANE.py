@@ -233,6 +233,7 @@ def do_morse():
     for i in range(morse_moves[match]):
         pyautogui.click(1482,758)
     pyautogui.click(1315,886)
+    return
 def maze_reverse(maze_map, current_number, goal_position, array_of_path_pos):
     while current_number > 0:
         current_number -= 1
@@ -696,9 +697,7 @@ def take_and_display_screenshot(serial,x, y, width, height):
 
 
 def do_maze():
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
     # i dont feel like doing loop xd
     '''screen[180, 95] = (0, 0, 255)   # maze 1
     screen[180, 290] = (0, 0, 255)  # maze 2
@@ -1141,9 +1140,7 @@ def do_maze():
 
 def do_wires(serial):
 
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
 
     '''screen[35, 110] = (0, 0, 255)   # wire 1
     screen[115, 110] = (0, 0, 255)  # wire 2
@@ -1302,8 +1299,7 @@ def do_wires(serial):
 
 
     print(len(wire_array), "number of wires",wire_array)
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+
     print(a)
 
 password_LUT = [
@@ -1385,9 +1381,7 @@ def do_password():
         }
     #big loop outside to check every letter
     for loop in range(6):
-        screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-        screen = np.array(screen)
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
 
         for i in range(5):
             #print('NEW LETTER')
@@ -1398,7 +1392,7 @@ def do_password():
             print("second check")
             letter_array_2 = []  # new for each letter thats why inside this loop
             pixel_number_2 = 0
-            screen[ 218 + 5 * 13][ 77 + i * 79 + 3 * 13] = (255,255,255)
+
             if closest_color(pyautogui.pixel(1050 + 77 + i * 79 + 3 * 13, 460 + 218 + 5 * 13),
                              password_color_lut) != None:
                 print('its a Q')
@@ -1416,7 +1410,6 @@ def do_password():
             for x in range(4):
                 for y in range(5):
                     # this one keeps track of which pixel is checked so its easier to tell which combination is what letter
-                    screen[218 + y * 13][77 + i * 79 + x * 13] = (255, 0, 0)
                     #print(pyautogui.pixel(1050 + 77 + i * 79 + x * 13, 460 + 218 + y * 13), pixel_number_2)
                     if closest_color(pyautogui.pixel(1050 + 77 + i * 79 + x * 13, 460 + 218 + y * 13),
                                      password_color_lut) != None:
@@ -1456,7 +1449,6 @@ def do_password():
             for x in range(3):
                 for y in range(4):
                      # this one keeps track of which pixel is checked so its easier to tell which combination is what letter
-                    screen[226+ y * 13][81+i*79 + x*13 ]=(0,0,255)
                     #print(pyautogui.pixel(1050+81+i*79 + x*13,460+226+ y * 13), pixel_number)
                     if closest_color(pyautogui.pixel(1050+81+i*79 + x*13,460+226+ y * 13),password_color_lut) != None:
                         letter_array.append(pixel_number)
@@ -1533,7 +1525,7 @@ def do_password():
         for j in range(moves[huj]):
             pyautogui.click(1050+90+huj*80,460+120)
     pyautogui.click(1050 + 90 + 2 * 80, 460 + 460)
-
+    return
 
 # can check for second and third leter in labels because __K is only for FRK and _A_ is only for CAR, but i think it is
 # better to ccheck for 3rd pos only and then just check one pixel to determine if the second position is A or L if third one is R.
@@ -1572,9 +1564,7 @@ def do_keypads():
             (223, 210, 190) : "bg",
             (229, 215, 194) : "bg",
         }
-    screen = pyautogui.screenshot(region=(780, 115, 1000, 1150))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
     # i think it should be named like row rather thankeypad, its confusing
     keypad1 = ['o', 'triangle', 'gamma', 'lightning', 'rocket', 'hello', 'c']
     keypad2 = ['monster', 'o', 'c', 'spring', 'star', 'hello', 'questionmark']
@@ -1600,26 +1590,7 @@ def do_keypads():
         #region
 
         #test push
-        screen[274+yy*539,120-aa*4+xx*571]=(255,255,255)
 
-        screen[ yy * 539 + 361,0 - aa * 4 + xx * 571 + 127]=(255,255,255)
-        screen[ yy * 539 + 373,0 - aa * 4 + xx * 571 + 218]=(255,255,255)
-        screen[ yy * 539 + 420,0 - aa * 4 + xx * 571 + 171]=(255,255,255)
-        screen[ yy * 539 + 504,0 - aa * 4 + xx * 571 + 223]=(255,255,255)
-        screen[ yy * 539 + 515,0 - aa * 4 + xx * 571 + 254]=(255,255,255)
-
-        screen[ yy * 539 + 364,0 - aa * 4 + xx * 571 + 195]=(2,0,255)
-        screen[ yy * 539 + 425,0 - aa * 4 + xx * 571 + 108]=(2,0,255)
-        screen[ yy * 539 + 425,0 - aa * 4 + xx * 571 + 282]=(2,0,255)
-        screen[ yy * 539 + 526,0 - aa * 4 + xx * 571 + 248]=(2,0,255)
-        screen[ yy * 539 + 525,0 - aa * 4 + xx * 571 + 141]=(2,0,255)
-
-
-        screen[ yy * 539 + 422,0 - aa  + xx * 571 + 167]=(255,0,2)
-        screen[ yy * 539 + 348,0 - aa  + xx * 571 + 177]=(255,0,2)
-        screen[ yy * 539 + 455,0 - aa  + xx * 571 + 253]=(255,0,2)
-        screen[ yy * 539 + 515,0 - aa  + xx * 571 + 122]=(255,0,2)
-        screen[ yy * 539 + 387,0 - aa  + xx * 571 + 245]=(255,0,2)
 
 
 
@@ -1905,8 +1876,7 @@ def do_keypads():
     pyautogui.scroll(-1)
     pyautogui.scroll(-1)
     pyautogui.scroll(-1)
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+
 
 def do_sequence():
     cable_lut =\
@@ -1937,9 +1907,7 @@ def do_sequence():
     #this one has to loop 4 times
     for j in range(4):
         print(f'reds {red_count} blue: {blue_count} black: {black_count}')
-        screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-        screen = np.array(screen)
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
 
         print(f' stage: {j+1}')
         color1 = "nothing"
@@ -2257,14 +2225,12 @@ def do_sequence():
                     pyautogui.click(1050 + 150,460+313)
                 elif (black_count == 9 and connection == 'C'):
                     pyautogui.click(1050 + 150,460+313)
-        cv2.imshow("scren",screen)
-        cv2.waitKey(0)
+
         pyautogui.click(1050 + 220, 460 + 446)
 
         if j < 3:
             time.sleep(3)
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+
 
 def do_first(start_flag):
     # this talb e is the one tha checks the mian screen
@@ -2985,13 +2951,8 @@ def do_button(labels,batteries):
             (247, 247, 247) : "white",
         }
     #time.sleep(1)
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
-    screen[325,192] = [0,0,0] # black
-    screen[324,115] = [0,0,255] # red
-    screen[205,168] = [255,255,255] # white (this one checks for button color)
-    screen[380,470] = [0,255,0] # green (checks stripe)
+
+
     print(pyautogui.pixel(1050+192, 460+325)," black")
     print(pyautogui.pixel(1050+115, 460+324)," red")
     print(pyautogui.pixel(1050+168, 460+205)," white")
@@ -3142,10 +3103,7 @@ def do_simon(serial):
             (44, 42, 39) : "gray",
             (1, 170, 35) : "green"
         }
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
-    screen[20,480] = (0,0,255)
+
 
     print(pyautogui.pixel(1050+480,480))
 
@@ -3249,9 +3207,7 @@ def do_simon(serial):
                 time.sleep(4.4)
             if stage == 4:
                 time.sleep(5.3)
-            screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-            screen = np.array(screen)
-            screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
             # if stage == 2:
             #     cv2.imshow('screen', screen)
             #     cv2.waitKey(0)
@@ -3307,8 +3263,7 @@ def do_simon(serial):
                     pyautogui.click(1050 + 380, 460 + 240)
 
             stage += 1
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+
     if serial_has_vowel:
         pass
 
@@ -3332,9 +3287,7 @@ def do_complicated(serial,batteries,parallel):
             (125, 100, 71) : "no star"
         }
     last_digit_even = int(serial[-1]) % 2 == 0
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+
     cable1 = []
     cable2 = []
     cable3 = []
@@ -3344,7 +3297,7 @@ def do_complicated(serial,batteries,parallel):
     # cable format: (led,color_1,color_2,star)
     for led in range(6):
         # pixels that check for leds
-        screen[50,65+led*58] = (0,0,255)
+
         #print(pyautogui.pixel(1050+65+led*58,460+50))
         if led == 0:
             cable1.append(closest_color(pyautogui.pixel(1050+65+led*58,460+50),led_lut))
@@ -3359,12 +3312,7 @@ def do_complicated(serial,batteries,parallel):
         elif led == 5:
             cable6.append(closest_color(pyautogui.pixel(1050 + 65 + led * 58, 460 + 50), led_lut))
 
-    screen[93, 65 + 0 * 58] = (0, 255, 0) # cable1 (on blue)
-    screen[90, 62 + 1 * 58] = (0, 255, 0) # cable2 (white) (meaning that second color_2  should check for red)
-    screen[98, 59 + 2 * 58] = (0, 255, 0) # cable3 (red)
-    screen[93, 69 + 3 * 58] = (0, 255, 0) # cable4 (blue)
-    screen[90, 67 + 4 * 58] = (0, 255, 0) # cable5 (white)
-    screen[95, 64 + 5 * 58] = (0, 255, 0) # cable6 (blue)
+
     print(pyautogui.pixel(1050 + 65 + 0 * 58, 460 + 93))
     cable1.append(closest_color(pyautogui.pixel(1050 + 65 + 0 * 58, 460 + 93),cable_lut))
     print(pyautogui.pixel(1050 + 62 + 1 * 58, 460 + 90))
@@ -3379,12 +3327,7 @@ def do_complicated(serial,batteries,parallel):
     cable6.append(closest_color(pyautogui.pixel(1050 + 64 + 5 * 58, 460 + 95),cable_lut))
     # another cable check
     print()
-    screen[93, 59 + 0 * 58] = (0, 0, 0)  # cable1
-    screen[95, 67 + 1 * 58] = (0, 0, 0)  # cable2  (meaning that second color_2  should check for red)
-    screen[93, 55 + 2 * 58] = (0, 0, 0)  # cable3
-    screen[110, 80 + 3 * 58] = (0, 0, 0)  # cable4 ()
-    screen[100, 75 + 4 * 58] = (0, 0, 0)  # cable5 ()
-    screen[110, 64 + 5 * 58] = (0, 0, 0)  # cable6 ()
+
     print(pyautogui.pixel(1050 + 59 + 0 * 58, 460 + 93))
     cable1.append(closest_color(pyautogui.pixel(1050 + 59 + 0 * 58, 460 + 93), cable_lut))
     print(pyautogui.pixel(1050 + 67 + 1 * 58, 460 + 95))
@@ -3401,12 +3344,7 @@ def do_complicated(serial,batteries,parallel):
     # ALL CABLES LOOK LIKE THEY WORK JSUT NEED TO SET UP PYAUTOGUI AND CHECKS
     # star check
     print()
-    screen[450, 70 + 0 * 70] = (255, 255, 0)  # star1
-    screen[450, 72 + 1 * 70] = (255, 255, 0)  #   star2
-    screen[440, 75 + 2 * 70] = (255, 255, 0)  # star3
-    screen[446, 80 + 3 * 70] = (255, 255, 0) #  star4
-    screen[435, 85 + 4 * 70] = (255, 255, 0)  # star5
-    screen[450, 92 + 5 * 70] = (255, 255, 0)  # star6
+
     print(pyautogui.pixel(1050 + 70 + 0 * 70, 460 + 450))
     cable1.append(closest_color(pyautogui.pixel(1050 + 70 + 0 * 70, 460 + 450),star_lut))
     print(pyautogui.pixel(1050 + 72 + 1 * 70, 460 + 450))
@@ -3474,8 +3412,7 @@ def do_complicated(serial,batteries,parallel):
             pyautogui.click(1050 + 65 + loop * 58, 460 + 93)
             time.sleep(0.1)
         loop+=1
-    cv2.imshow('screen', screen)
-    cv2.waitKey(0)
+
 
 def click_position(index):
     x_coord = 1050 + 75 + index * 85
@@ -3499,11 +3436,7 @@ def do_memory(previous_answers,stage,numbers):
             (187, 167, 134) : "bg",
             (49, 44, 35) : "number"
         }
-    screen = pyautogui.screenshot(region=(1050, 460, 500, 500))
-    screen = np.array(screen)
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
-    screen[155,200] = (0,0,0)
-    screen[155,235] = (0,0,255)
+
     #print(pyautogui.pixel(1050+200,460+155))
     #print(pyautogui.pixel(1050+235,460+155)) # red
     color_1 = closest_color(pyautogui.pixel(1050+200,460+155),memory_LUT)
@@ -3524,8 +3457,7 @@ def do_memory(previous_answers,stage,numbers):
     for i in range(4):
         #print(pyautogui.pixel(1050 + 75+i*85, 460 + 385))
         #print(pyautogui.pixel(1050 + 100+i*85, 460 + 385))
-        screen[385, 75+i*85] = (0, 0, 0)
-        screen[385, 100+i*85] = (0, 0, 255)
+
         color_3 =closest_color(pyautogui.pixel(1050 + 75+i*85, 460 + 385),memory_lut_bottom)
         color_4 = closest_color(pyautogui.pixel(1050 + 100+i*85, 460 + 385),memory_lut_bottom) # red
         if  color_3== "number" and color_4 == "bg":
@@ -3917,9 +3849,7 @@ while True:
     #single_module_image_with_pixels[yy + y , xx + x ] = (0, 0, 255)
 
 
-    #cv2.imshow("test", test_image)
-    cv2.waitKey(0)
-    time.sleep(999)
+
 '''
 speed_up = 225 # speed and slowed down voice for bot to read faster or slower if needed
 slow_down = 175
