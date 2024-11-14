@@ -1475,12 +1475,12 @@ def do_keypads():
         and   closest_color(pyautogui.pixel(780+0+xx*571 + 141,115+yy*539 + 525),keypad_lut) == "key"):
             keypad[i] = "star"
 
-        elif (closest_color(pyautogui.pixel(780+0+xx*571 + 195,115+yy*539 + 364),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0+xx*571 + 108,115+yy*539 + 425),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0+xx*571 + 282,115+yy*539 + 425),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0+xx*571 + 248,115+yy*539 + 526),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0+xx*571 + 141,115+yy*539 + 525),keypad_lut) == "key"):
-            keypad[i] = "star"# full black | doesnt work btw
+        elif (closest_color(pyautogui.pixel(780+0+xx*571 + 191,115+yy*539 + 381),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 144,115+yy*539 + 436),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 165,115+yy*539 + 489),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 221,115+yy*539 + 483),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 239,115+yy*539 + 436),keypad_lut) == "key"):
+            keypad[i] = "star"
         elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 167,115+yy*539 + 490),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 271,115+yy*539 + 502),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 112,115+yy*539 + 408),keypad_lut) == "key"
@@ -1584,6 +1584,7 @@ def do_keypads():
     kp4 = 0
     kp5 = 0
     kp6 = 0
+    final_array =[]# this array will have everything you need to click, sorted
     k_array1 = []
     k_array2 = []
     k_array3 = []
@@ -1616,65 +1617,78 @@ def do_keypads():
             k_array6.append(sign)
             kp6 += 1
             print('kp6 + 1', kp6)
-        print(kp1, kp2, kp3, kp4, kp5, kp6)
-        print(k_array1, k_array2, k_array3, k_array4, k_array5, k_array6)
-        if kp1 == 4:
-            print(f'entire array{keypad1} and what you said {k_array1}')
-            for keys in keypad1[:]:
-                print(f'current key {keys}')
-                if keys not in k_array1:
-                    keypad1.remove(keys)
-                    print(f'removing {keys}, current array {keypad1}')
-            print(keypad1, 'keypad1')
-            print(f'{keypad1[0]} {keypad1[1]} {keypad1[2]} {keypad1[3]} ')
-        elif kp2 == 4:
-            print(f'entire array{keypad2} and what you said {k_array2}')
-            for keys in keypad2[:]:
-                print(f'current key {keys}')
-                if keys not in k_array2:
-                    keypad2.remove(keys)
-                    print(f'removing {keys}, current array {keypad2}')
-            print(keypad2, 'keypad2')
-            print(f'{keypad2[0]} {keypad2[1]} {keypad2[2]} {keypad2[3]}  ')
-        elif kp3 == 4:
-            print(f'entire array{keypad3} and what you said {k_array3}')
-            for keys in keypad3[:]:
-                print(f'current key {keys}')
-                if keys not in k_array3:
-                    keypad3.remove(keys)
-                    print(f'removing {keys}, current array {keypad3}')
-            print(keypad3, 'keypad3')
-            print(f'{keypad3[0]} {keypad3[1]} {keypad3[2]} {keypad3[3]} ')
-        elif kp4 == 4:
-            print(f'entire array{keypad4} and what you said {k_array4}')
-            for keys in keypad4[:]:
-                print(f'current key {keys}')
-                if keys not in k_array4:
-                    keypad4.remove(keys)
-                    print(f'removing {keys}, current array {keypad4}')
-            print(keypad4, 'keypad4')
-            print(f'{keypad4[0]} {keypad4[1]} {keypad4[2]} {keypad4[3]}  ')
-        elif kp5 == 4:
-            print(f'entire array {keypad5} and what you said {k_array5}')
-            for keys in keypad5[:]:  # Iterate over a copy of the list
-                print(f'current key {keys}')
-                if keys not in k_array5:
-                    keypad5.remove(keys)
-                    print(f'removing {keys}, current array {keypad5}')
-            print(keypad5, 'keypad5')
-            print(f'{keypad5[0]} {keypad5[1]} {keypad5[2]} {keypad5[3]}')
 
-        elif kp6 == 4:
-            print(f'entire array{keypad6} and what you said {k_array6}')
-            for keys in keypad6[:]:
-                print(f'current key {keys}')
-                if keys not in k_array6:
-                    keypad6.remove(keys)
-                    print(f'removing {keys}, current array {keypad6}')
-            print(keypad6, 'keypad6')
-            print(f'{keypad6[0]} {keypad6[1]} {keypad6[2]} {keypad6[3]}  ')
+    cv2.imshow('screen', screen)
+    cv2.waitKey(0)
+    if kp1 == 4:
+
+        for keys in keypad1[:]:
+
+            if keys not in k_array1:
+                keypad1.remove(keys)
+
+        print(keypad1, 'keypad1')
+        final_array = [keypad1[0],keypad1[1],keypad1[2],keypad1[3]]
+    elif kp2 == 4:
+
+        for keys in keypad2[:]:
+            print(f'current key {keys}')
+            if keys not in k_array2:
+                keypad2.remove(keys)
 
 
+        final_array = [keypad2[0],keypad2[1],keypad2[2],keypad2[3]]
+    elif kp3 == 4:
+
+        for keys in keypad3[:]:
+            print(f'current key {keys}')
+            if keys not in k_array3:
+                keypad3.remove(keys)
+
+
+        final_array = [keypad3[0],keypad3[1],keypad3[2],keypad3[3]]
+    elif kp4 == 4:
+
+        for keys in keypad4[:]:
+            print(f'current key {keys}')
+            if keys not in k_array4:
+                keypad4.remove(keys)
+
+
+        final_array = [keypad4[0],keypad4[1],keypad4[2],keypad4[3]]
+    elif kp5 == 4:
+
+        for keys in keypad5[:]:  # Iterate over a copy of the list
+            print(f'current key {keys}')
+            if keys not in k_array5:
+                keypad5.remove(keys)
+
+
+        final_array = [keypad5[0],keypad5[1],keypad5[2],keypad5[3]]
+
+    elif kp6 == 4:
+
+        for keys in keypad6[:]:
+
+            if keys not in k_array6:
+                keypad6.remove(keys)
+
+
+        final_array = [keypad6[0],keypad6[1],keypad6[2],keypad6[3]]
+    print(keypad)
+    print(final_array)
+
+    for i,word in enumerate(final_array):
+        new_pos = keypad.index(word)
+        if new_pos == 0:
+            pyautogui.click(970,560)
+        elif new_pos == 1:
+            pyautogui.click(1540,553)
+        elif new_pos == 3:
+            pyautogui.click(970,1133)
+        elif new_pos == 2:
+            pyautogui.click(1540,1133)
+        print(new_pos)
     pyautogui.scroll(-1)
     pyautogui.scroll(-1)
     pyautogui.scroll(-1)
