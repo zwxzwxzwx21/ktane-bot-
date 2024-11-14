@@ -1349,7 +1349,7 @@ def do_keypads():
     pyautogui.scroll(1)
     pyautogui.scroll(1)
     pyautogui.scroll(1)
-    #keypads go (top right,top left, ?,? )
+    #keypads go (top right,top left, bottom right,bottom left )
     keypad_lut = \
         {
             (0,0,0) : "key",
@@ -1384,7 +1384,7 @@ def do_keypads():
             xx = 1; yy = 1; aa=1
         elif i == 3:
             yy = 1; aa = 1
-
+        #region
 
         #test push
         screen[274+yy*539,120-aa*4+xx*571]=(255,255,255)
@@ -1395,34 +1395,286 @@ def do_keypads():
         screen[ yy * 539 + 504,0 - aa * 4 + xx * 571 + 223]=(255,255,255)
         screen[ yy * 539 + 515,0 - aa * 4 + xx * 571 + 254]=(255,255,255)
 
+        screen[ yy * 539 + 364,0 - aa * 4 + xx * 571 + 195]=(2,0,255)
+        screen[ yy * 539 + 425,0 - aa * 4 + xx * 571 + 108]=(2,0,255)
+        screen[ yy * 539 + 425,0 - aa * 4 + xx * 571 + 282]=(2,0,255)
+        screen[ yy * 539 + 526,0 - aa * 4 + xx * 571 + 248]=(2,0,255)
+        screen[ yy * 539 + 525,0 - aa * 4 + xx * 571 + 141]=(2,0,255)
+
+
+        screen[ yy * 539 + 422,0 - aa  + xx * 571 + 167]=(255,0,2)
+        screen[ yy * 539 + 348,0 - aa  + xx * 571 + 177]=(255,0,2)
+        screen[ yy * 539 + 455,0 - aa  + xx * 571 + 253]=(255,0,2)
+        screen[ yy * 539 + 515,0 - aa  + xx * 571 + 122]=(255,0,2)
+        screen[ yy * 539 + 387,0 - aa  + xx * 571 + 245]=(255,0,2)
+
+
+
         if (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 127,115+yy*539 + 361),keypad_lut) == "key"
         and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 218,115+yy*539 + 373),keypad_lut) == "key"
         and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 171,115+yy*539 + 420),keypad_lut) == "key"
         and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 223,115+yy*539 + 504),keypad_lut) == "key"
         and closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 254,115+yy*539 + 515),keypad_lut) == "key"):
             keypad[i] = "line"
-        # THIS APPROACH PRONE TO ERROR, MAKE IT ZOOM 3 TIMES LIKE IN SEQUENCE, SO CHECKS WONT BE SCREWED THAT EASILY!!!!
-        '''#screen[178+yy*183,324] = (0,0,255)
-        screen[178+yy*183,324-xx*190] = (0,0,255)
-        #screen[178,324-xx*190] = (0,0,255)
-        #screen[178,324] = (255, 0, 255) # this one and 2 below checks for reversed qiuestionmark, dont remove that one, remove bottom 2
-        screen[220+yy*183,308-xx*190] = (0,255,255)
-        screen[227+yy*183,333-xx*190] = (0,255,255)
-        print(xx,yy)
-        print(pyautogui.pixel(1050+308 - xx * 190,460+ 220 + yy * 183))
-        print(pyautogui.pixel(1050+324 - xx * 190,460+ 178 + yy * 183))
-        print(pyautogui.pixel(1050+333 - xx * 190,460+ 227 + yy * 183))
-        print(closest_color(pyautogui.pixel(1050+308-xx*190,460+ 220+yy*183),keypad_lut))
-        print(closest_color(pyautogui.pixel(1050+324-xx*190,460+ 178+yy*183),keypad_lut))
-        print(closest_color(pyautogui.pixel(1050+333-xx*190,460+ 227+yy*183),keypad_lut))
-        if (closest_color(pyautogui.pixel(1050+308-xx*190,460+ 220+yy*183),keypad_lut) == "key"
-        and closest_color(pyautogui.pixel(1050+324-xx*190,460+ 178+yy*183),keypad_lut) == "key"
-        and closest_color(pyautogui.pixel(1050+333-xx*190,460+ 227+yy*183),keypad_lut) == "key"):
-            keypad[i] = "questionmard"'''
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 123,115+yy*539 + 418),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 116,115+yy*539 + 455),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 193,115+yy*539 + 451),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 271,115+yy*539 + 448),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 236,115+yy*539 + 525),keypad_lut) == "key"):
+            keypad[i] = "spring"
 
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 174,115+yy*539 + 319),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 226,115+yy*539 + 319),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 145,115+yy*539 + 382),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 148,115+yy*539 + 508),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 253,115+yy*539 + 503),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 255,115+yy*539 + 402),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 258,115+yy*539 + 580),keypad_lut) == "key"):
+            keypad[i] = "devil"
 
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 147,115+yy*539 + 530),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 126,115+yy*539 + 463),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 265,115+yy*539 + 441),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 228,115+yy*539 + 509),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 230,115+yy*539 + 376),keypad_lut) == "key"):
+            keypad[i] = "puzzle"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 103,115+yy*539 + 372),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 201,115+yy*539 + 452),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 301,115+yy*539 + 546),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 185,115+yy*539 + 531),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 301,115+yy*539 + 375),keypad_lut) == "key"):
+            keypad[i] = "octopus"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 172,115+yy*539 + 316),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 228,115+yy*539 + 316),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 261,115+yy*539 + 448),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 140,115+yy*539 + 526),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 203,115+yy*539 + 446),keypad_lut) == "key"):
+            keypad[i] = "monster"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 226,115+yy*539 + 567),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 187,115+yy*539 + 392),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 238,115+yy*539 + 418),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 187,115+yy*539 + 451),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 157,115+yy*539 + 521),keypad_lut) == "key"):
+            keypad[i] = "three"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 151,115+yy*539 + 470),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 252,115+yy*539 + 491),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 254,115+yy*539 + 373),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 142,115+yy*539 + 367),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 217,115+yy*539 + 423),keypad_lut) == "key"):
+            keypad[i] = "hello"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 197,115+yy*539 + 385),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 119,115+yy*539 + 420),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 196,115+yy*539 + 486),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 275,115+yy*539 + 412),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 197,115+yy*539 + 530),keypad_lut) == "key"):
+            keypad[i] = "trident"
+        elif (closest_color(pyautogui.pixel(780+0+xx*571 + 195,115+yy*539 + 364),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 108,115+yy*539 + 425),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 282,115+yy*539 + 425),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 248,115+yy*539 + 526),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 141,115+yy*539 + 525),keypad_lut) == "key"):
+            keypad[i] = "star"
+
+        elif (closest_color(pyautogui.pixel(780+0+xx*571 + 195,115+yy*539 + 364),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 108,115+yy*539 + 425),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 282,115+yy*539 + 425),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 248,115+yy*539 + 526),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0+xx*571 + 141,115+yy*539 + 525),keypad_lut) == "key"):
+            keypad[i] = "star"# full black | doesnt work btw
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 167,115+yy*539 + 490),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 271,115+yy*539 + 502),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 112,115+yy*539 + 408),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 169,115+yy*539 + 371),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 224,115+yy*539 + 418),keypad_lut) == "key"):
+            keypad[i] = "table"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 138,115+yy*539 + 424),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 257,115+yy*539 + 484),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 195,115+yy*539 + 526),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 251,115+yy*539 + 350),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 226,115+yy*539 + 400),keypad_lut) == "key"):
+            keypad[i] = "six"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 193,115+yy*539 + 464),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 225,115+yy*539 + 399),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 193,115+yy*539 + 360),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 271,115+yy*539 + 490),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 132,115+yy*539 + 462),keypad_lut) == "key"):
+            keypad[i] = "triangle"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 167,115+yy*539 + 442),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 177,115+yy*539 + 348),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 253,115+yy*539 + 455),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 122,115+yy*539 + 515),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 245,115+yy*539 + 387),keypad_lut) == "key"):
+            keypad[i] = "c" # SEEMS TO WORK, ITS REVERSED C
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 211,115+yy*539 + 441),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 124,115+yy*539 + 440),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 207,115+yy*539 + 348),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 205,115+yy*539 + 526),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 129,115+yy*539 + 383),keypad_lut) == "key"):
+            keypad[i] = "c" # ?
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 192,115+yy*539 + 414),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 193,115+yy*539 + 470),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 272,115+yy*539 + 425),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 129,115+yy*539 + 401),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 120,115+yy*539 + 477),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 240,115+yy*539 + 499),keypad_lut) == "key"):
+            keypad[i] = "something"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 95 ,115+yy*539 + 352),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 94 ,115+yy*539 + 520),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 299,115+yy*539 + 518),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 284,115+yy*539 + 351),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 200,115+yy*539 + 434),keypad_lut) == "key"):
+            keypad[i] = "rocket"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 195,115+yy*539 + 571),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 116,115+yy*539 + 424),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 197,115+yy*539 + 336),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 271,115+yy*539 + 424),keypad_lut) == "key"):
+            keypad[i] = "o"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 137,115+yy*539 + 377),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 144,115+yy*539 + 519),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 194,115+yy*539 + 428),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 194,115+yy*539 + 428),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 182,115+yy*539 + 388),keypad_lut) == "key"):
+            keypad[i] = "gamma"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 216,115+yy*539 + 364),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 168,115+yy*539 + 484),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 240,115+yy*539 + 512),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 214,115+yy*539 + 433),keypad_lut) == "key"):
+            keypad[i] = "questionmark"
+
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 237,115+yy*539 + 351),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 200,115+yy*539 + 440),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 155,115+yy*539 + 405),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 184,115+yy*539 + 360),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 190,115+yy*539 + 396),keypad_lut) == "key"):
+            keypad[i] = "paragraph"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 129,115+yy*539 + 532),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 245,115+yy*539 + 532),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 269,115+yy*539 + 431),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 113,115+yy*539 + 428),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 262,115+yy*539 + 470),keypad_lut) == "key"):
+            keypad[i] = "omega"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 167,115+yy*539 + 400),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 200,115+yy*539 + 400),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 95 ,115+yy*539 + 447),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 288,115+yy*539 + 427),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 184,115+yy*539 + 533),keypad_lut) == "key"):
+            keypad[i] = "face"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 149,115+yy*539 + 443),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 232,115+yy*539 + 403),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 231,115+yy*539 + 487),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 295,115+yy*539 + 444),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 100,115+yy*539 + 446),keypad_lut) == "key"):
+            keypad[i] = "copyright"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 143,115+yy*539 + 355),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 149,115+yy*539 + 452),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 223,115+yy*539 + 514),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 241,115+yy*539 + 417),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 196,115+yy*539 + 433),keypad_lut) == "key"):
+            keypad[i] = "lightning"
+        else:
+            keypad[i] = "bob"
+        #endregion
+        print(keypad)
+        kp1 = 0
+        kp2 = 0
+        kp3 = 0
+        kp4 = 0
+        kp5 = 0
+        kp6 = 0
+        k_array1 = []
+        k_array2 = []
+        k_array3 = []
+        k_array4 = []
+        k_array5 = []
+        k_array6 = []
+        for sign in keypad:
+            print(sign)
+            if sign in keypad1:
+                k_array1.append(sign)
+                kp1 += 1
+                print('kp1 + 1', kp1)
+            if sign in keypad2:
+                k_array2.append(sign)
+                kp2 += 1
+                print('kp2 + 1', kp2)
+            if sign in keypad3:
+                k_array3.append(sign)
+                kp3 += 1
+                print('kp3 + 1', kp3)
+            if sign in keypad4:
+                k_array4.append(sign)
+                kp4 += 1
+                print('kp4 + 1', kp4)
+            if sign in keypad5:
+                k_array5.append(sign)
+                kp5 += 1
+                print('kp5 + 1', kp5)
+            if sign in keypad6:
+                k_array6.append(sign)
+                kp6 += 1
+                print('kp6 + 1', kp6)
+            print(kp1, kp2, kp3, kp4, kp5, kp6)
+            print(k_array1, k_array2, k_array3, k_array4, k_array5, k_array6)
+            if kp1 == 4:
+                print(f'entire array{keypad1} and what you said {k_array1}')
+                for keys in keypad1[:]:
+                    print(f'current key {keys}')
+                    if keys not in k_array1:
+                        keypad1.remove(keys)
+                        print(f'removing {keys}, current array {keypad1}')
+                print(keypad1, 'keypad1')
+                print(f'{keypad1[0]} {keypad1[1]} {keypad1[2]} {keypad1[3]} ')
+            elif kp2 == 4:
+                print(f'entire array{keypad2} and what you said {k_array2}')
+                for keys in keypad2[:]:
+                    print(f'current key {keys}')
+                    if keys not in k_array2:
+                        keypad2.remove(keys)
+                        print(f'removing {keys}, current array {keypad2}')
+                print(keypad2, 'keypad2')
+                print(f'{keypad2[0]} {keypad2[1]} {keypad2[2]} {keypad2[3]}  ')
+            elif kp3 == 4:
+                print(f'entire array{keypad3} and what you said {k_array3}')
+                for keys in keypad3[:]:
+                    print(f'current key {keys}')
+                    if keys not in k_array3:
+                        keypad3.remove(keys)
+                        print(f'removing {keys}, current array {keypad3}')
+                print(keypad3, 'keypad3')
+                print(f'{keypad3[0]} {keypad3[1]} {keypad3[2]} {keypad3[3]} ')
+            elif kp4 == 4:
+                print(f'entire array{keypad4} and what you said {k_array4}')
+                for keys in keypad4[:]:
+                    print(f'current key {keys}')
+                    if keys not in k_array4:
+                        keypad4.remove(keys)
+                        print(f'removing {keys}, current array {keypad4}')
+                print(keypad4, 'keypad4')
+                print(f'{keypad4[0]} {keypad4[1]} {keypad4[2]} {keypad4[3]}  ')
+            elif kp5 == 4:
+                print(f'entire array {keypad5} and what you said {k_array5}')
+                for keys in keypad5[:]:  # Iterate over a copy of the list
+                    print(f'current key {keys}')
+                    if keys not in k_array5:
+                        keypad5.remove(keys)
+                        print(f'removing {keys}, current array {keypad5}')
+                print(keypad5, 'keypad5')
+                print(f'{keypad5[0]} {keypad5[1]} {keypad5[2]} {keypad5[3]}')
+
+            elif kp6 == 4:
+                print(f'entire array{keypad6} and what you said {k_array6}')
+                for keys in keypad6[:]:
+                    print(f'current key {keys}')
+                    if keys not in k_array6:
+                        keypad6.remove(keys)
+                        print(f'removing {keys}, current array {keypad6}')
+                print(keypad6, 'keypad6')
+                print(f'{keypad6[0]} {keypad6[1]} {keypad6[2]} {keypad6[3]}  ')
+
+            return
         print(keypad)
         #color = screen[point_x, point_y]
+
     pyautogui.scroll(-1)
     pyautogui.scroll(-1)
     pyautogui.scroll(-1)
