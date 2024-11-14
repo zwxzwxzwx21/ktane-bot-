@@ -19,6 +19,23 @@ import math
 global parallel_port
 parallel_port = False
 
+
+def find_unique_match(string, lut):
+    possible_matches = []
+
+    # Przeszukiwanie LUT w poszukiwaniu dopasowań prefiksowych
+    for pattern, value in lut.items():
+        for i in range(len(pattern)):
+            shifted_pattern = pattern[i:] + pattern[:i]
+            # Jeśli string jest prefiksem przesuniętego wzorca, dodajemy go do dopasowań
+            if shifted_pattern.startswith(string):
+                possible_matches.append(value)
+
+    # Sprawdzamy, czy pozostało dokładnie jedno możliwe dopasowanie
+    if len(possible_matches) == 1:
+        return possible_matches[0]  # Zwracamy jedyne możliwe dopasowanie
+
+    return None
 def do_morse():
     light_lut = \
         {
@@ -47,6 +64,24 @@ def do_morse():
         'sting': 592,
         'vector': 595,
         'beats': 600
+    }
+    morse_moves = {
+        'shell': 0,
+        'halls': 1,
+        'slick': 2,
+        'trick': 3,
+        'boxes': 4,
+        'leaks': 5,
+        'strobe': 6,
+        'bistro': 7,
+        'flick': 8,
+        'bombs': 9,
+        'break': 10,
+        'brick': 11,
+        'steak': 12,
+        'sting': 13,
+        'vector': 14,
+        'beats': 15
     }
     morse_LUT2 = ['shell', 'halls', 'slick', 'trick', 'boxes', 'leaks', 'strobe', 'bistro', 'flick', 'bombs', 'break',
                   'brick', 'steak', 'sting', 'vector', 'beats']
@@ -129,6 +164,26 @@ def do_morse():
 
     pixel_x, pixel_y = 1220, 513
 
+    answer_lut = \
+        {
+        "N.........-...-.." :  'shell',
+        'N.....-.-...-.....' : 'halls',
+        'N....-....-.-.-.-' :  'slick',
+        'N-.-...-.-.-.-' :        'trick',
+        'N-...----..-....' :   'boxes',
+        'N.-....--.-...' :      'leaks',
+        'N...-.-.----....' :     'strobe',
+        'N-........-.-.---' :     'bistro',
+        'N..-..-....-.-.-.-' :    'flick',
+        'N-...------......' :  'bombs',
+        'N-....-...--.-' :     'break',
+        'N-....-...-.-.-.-' :   'brick',
+        'N...-..--.-':          'steak',
+        'N...-..-.--.':           'sting',
+        'N...-.-.-.----.-.':     'vector',
+        'N-.....--...':         'beats',
+
+        }
 
     time_per_loop = 0.01
     dot_threshold = int(0.30 / time_per_loop)
@@ -141,45 +196,29 @@ def do_morse():
     current_state = None
     loop_count = 0
     results = []
-
+    string = ''
+    state_transition_count = 0
     try:
         print("Monitoring pixel for Morse code... Press Ctrl+C to stop.")
         while True:
             pixel_color = pyautogui.pixel(pixel_x, pixel_y)
-
-            if closest_color(pixel_color,light_lut) == "lit":
-                new_state = "lit"
-            else:
-                new_state = "unlit"
+            new_state = "lit" if closest_color(pixel_color, light_lut) == "lit" else "unlit"
 
             if new_state != current_state:
                 if current_state is not None and loop_count > 0:
-
-                    if current_state == "lit":
-                        if loop_count <= dot_threshold:
-                            result = "dot"
-                        elif loop_count <= dash_threshold:
-                            result = "dash"
-                        else:
-                            result = "long lit"
-                    elif current_state == "unlit":
-                        if loop_count <= intra_gap_threshold:
-                            result = "intra-character gap"
-                        elif loop_count <= char_gap_threshold:
-                            result = "character gap"
-                        elif loop_count <= word_gap_threshold:
-                            result = "word gap"
-                        else:
-                            result = "end-of-word marker"
-
-                    # skip 3 results
-                    if len(results) >= 3:
-                        results.append(result)
-                        print(f"{current_state.capitalize()} interpreted as: {result} (duration: {loop_count} loops)")
-                    else:
-                        if result != 'character gap':
-                            print(f"{result}")
-
+                    state_transition_count += 1
+                    if state_transition_count > 2:
+                        if current_state == "lit":
+                            string += '.' if loop_count <= dash_threshold else '-'
+                        elif current_state == "unlit":
+                            if loop_count > char_gap_threshold:
+                                string += "" if loop_count <= word_gap_threshold else "N"
+                        print(string)
+                        # Sprawdź dopasowanie w czasie rzeczywistym
+                        match = find_unique_match(string, answer_lut)
+                        if match:
+                            print(f"Znaleziono unikalne dopasowanie: {match}")
+                            break  # Zakończ pętlę
 
                     loop_count = 0
                 current_state = new_state
@@ -189,10 +228,11 @@ def do_morse():
     except KeyboardInterrupt:
         print("Monitoring stopped.")
         print("Final Morse code interpretation:")
-        for res in results:
-            print(res)
-
-
+        print(string)
+    print(morse_moves[match])
+    for i in range(morse_moves[match]):
+        pyautogui.click(1482,758)
+    pyautogui.click(1315,886)
 def maze_reverse(maze_map, current_number, goal_position, array_of_path_pos):
     while current_number > 0:
         current_number -= 1
