@@ -3679,8 +3679,7 @@ def do_memory(previous_answers,stage,numbers):
 
 
 labels = []
-do_morse()
-time.sleep(21)
+
 #IF PIXELS ARE OFF, ZOOM BY ONE
 def check_pixel(x,y):
     a = pyautogui.pixel(x, y)
@@ -3779,12 +3778,13 @@ while True:
                 if pyautogui.pixel(800+x*550+xx,yy+ 240+y*550) in modules_LUT:
 
                     #print(f"we have module at ")
+                    a = pyautogui.pixel(800+x*550+xx,yy+ 240+y*550)
 
-                    tuple = ("X module",x,y)
+                    tuple1 = ('str',x,y)
                     if front_side == 1:
-                        module_array_front.append(tuple)
+                        module_array_front.append(tuple1)
                     else:
-                        module_array_back.append(tuple)
+                        module_array_back.append(tuple1)
                 else: print(f' not in table {pyautogui.pixel(800+x*550+xx,yy+ 240+y*550)}')
         if front_side == 1:
             pyautogui.dragTo(700,None,0.12,button="right")
@@ -3810,8 +3810,8 @@ while True:
         }
     type_of_module_LUT2 = \
     {
-        (67, 66, 79) : "sequence",
-        (67, 67, 79) : "sequence",
+        (67, 66, 79) : "complicated",
+        (67, 67, 79) : "complicated",
         (87, 91, 102) : "morse",
         (40, 36, 44) : "whos on first",
         (99, 110, 137): "wires",
@@ -3822,6 +3822,7 @@ while True:
     pixel_x2,pixel_y2=617,355 # those are the values to change for pixels checks, they wont be needed
     # later so dw changing as much as needed for testing purposes
     for module in module_array_back: # back because we are on the back
+        #region
         # module is ("name",x,y)
         module_name = ''
         #print(module)
@@ -3848,11 +3849,31 @@ while True:
         else:
             module_name = 'button'
             print("its a button")
+            #do_button(labels,batteries)
         #EXECUTING MODULE IMMEDIATELY
+        #endregion
         if module_name == 'maze':
             do_maze()
-        '''cv2.imshow("test", single_module_image_with_pixels)
-        cv2.waitKey(0)'''
+        elif module_name == "sequence":
+            do_sequence()
+        elif module_name == 'wires':
+            do_wires(serial)
+        elif module_name == 'whos on first':
+            do_first(0)
+        elif module_name == 'morse':
+            do_morse()
+        elif module_name == 'memory':
+            do_memory([],1,[])
+        elif module_name == 'simon':
+            do_simon(serial)
+        elif module_name == 'password':
+            do_password()
+        elif module_name == 'keypads':
+            do_keypads()
+        elif module_name == 'button':
+            do_button(labels,batteries)
+        elif module_name == 'complicated':
+            do_complicated(serial,batteries,parallel_port)
         pyautogui.click(button = "right")
         time.sleep(0.5)
 
