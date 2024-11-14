@@ -37,6 +37,7 @@ def find_unique_match(string, lut):
 
     return None
 def do_morse():
+    print('DOING MORSE')
     light_lut = \
         {
             (253, 222, 71) : "lit",
@@ -697,6 +698,7 @@ def take_and_display_screenshot(serial,x, y, width, height):
 
 
 def do_maze():
+    print('DOING MAZE')
 
     # i dont feel like doing loop xd
     '''screen[180, 95] = (0, 0, 255)   # maze 1
@@ -927,7 +929,7 @@ def do_maze():
     for x in range(6):
         for y in range(6):
             print(pyautogui.pixel(1050+118+x*49, 460  +135+y*49))
-            screen[135+y*49,118+x*49] = (0,0,255)
+            #screen[135+y*49,118+x*49] = (0,0,255)
             if pyautogui.pixel(1050+118+x*49, 460  +135+y*49) == (211, 218, 220):
                 # start
                 start_pos = (x,y)
@@ -1139,7 +1141,7 @@ def do_maze():
     #print(a)
 
 def do_wires(serial):
-
+    print('DOING WIRES')
 
 
     '''screen[35, 110] = (0, 0, 255)   # wire 1
@@ -1330,7 +1332,7 @@ def password_word(row1,row2,row3,row4,row5):
                             #print(word)
                             return word
 def do_password():
-
+    print('DOING PASSWORD')
     # IT GOES LIKE:
     # 1 4 7
     # 2 5 8
@@ -1549,6 +1551,7 @@ parallel_test = False
 batteries_test = 3
 
 def do_keypads():
+    print('DOING KEYPADS')
     #120 274  | 684
     #116 813    687 812
     pyautogui.scroll(1)
@@ -1646,6 +1649,12 @@ def do_keypads():
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 142,115+yy*539 + 367),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 217,115+yy*539 + 423),keypad_lut) == "key"):
             keypad[i] = "hello"
+        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 95 ,115+yy*539 + 352),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 94 ,115+yy*539 + 520),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 299,115+yy*539 + 518),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 284,115+yy*539 + 351),keypad_lut) == "key"
+        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 200,115+yy*539 + 434),keypad_lut) == "key"):
+            keypad[i] = "rocket"
         elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 197,115+yy*539 + 385),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 119,115+yy*539 + 420),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 196,115+yy*539 + 486),keypad_lut) == "key"
@@ -1702,12 +1711,7 @@ def do_keypads():
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 120,115+yy*539 + 477),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 240,115+yy*539 + 499),keypad_lut) == "key"):
             keypad[i] = "something"
-        elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 95 ,115+yy*539 + 352),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 94 ,115+yy*539 + 520),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 299,115+yy*539 + 518),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 284,115+yy*539 + 351),keypad_lut) == "key"
-        and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 200,115+yy*539 + 434),keypad_lut) == "key"):
-            keypad[i] = "rocket"
+
         elif (closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 195,115+yy*539 + 571),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 116,115+yy*539 + 424),keypad_lut) == "key"
         and   closest_color(pyautogui.pixel(780+0-aa*4+xx*571 + 197,115+yy*539 + 336),keypad_lut) == "key"
@@ -1879,6 +1883,7 @@ def do_keypads():
 
 
 def do_sequence():
+    print('DOING SEQUENCE')
     cable_lut =\
         {
             (255, 106, 40) : "red",
@@ -1943,10 +1948,6 @@ def do_sequence():
 
                 break
         print(color1,color2,color3)
-        for i in range(10):
-            screen[150, 151 + i * 14] = (0, 255, 0)
-            screen[158+i*7, 151 + i * 14] = (0, 255, 0)
-            screen[158+i*14, 151 + i * 14] = (0, 255, 0)
 
         if color1 != 'nothing':
             print(f"checking color 1 which is {color1}")
@@ -2046,9 +2047,9 @@ def do_sequence():
             check_2 = 0
             check_3 = 0
             for i in range(10):
-                screen[225-i*7, 144 + i * 14] = (255,255, 0)
+                '''screen[225-i*7, 144 + i * 14] = (255,255, 0)
                 screen[230, 144 + i * 14] = (255, 255, 0)
-                screen[241+i*7, 144 + i * 14] = (255,255, 0)
+                screen[241+i*7, 144 + i * 14] = (255,255, 0)'''
                 if closest_color(pyautogui.pixel(1050 + 144 + i * 14, 460 + 225-i*7), cable_lut) == color2:
                     check_1 += 1
                 # from 1 to B
@@ -2138,9 +2139,9 @@ def do_sequence():
             check_2 = 0
             check_3 = 0
             for i in range(10):
-                screen[310-i*14, 147 + i * 14] = (0, 0, 255)
+                '''screen[310-i*14, 147 + i * 14] = (0, 0, 255)
                 screen[319-i*7, 147 + i * 14] = (0, 0, 255)
-                screen[319, 147 + i * 14] = (0, 0, 255)
+                screen[319, 147 + i * 14] = (0, 0, 255)'''
                 if closest_color(pyautogui.pixel(1050 + 147 + i * 14, 460 + 310-i*14), cable_lut) == color3:
                     check_1 += 1
                 # from 1 to B
@@ -2233,6 +2234,7 @@ def do_sequence():
 
 
 def do_first(start_flag):
+    print('DOING WHOS ON FIRST')
     # this talb e is the one tha checks the mian screen
     screen_lut = \
         {
@@ -2922,6 +2924,7 @@ def do_first(start_flag):
     pyautogui.scroll(-1)
     pyautogui.scroll(-1)
 def do_button(labels,batteries):
+    print('DOING BUTTON')
     text_lut = \
         {
             (217, 171, 30) : "bg",
@@ -3098,6 +3101,7 @@ def do_button(labels,batteries):
             if module_done:
                 break
 def do_simon(serial):
+    print('DOING SIMON SAYS')
     green_light_lut = \
         {
             (44, 42, 39) : "gray",
@@ -3269,6 +3273,7 @@ def do_simon(serial):
 
 
 def do_complicated(serial,batteries,parallel):
+    print('DOING COMPLICATED')
     #region
     led_lut = \
         {
@@ -3420,6 +3425,7 @@ def click_position(index):
     pyautogui.click(x_coord, y_coord)
 
 def do_memory(previous_answers,stage,numbers):
+    print('DOING MEMORY')
     # numbers are nubmers that were in prev stages, testing purpose only
     print(numbers , " numbers")
     print(stage, "stage")
@@ -3706,7 +3712,7 @@ while True:
         for x in range(3):
             for y in range(2):
                 test_image[yy+y*550,xx+x*550] = (0,0,255)
-                print(pyautogui.pixel(800+x*550+xx,yy+ 240+y*550))
+                #print(pyautogui.pixel(800+x*550+xx,yy+ 240+y*550))
                 if pyautogui.pixel(800+x*550+xx,yy+ 240+y*550) in modules_LUT:
 
                     #print(f"we have module at ")
@@ -3739,6 +3745,10 @@ while True:
             (43, 48, 67) : "simon",
             (221, 208, 188) : "keypads",
             (92, 89, 84): "memory",
+            (41, 109, 81) : 'password',
+            (103, 115, 143) : 'wires',
+            (103, 115, 144) : 'wires',
+            (132, 137, 146) : "button",
         }
     type_of_module_LUT2 = \
     {
@@ -3748,6 +3758,8 @@ while True:
         (40, 36, 44) : "whos on first",
         (99, 110, 137): "wires",
         (99, 111, 137): "wires",
+        (29, 41, 67) : 'password',
+        (132, 137, 146) : 'button',
     }
     # if not in any then its button
     pixel_x,pixel_y=670,560 # those are the values to change for pixels checks, they wont be needed
@@ -3765,23 +3777,45 @@ while True:
         press_position = cv2.cvtColor(press_position, cv2.COLOR_BGR2RGB)
         cv2.imshow("test",press_position)
         cv2.waitKey(0)'''
-        time.sleep(0.7)
-        '''single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
+        print('doing the 0.7 time sleep')
+        time.sleep(1.5) # used to be 0.7
+        single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
         single_module_image_np = np.array(single_module_image)
         single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
-        single_module_image_with_pixels[pixel_y,pixel_x] = (0, 0, 255)'''
+        single_module_image_with_pixels[pixel_y,pixel_x] = (0, 0, 255)
+        single_module_image_with_pixels[pixel_y2,pixel_x2] = (255, 0, 0)
 
         print(" " ,pyautogui.pixel(pixel_x2+800,240+pixel_y2)) # pixel check position
-        if pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2) in type_of_module_LUT:
+        first_px = closest_color(pyautogui.pixel(pixel_x2+800,240+pixel_y2),type_of_module_LUT)
+        second_px = closest_color(pyautogui.pixel(pixel_x+800,240+pixel_y),type_of_module_LUT2)
+        print(pyautogui.pixel(pixel_x + 800, 240 + pixel_y), ' red')  # red
+        print(pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2), ' blue')  # blue
+        if (first_px == 'wires' and second_px == 'complicated') or (first_px == 'memory' and second_px == 'complicated'):
+            module_name = 'complicated'
+        else:
+            if first_px == second_px == 'button':
+                module_name = 'button'
+            else:
+                if first_px != 'button':
+                    module_name = first_px
+                elif second_px != 'button':
+                    module_name = second_px
+        print(first_px,second_px,' first and second px' )
+        print(module_name)
+        '''if pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2) in type_of_module_LUT:
             module_name = type_of_module_LUT[pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2)]
             print(module_name, ' module')
         elif pyautogui.pixel(pixel_x + 800, 240 + pixel_y) in type_of_module_LUT2:
             module_name = type_of_module_LUT2[pyautogui.pixel(pixel_x + 800, 240 + pixel_y)]
             print(module_name, ' module')
         else:
+            print(pyautogui.pixel(pixel_x + 800, 240 + pixel_y), 'not in lut') # red
+            print(pyautogui.pixel(pixel_x2+800,240+pixel_y2), 'not in lut') # blue
             module_name = 'button'
-            print("its a button")
+            print("its a button")'''
             #do_button(labels,batteries)
+        '''cv2.imshow("test", single_module_image_with_pixels)
+        cv2.waitKey(0)'''
         #EXECUTING MODULE IMMEDIATELY
         #endregion
         if module_name == 'maze':
@@ -3791,7 +3825,7 @@ while True:
         elif module_name == 'wires':
             do_wires(serial)
         elif module_name == 'whos on first':
-            do_first(0)
+            do_first(True)
         elif module_name == 'morse':
             do_morse()
         elif module_name == 'memory':
@@ -3806,8 +3840,11 @@ while True:
             do_button(labels,batteries)
         elif module_name == 'complicated':
             do_complicated(serial,batteries,parallel_port)
+        time.sleep(0.3)
+        print('going back shoundt be zoomed')
         pyautogui.click(button = "right")
-        time.sleep(0.5)
+        print('doing the 0.5 time sleep')
+        time.sleep(1.5) # used to be 0.5
 
     pyautogui.dragTo(700, None, 0.12, button="right")
     pyautogui.click(button='right')
@@ -3817,32 +3854,85 @@ while True:
     time.sleep(1)
     #checking modules on other side
     for module in module_array_front:
+        # region
+        # module is ("name",x,y)
         module_name = ''
-        #print(module)
+        # print(module)
         pyautogui.click(650 + module[1] * 550, 400 + module[2] * 550)
-        time.sleep(0.7)
-        #image testing
-        '''single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
+        # image to show what im clicking at more or less
+        '''press_position = pyautogui.screenshot(region=(650+module[1]*550, 400+module[2]*550, 50, 50))
+        press_position = np.array(press_position)
+        press_position = cv2.cvtColor(press_position, cv2.COLOR_BGR2RGB)
+        cv2.imshow("test",press_position)
+        cv2.waitKey(0)'''
+        print('doing the 0.7 time sleep')
+        time.sleep(1.5)  # used to be 0.7
+        single_module_image = pyautogui.screenshot(region=(800, 240, 1300, 1200))
         single_module_image_np = np.array(single_module_image)
         single_module_image_with_pixels = cv2.cvtColor(single_module_image_np, cv2.COLOR_BGR2RGB)
-        single_module_image_with_pixels[pixel_y, pixel_x] = (0, 0, 255)'''
-        print(" ", pyautogui.pixel(pixel_x + 800, 240 + pixel_y)) # pixel check position
-        if pyautogui.pixel(pixel_x2+800,240+pixel_y2) in type_of_module_LUT:
-            module_name = type_of_module_LUT[pyautogui.pixel(pixel_x2+800,240+pixel_y2)]
+        single_module_image_with_pixels[pixel_y, pixel_x] = (0, 0, 255)
+        single_module_image_with_pixels[pixel_y2, pixel_x2] = (255, 0, 0)
+
+        print(" ", pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2))  # pixel check position
+        first_px = closest_color(pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2), type_of_module_LUT)
+        second_px = closest_color(pyautogui.pixel(pixel_x + 800, 240 + pixel_y), type_of_module_LUT2)
+        print(pyautogui.pixel(pixel_x + 800, 240 + pixel_y), ' red')  # red
+        print(pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2), ' blue')  # blue
+        if first_px == 'wires' and second_px == 'complicated':
+            module_name = 'complicated'
+        else:
+            if first_px == second_px == 'button':
+                module_name = 'button'
+            else:
+                if first_px != 'button':
+                    module_name = first_px
+                elif second_px != 'button':
+                    module_name = second_px
+        print(first_px, second_px, ' first and second px')
+        print(module_name)
+        '''if pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2) in type_of_module_LUT:
+            module_name = type_of_module_LUT[pyautogui.pixel(pixel_x2 + 800, 240 + pixel_y2)]
             print(module_name, ' module')
-        elif pyautogui.pixel(pixel_x+800,240+pixel_y) in type_of_module_LUT2:
-            module_name = type_of_module_LUT2[pyautogui.pixel(pixel_x+800,240+pixel_y)]
+        elif pyautogui.pixel(pixel_x + 800, 240 + pixel_y) in type_of_module_LUT2:
+            module_name = type_of_module_LUT2[pyautogui.pixel(pixel_x + 800, 240 + pixel_y)]
             print(module_name, ' module')
         else:
-            print("its a button");
+            print(pyautogui.pixel(pixel_x + 800, 240 + pixel_y), 'not in lut') # red
+            print(pyautogui.pixel(pixel_x2+800,240+pixel_y2), 'not in lut') # blue
             module_name = 'button'
-        '''
-        cv2.imshow("test", single_module_image_with_pixels)
+            print("its a button")'''
+        # do_button(labels,batteries)
+        '''cv2.imshow("test", single_module_image_with_pixels)
         cv2.waitKey(0)'''
-
-
+        # EXECUTING MODULE IMMEDIATELY
+        # endregion
+        if module_name == 'maze':
+            do_maze()
+        elif module_name == "sequence":
+            do_sequence()
+        elif module_name == 'wires':
+            do_wires(serial)
+        elif module_name == 'whos on first':
+            do_first(True)
+        elif module_name == 'morse':
+            do_morse()
+        elif module_name == 'memory':
+            do_memory([], 1, [])
+        elif module_name == 'simon':
+            do_simon(serial)
+        elif module_name == 'password':
+            do_password()
+        elif module_name == 'keypads':
+            do_keypads()
+        elif module_name == 'button':
+            do_button(labels, batteries)
+        elif module_name == 'complicated':
+            do_complicated(serial, batteries, parallel_port)
+        time.sleep(0.3)
+        print('going back shoundt be zoomed')
         pyautogui.click(button="right")
-        time.sleep(0.5)
+        print('doing the 0.5 time sleep')
+        time.sleep(1.5)  # used to be 0.5
     print(f"printing ciapka at {module[1]*550}, {module[2]*550}")
 
 
