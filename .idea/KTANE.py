@@ -1572,7 +1572,7 @@ def do_keypads():
     keypad1 = ['o', 'triangle', 'gamma', 'lightning', 'rocket', 'hello', 'c']
     keypad2 = ['monster', 'o', 'c', 'spring', 'star', 'hello', 'questionmark']
     keypad3 = ['copyright', 'bob', 'spring', 'octopus', 'line', 'gamma', 'star']
-    keypad4 = ['six', 'paragraph', 'table', 'rocket', 'questionmark', 'face']
+    keypad4 = ['six', 'paragraph', 'table', 'rocket','octopus', 'questionmark', 'face']
     keypad5 = ['trident', 'face', 'table', 'c', 'paragraph', 'three', 'star']
     keypad6 = ['six', 'monster', 'puzzle', 'something', 'trident', 'devil', 'omega']
     #                                      xxx     yyy
@@ -3623,7 +3623,8 @@ def check_pixel(x,y):
     a = pyautogui.pixel(x, y)
     print(a)
     return a
-
+do_keypads()
+po
 serial = ''
 batteries = -1 # nothing is checked yet
 while True:
