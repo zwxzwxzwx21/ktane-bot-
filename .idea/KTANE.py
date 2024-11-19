@@ -723,6 +723,11 @@ def do_maze():
     print("pixel color maze #9: ",pyautogui.pixel(1050+200, 460+165))
     color_LUT = \
         {
+            (2,8,22) : 'nothing',
+            (2,4,11) : 'nothing',
+            (2,5,13) : 'nothing',
+            (5,12,33) : 'nothing',
+            (2,7,19) : 'nothing',
             (76, 163, 57) : "maze 1",
             (77, 164, 57) : "maze 1",
             (78, 166, 58) : "maze 1",
@@ -762,8 +767,8 @@ def do_maze():
         }
 
     #im changing maze number to maze map cuz it makes no sense to have 2 variables for the same thing kinda
-    if pyautogui.pixel(1050 + 95, 460 + 180) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050 + 95, 460 + 180)])
+    if closest_color(pyautogui.pixel(1050 + 95, 460 + 180), color_LUT) == 'maze 1':
+        #print(color_LUT[pyautogui.pixel(1050 + 95, 460 + 180)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -779,8 +784,8 @@ def do_maze():
             ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050+290, 460+180) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050+290, 460+180)])
+    elif closest_color(pyautogui.pixel(1050+290, 460+180),color_LUT) == 'maze 2':
+        #print(color_LUT[pyautogui.pixel(1050+290, 460+180)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -792,12 +797,12 @@ def do_maze():
             ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■', 'P', '■'],
             ['■', ' ', '■', '■', '■', ' ', '■', '■', '■', ' ', '■', ' ', '■'],
             ['■', 'P', '■', 'P', '■', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
-            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', '■', '■'],
+            ['■', ' ', '■', ' ', '■', ' ', '■', ' ', '■', '■', '■', ' ', '■'],
             ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050+385, 460+275) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050+385, 460+275)])
+    elif closest_color(pyautogui.pixel(1050+385, 460+275),color_LUT)== 'maze 3':
+        #print(color_LUT[pyautogui.pixel(1050+385, 460+275)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', '■', 'P', ' ', 'P', '■'],
@@ -813,8 +818,8 @@ def do_maze():
             ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050 + 105, 460 + 115) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050 + 105, 460 + 115)])
+    elif closest_color(pyautogui.pixel(1050 + 105, 460 + 115),color_LUT)== 'maze 4':
+        #print(color_LUT[pyautogui.pixel(1050 + 105, 460 + 115)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -830,8 +835,8 @@ def do_maze():
             ['■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050+270, 460+400) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050+270, 460+400)])
+    elif closest_color(pyautogui.pixel(1050+270, 460+400),color_LUT)== 'maze 5':
+        #print(color_LUT[pyautogui.pixel(1050+270, 460+400)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -847,8 +852,8 @@ def do_maze():
             ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050+310, 460+115) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050+310, 460+115)])
+    elif closest_color(pyautogui.pixel(1050+310, 460+115),color_LUT)== 'maze 6':
+        #print(color_LUT[pyautogui.pixel(1050+310, 460+115)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', '■', 'P', ' ', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -864,8 +869,8 @@ def do_maze():
             ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050 + 155, 460 + 115) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050+155, 460+115)])
+    elif closest_color(pyautogui.pixel(1050 + 155, 460 + 115),color_LUT)== 'maze 7':
+        #print(color_LUT[pyautogui.pixel(1050+155, 460+115)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
@@ -881,8 +886,8 @@ def do_maze():
             ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050+260, 460+110) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050+260, 460+110)])
+    elif closest_color(pyautogui.pixel(1050+260, 460+110) , color_LUT)== 'maze 8':
+        #print(color_LUT[pyautogui.pixel(1050+260, 460+110)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', '■', 'P', ' ', 'P', '■'],
@@ -898,8 +903,8 @@ def do_maze():
             ['■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■']
         ]
-    elif pyautogui.pixel(1050+200, 460+165) in color_LUT:
-        print(color_LUT[pyautogui.pixel(1050+200, 460+165)])
+    elif closest_color(pyautogui.pixel(1050+200, 460+165) , color_LUT)== 'maze 9':
+        #print(color_LUT[pyautogui.pixel(1050+200, 460+165)])
         maze_number = [
             ['■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■', '■'],
             ['■', 'P', '■', 'P', ' ', 'P', ' ', 'P', ' ', 'P', ' ', 'P', '■'],
@@ -922,7 +927,9 @@ def do_maze():
         
         do_maze()''' #dont worry about it :3
         #upper one is like, place down and pick up bomb nbut its fucked kinda
-        print("something is off | try placing the bomb and picking it up again, that helps")
+        print("something is off | try placing the bomb and picking it up again, that helps",pyautogui.pixel(1050 + 95, 460 + 180),pyautogui.pixel(1050+290, 460+180)
+              ,pyautogui.pixel(1050+385, 460+275),pyautogui.pixel(1050 + 105, 460 + 115),pyautogui.pixel(1050+270, 460+400),pyautogui.pixel(1050+310, 460+115)
+              ,pyautogui.pixel(1050 + 155, 460 + 115),pyautogui.pixel(1050+260, 460+110),pyautogui.pixel(1050+200, 460+165))
 
     start_pos = ()
     end_pos = ()
@@ -2232,7 +2239,8 @@ def do_sequence():
         if j < 3:
             time.sleep(3)
 
-
+def print_dots(position):
+    pass
 def do_first(start_flag):
     print('DOING WHOS ON FIRST')
     # this talb e is the one tha checks the mian screen
@@ -2247,17 +2255,35 @@ def do_first(start_flag):
         pyautogui.scroll(1)
         pyautogui.scroll(1)
         start_flag = False
-    '''screen = pyautogui.screenshot(region=(780, 115, 1000, 1150))
-    screen = np.array(screen)'''
+    screen = pyautogui.screenshot(region=(780, 115, 1000, 1150))
+    screen = np.array(screen)
     # YOU ARE
-    '''screen[13,140] = (0,0,255)
+    ''' screen[13,140] = (0,0,255)
     screen[13,200] = (0,0,255)
     screen[95,170] = (0,0,255)
     screen[50,295] = (0,0,255)
     screen[50,215] = (0,0,255)
     screen[95,595] = (0,0,255)
-    screen[10,560] = (0,0,255)'''
+    screen[10,560] = (0,0,255)
+    '''
+    screen[95,302] = (0,0,0)
+    screen[38,300] = (0,0,0)
+    screen[17,337] = (0,0,0)
+    screen[82,367] = (0,0,0)
+    screen[129,415] = (0,0,0)
+    screen[82,473] = (0,0,0)
 
+
+    '''elif (closest_color(pyautogui.pixel(780 + 302, 115 + 95), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 300, 115 + 38), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 337, 115 + 17), screen_lut) == 'text'
+          and closest_color(pyautogui.pixel(780 + 367, 115 + 82), screen_lut) == 'text'
+          
+          and closest_color(pyautogui.pixel(780 + 473, 115 + 82), screen_lut) == 'text'):
+    print("word is YOU")'''
+
+    '''cv2.imshow("asdf",screen)
+    cv2.waitKey(0)'''
     for i in range(3):
         display = 0 # changing how this one worst, instead its an int and it just goes buttonarray[display] and then just does notmal checkes
         #region
@@ -2429,11 +2455,11 @@ def do_first(start_flag):
             print("word is THEY'RE")
             display = 2
         elif (closest_color(pyautogui.pixel(780 + 302, 115 + 95), screen_lut) == 'text'
-              and closest_color(pyautogui.pixel(780 + 300, 115 + 38), screen_lut) == 'text'
-              and closest_color(pyautogui.pixel(780 + 337, 115 + 17), screen_lut) == 'text'
-              and closest_color(pyautogui.pixel(780 + 367, 115 + 82), screen_lut) == 'text'
-              and closest_color(pyautogui.pixel(780 + 415, 115 + 129), screen_lut) == 'text'
-              and closest_color(pyautogui.pixel(780 + 473, 115 + 82), screen_lut) == 'text'):
+                  and closest_color(pyautogui.pixel(780 + 300, 115 + 38), screen_lut) == 'text'
+                  and closest_color(pyautogui.pixel(780 + 337, 115 + 17), screen_lut) == 'text'
+                  and closest_color(pyautogui.pixel(780 + 367, 115 + 82), screen_lut) == 'text'
+
+                  and closest_color(pyautogui.pixel(780 + 473, 115 + 82), screen_lut) == 'text'):
             print("word is YOU")
             display = 4
         elif (closest_color(pyautogui.pixel(780 + 335, 115 + 11), screen_lut) == 'text'
@@ -2523,12 +2549,49 @@ def do_first(start_flag):
             # print(pyautogui.pixel(780 + 299 + row * 480, 115 + 426 + col * 283))
             # print(pyautogui.pixel(780 + 175 + row * 480, 115 + 416 + col * 283))
             # print(pyautogui.pixel(780 + 187 + row * 480, 115 + 467 + col * 283))
+            ''' but_ready = pyautogui.screenshot(region=(780, 115, 1000, 1150))
+            but_ready = np.array(but_ready)
+            but_ready[505 + col * 283][81  + row * 480] = (0,0,255)
+            but_ready[464 + col * 283][111  + row * 480] = (0,0,255)
+            but_ready[462 + col * 283][162  + row * 480] = (0,0,255)
+            but_ready[470 + col * 283][252  + row * 480] = (0,0,255)
+            but_ready[498 + col * 283][250  + row * 480] = (0,0,255)
+            but_ready[462 + col * 283][325  + row * 480] = (0,0,255)'''
+            #no green
+            screen[500 + col * 283][168 + row * 480] = (0,255,0)
+            screen[500 + col * 283][204 + row * 480] = (0,255,0)
+            screen[424 + col * 283][167 + row * 480] = (0,255,0)
+            screen[424 + col * 283][202 + row * 480] = (0,255,0)
+            screen[452 + col * 283][184 + row * 480] = (0,255,0)
+            screen[460 + col * 283][230 + row * 480] = (0,255,0)
+            screen[460 + col * 283][262 + row * 480] = (0,255,0)
+            # you are red
+            screen[418 + col * 283][40 + row * 480] = (0,0,255)
+            screen[420 + col * 283][71 + row * 480] = (0,0,255)
+            screen[455 + col * 283][57 + row * 480] = (0,0,255)
+            screen[456 + col * 283][92 + row * 480] = (0,0,255)
+            screen[457 + col * 283][385 + row * 480] = (0,0,255)
+            screen[500 + col * 283][389 + row * 480] = (0,0,255)
+            screen[415 + col * 283][371 + row * 480] = (0,0,255)
+            screen[469 + col * 283][262 + row * 480] = (0,0,255)
+            screen[498 + col * 283][166 + row * 480] = (0,0,255)
+            # you're blue
+            screen[245 + col * 283][418 + row * 480] = (255, 0,0)
+            screen[74  + col * 283][421 + row * 480] = (255, 0,0)
+            screen[105 + col * 283][421 + row * 480] = (255, 0,0)
+            screen[91  + col * 283][453 + row * 480] = (255, 0,0)
+            screen[351 + col * 283][415 + row * 480] = (255, 0,0)
+            screen[270 + col * 283][460 + row * 480] = (255, 0,0)
+            screen[183 + col * 283][446 + row * 480] = (255, 0,0)
+            screen[150 + col * 283][420 + row * 480] = (255, 0,0)
+            screen[200 + col * 283][501 + row * 480] = (255, 0,0)
+
             if         (closest_color(pyautogui.pixel(780 + 81  + row * 480, 115 + 505 + col * 283),button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 111 + row * 480, 115 + 464 + col * 283),                 button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 162 + row * 480, 115 + 462 + col * 283),                                  button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 252 + row * 480, 115 + 470 + col * 283),                                  button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 250 + row * 480, 115 + 498 + col * 283),                                  button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 325 + row * 480, 115 + 462 + col * 283),                                  button_lut) == "text"):
+                    and closest_color(pyautogui.pixel(780 + 111 + row * 480, 115 + 464 + col * 283),button_lut) == "text"
+                    and closest_color(pyautogui.pixel(780 + 162 + row * 480, 115 + 462 + col * 283),button_lut) == "text"
+                    and closest_color(pyautogui.pixel(780 + 252 + row * 480, 115 + 470 + col * 283),button_lut) == "text"
+                    and closest_color(pyautogui.pixel(780 + 250 + row * 480, 115 + 498 + col * 283),button_lut) == "text"
+                    and closest_color(pyautogui.pixel(780 + 325 + row * 480, 115 + 462 + col * 283),button_lut) == "text"):
                 print("ready")
                 button_array.append("ready")
             elif       (closest_color(pyautogui.pixel(780 + 103 + row * 480, 115 + 500 + col * 283), button_lut) == "text"
@@ -2565,9 +2628,9 @@ def do_first(start_flag):
                     and closest_color(pyautogui.pixel(780 + 233 + row * 480, 115 + 457 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 247 + row * 480, 115 + 457 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 300 + row * 480, 115 + 458 + col * 283), button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 188 + row * 480, 115 + 457 + col * 283),                                      button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 146 + row * 480, 115 + 432 + col * 283),                                      button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 112 + row * 480, 115 + 431 + col * 283),                                      button_lut) == "text"):
+                    and closest_color(pyautogui.pixel(780 + 188 + row * 480, 115 + 457 + col * 283), button_lut) == "text"
+                    and closest_color(pyautogui.pixel(780 + 146 + row * 480, 115 + 432 + col * 283), button_lut) == "text"
+                    and closest_color(pyautogui.pixel(780 + 112 + row * 480, 115 + 431 + col * 283), button_lut) == "text"):
                 print("uhhh")
                 button_array.append("uhhh")  #              xxx                    yyy
             elif       (closest_color(pyautogui.pixel(780 + 167 + row * 480, 115 + 422 + col * 283), button_lut) == "text"
@@ -2627,14 +2690,7 @@ def do_first(start_flag):
                     and closest_color(pyautogui.pixel(780 + 380 + row * 480, 115 + 502 + col * 283), button_lut) == "text"):
                 print("nothing")
                 button_array.append("nothing")
-                '''elif       (closest_color(pyautogui.pixel(780 + 128 + row * 480, 115 + 500 + col * 283), button_lut) == "text"
-                    # and closest_color(pyautogui.pixel(780 + 180 + row * 480, 115 + 466 + col * 283), button_lut) == "text"
-                    # and closest_color(pyautogui.pixel(780 + 200 + row * 480, 115 + 425 + col * 283), button_lut) == "text"
-                    # and closest_color(pyautogui.pixel(780 + 237 + row * 480, 115 + 472 + col * 283), button_lut) == "text"
-                    # and closest_color(pyautogui.pixel(780 + 302 + row * 480, 115 + 422 + col * 283), button_lut) == "text"
-                    and closest_color(pyautogui.pixel(780 + 259 + row * 480, 115 + 466 + col * 283), button_lut) == "text"):
-                print("okay")
-                button_array.append("okay")'''  #              xxx                    yyy
+                                             #              xxx                    yyy
             elif       (closest_color(pyautogui.pixel(780 + 81  + row * 480, 115 + 495 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 96  + row * 480, 115 + 458 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 109 + row * 480, 115 + 420 + col * 283), button_lut) == "text"
@@ -2735,6 +2791,7 @@ def do_first(start_flag):
                 print("like")
                 button_array.append("like")   #             xxx                    yyy
                 # you're not done!!
+
             elif       (closest_color(pyautogui.pixel(780 + 245 + row * 480, 115 + 418 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 74  + row * 480, 115 + 421 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 105 + row * 480, 115 + 421 + col * 283), button_lut) == "text"
@@ -2744,7 +2801,7 @@ def do_first(start_flag):
                     and closest_color(pyautogui.pixel(780 + 183 + row * 480, 115 + 446 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 150 + row * 480, 115 + 420 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 200 + row * 480, 115 + 501 + col * 283), button_lut) == "text"):
-                print("you're")
+                print("you're") # doesnt work
                 button_array.append("you're") #             xxx                    yyy
             elif       (closest_color(pyautogui.pixel(780 + 101 + row * 480, 115 + 500 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 122 + row * 480, 115 + 500 + col * 283), button_lut) == "text"
@@ -2778,7 +2835,7 @@ def do_first(start_flag):
                     and closest_color(pyautogui.pixel(780 + 371 + row * 480, 115 + 415 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 262 + row * 480, 115 + 469 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 166 + row * 480, 115 + 498 + col * 283), button_lut) == "text"):
-                print("you are")
+                print("you are") #doesnt work
                 button_array.append("you are")  #           xxx                    yyy
             elif       (closest_color(pyautogui.pixel(780 + 197 + row * 480, 115 + 438 + col * 283), button_lut) == "text"
                     and closest_color(pyautogui.pixel(780 + 213 + row * 480, 115 + 501 + col * 283), button_lut) == "text"
@@ -3153,7 +3210,8 @@ def do_simon(serial):
         print('yellow ',pyautogui.pixel(1050+380,460+240))
         print('green ',pyautogui.pixel(1050+260,460+350))
         timer += 1
-        if stage < 6:
+        if timer >=15 : return
+        if stage < 7:
             #print(f'debug shit stage: {stage}, press_array: {press_array} is_flashing {is_flashing} eep = {eep}')
             if closest_color(pyautogui.pixel(1050 + 480, 480), green_light_lut) == "green":
                 print(pyautogui.pixel(1050 + 480, 480))
@@ -3497,7 +3555,7 @@ def do_complicated(serial,batteries,parallel):
             to_cut = True
         if to_cut:
             pyautogui.click(1050 + 65 + loop * 58, 460 + 93)
-            time.sleep(0.1)
+            time.sleep(0.4)
         loop+=1
 
 
@@ -3771,13 +3829,20 @@ while True:
     xx,yy = 150,15 # by how much shift pixels to check more or less the same pos (its normalized anyway, just has to be on the light to make things easier)
     test_image = cv2.cvtColor(module_screenshot_np, cv2.COLOR_BGR2RGB)
     #lut for colors that indicate we have a module
-    modules_LUT = [(33, 31, 28),(45, 41, 36),(35, 29, 25),(22, 22, 20),(141, 130, 114),(0, 1, 0),
+    amodules_LUT = [(33, 31, 28),(45, 41, 36),(35, 29, 25),(22, 22, 20),(141, 130, 114),(0, 1, 0),
                    (33, 30, 26),(45, 42, 36),(35, 31, 26),(21, 21, 20),
                    (33, 30, 28),(22, 21, 20),(31, 28, 26),(37, 33, 30),(21, 21, 19),
                    (31, 28, 25),(35, 30, 25),(35, 32, 28),(139, 128, 113),
                    (32, 30, 27),(140, 129, 113)
                    ]
+    modules_LUT = \
+        {
+            (18, 31, 47) : "timer",
+            (33, 30, 26) : 'module',
+            (139, 128, 113) : 'module',
+            (45, 41, 36) : 'module',
 
+        }
     # accesing modules on demand:
     # have a tuble that will have things stored in ("module name",x pos, y pos,bool which would tell if front or back side).
     module_array_front = []
@@ -3796,7 +3861,7 @@ while True:
             for y in range(2):
                 test_image[yy+y*550,xx+x*550] = (0,0,255)
                 #print(pyautogui.pixel(800+x*550+xx,yy+ 240+y*550))
-                if pyautogui.pixel(800+x*550+xx,yy+ 240+y*550) in modules_LUT:
+                if closest_color(pyautogui.pixel(800+x*550+xx,yy+ 240+y*550),modules_LUT) == 'module':
 
                     #print(f"we have module at ")
                     a = pyautogui.pixel(800+x*550+xx,yy+ 240+y*550)
@@ -3810,7 +3875,7 @@ while True:
         if front_side == 1:
             pyautogui.dragTo(700,None,0.12,button="right")
             pyautogui.click(button='right')
-            time.sleep(0.1)
+            time.sleep(0.2)
             pyautogui.click(1200,1000,button='left')
             is_on_flipped = True
         time.sleep(1.5)
