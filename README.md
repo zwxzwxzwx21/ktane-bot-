@@ -3,4 +3,5 @@ The bot has some errors connected to image recognition related stuff that requir
 
 If youre interested how the bot works in action here is a showcase video: 
 https://www.youtube.com/watch?v=gOd2ub8RRYc
+
 The explanation video doesnt exist yet. 
